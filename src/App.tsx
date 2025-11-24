@@ -31,10 +31,11 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
 function App() {
   const user = useAuthStore((state) => state.user);
+  const basename = import.meta.env.BASE_URL;
 
   if (!user) {
     return (
-      <BrowserRouter>
+      <BrowserRouter basename={basename}>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="*" element={<Navigate to="/login" replace />} />
@@ -44,7 +45,7 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={basename}>
       <AppShell
         header={{ height: 60 }}
         navbar={{ width: 250, breakpoint: 'sm' }}

@@ -27,7 +27,9 @@ api.interceptors.response.use(
       // Clear tokens and redirect to login
       localStorage.removeItem('access_token');
       localStorage.removeItem('refresh_token');
-      window.location.href = '/login';
+      // Use import.meta.env.BASE_URL to account for subdirectory deployment
+      const basePath = import.meta.env.BASE_URL;
+      window.location.href = `${basePath}login`;
     }
     return Promise.reject(error);
   }
