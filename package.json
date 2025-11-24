@@ -4,6 +4,7 @@
   "description": "Odyssean Grant Management Tool - Frontend",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@10.23.0",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
