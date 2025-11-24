@@ -1,0 +1,48 @@
+{
+  "name": "grant-manager-frontend",
+  "version": "0.1.0",
+  "description": "Odyssean Grant Management Tool - Frontend",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "type-check": "tsc --noEmit",
+    "deploy": "npm run build && gh-pages -d dist"
+  },
+  "dependencies": {
+    "@mantine/core": "^7.4.0",
+    "@mantine/dates": "^7.4.0",
+    "@mantine/form": "^7.4.0",
+    "@mantine/hooks": "^7.4.0",
+    "@mantine/notifications": "^7.4.0",
+    "@tabler/icons-react": "^3.35.0",
+    "@tanstack/react-query": "^5.17.9",
+    "@tanstack/react-query-devtools": "^5.17.9",
+    "axios": "^1.6.5",
+    "dayjs": "^1.11.10",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.21.1",
+    "zustand": "^4.4.7"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/react": "^18.2.48",
+    "@types/react-dom": "^18.2.18",
+    "@typescript-eslint/eslint-plugin": "^6.18.1",
+    "@typescript-eslint/parser": "^6.18.1",
+    "@vitejs/plugin-react": "^4.2.1",
+    "eslint": "^8.56.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "gh-pages": "^6.1.1",
+    "postcss": "^8.4.33",
+    "postcss-preset-mantine": "^1.12.0",
+    "postcss-simple-vars": "^7.0.1",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.11"
+  }
+}

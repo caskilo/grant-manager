@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Testing
+coverage/
+*.log
+
+# Production
+dist/
+build/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+*.pid
+*.seed
+*.pid.lock
+
+# Prisma
+prisma/migrations/dev.db*
+
+# Uploads (local dev)
+uploads/
