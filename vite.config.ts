@@ -14,6 +14,7 @@ export default defineConfig({
       '@': `${__dirname}/src`,
     },
   },
+  envPrefix: 'VITE_',
   server: {
     port: 5173,
     proxy: {
