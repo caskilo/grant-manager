@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Odyssean Grant Manager</title>
+    <script type="text/javascript">
+      // Store the redirect path and redirect to index.html
+      // This allows React Router to handle the route
+      sessionStorage.redirect = location.pathname + location.search + location.hash;
+      location.replace('/grant-manager/');
+    </script>
+  </head>
+  <body></body>
+</html>
