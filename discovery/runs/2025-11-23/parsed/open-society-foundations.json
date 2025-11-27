@@ -1,0 +1,34 @@
+{
+  "funder": {
+    "funderName": "Open Society Foundations",
+    "website": "https://www.opensocietyfoundations.org/",
+    "type": "US philanthropic network",
+    "focus": "Human rights, democracy, governance (controversial)",
+    "geography": "Global",
+    "notes": "Open data: Partial"
+  },
+  "opportunities": [
+    {
+      "externalId": "open-society-foundations-general",
+      "programName": "Open Society Foundations - General Funding",
+      "sourceUrl": "https://www.opensocietyfoundations.org/",
+      "declaredFocus": [
+        "Human rights",
+        "democracy",
+        "governance (controversial)"
+      ],
+      "geographies": [
+        "Global"
+      ],
+      "eligibleApplicantTypes": [
+        "CHARITY",
+        "UNIVERSITY",
+        "RESEARCH_INSTITUTE"
+      ],
+      "minAward": 10000,
+      "currency": "USD",
+      "rawDescription": "Open Society Foundations is a US philanthropic network focused on Human rights, democracy, governance (controversial). Geography: Global. Typical award range: $10k - $m.",
+      "status": "OPEN"
+    }
+  ]
+}

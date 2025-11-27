@@ -1,0 +1,33 @@
+{
+  "funder": {
+    "funderName": "Ford Foundation",
+    "website": "https://www.fordfoundation.org/",
+    "type": "US foundation",
+    "focus": "Social justice, democracy, inequality",
+    "geography": "Global",
+    "notes": "Open data: Partial"
+  },
+  "opportunities": [
+    {
+      "externalId": "ford-foundation-general",
+      "programName": "Ford Foundation - General Funding",
+      "sourceUrl": "https://www.fordfoundation.org/",
+      "declaredFocus": [
+        "Social justice",
+        "democracy",
+        "inequality"
+      ],
+      "geographies": [
+        "Global"
+      ],
+      "eligibleApplicantTypes": [
+        "CHARITY",
+        "NONPROFIT"
+      ],
+      "minAward": 50000,
+      "currency": "USD",
+      "rawDescription": "Ford Foundation is a US foundation focused on Social justice, democracy, inequality. Geography: Global. Typical award range: $50k - $m.",
+      "status": "OPEN"
+    }
+  ]
+}

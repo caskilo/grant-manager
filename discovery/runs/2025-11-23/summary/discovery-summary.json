@@ -1,0 +1,1586 @@
+{
+  "metadata": {
+    "runDate": "2025-11-23",
+    "sourceId": "catalogue_v1",
+    "sourceName": "Odyssean Funder Catalogue v1",
+    "startTime": "2025-11-23T19:46:06.999Z",
+    "status": "running"
+  },
+  "plan": {
+    "newFunders": [
+      {
+        "funder": {
+          "funderName": "Wellcome Trust",
+          "website": "https://wellcome.org/",
+          "type": "Foundation",
+          "focus": "Biomedical research, open research, health",
+          "geography": "Global (UK origin)",
+          "notes": "Open data: Yes (grants database)"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "UK Research and Innovation (UKRI)",
+          "website": "https://www.ukri.org/",
+          "type": "Public research funder",
+          "focus": "All research disciplines via councils (ESRC, AHRC, EPSRC, NERC, MRC, BBSRC)",
+          "geography": "UK",
+          "notes": "Open data: Yes (funding finder)"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "Paul Hamlyn Foundation",
+          "website": "https://www.phf.org.uk/",
+          "type": "Independent foundation",
+          "focus": "Arts, education, social justice",
+          "geography": "UK, India",
+          "notes": "Open data: Yes (grants database)"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "Esmee Fairbairn Foundation",
+          "website": "https://esmeefairbairn.org.uk/",
+          "type": "Foundation",
+          "focus": "Environment, social justice, communities",
+          "geography": "UK",
+          "notes": "Open data: Partial"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "Leverhulme Trust",
+          "website": "https://www.leverhulme.ac.uk/",
+          "type": "Trust",
+          "focus": "Research, fellowships, interdisciplinary",
+          "geography": "UK",
+          "notes": "Open data: No (schemes listed)"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "Gatsby Charitable Foundation",
+          "website": "https://www.gatsby.org.uk/",
+          "type": "Foundation",
+          "focus": "Science, policy, research, education",
+          "geography": "UK",
+          "notes": "Open data: Partial"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "Nesta",
+          "website": "https://www.nesta.org.uk/",
+          "type": "Innovation foundation/charity",
+          "focus": "Innovation, civic tech, research on futures",
+          "geography": "UK",
+          "notes": "Open data: Partial"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "Joseph Rowntree Foundation",
+          "website": "https://www.jrf.org.uk/",
+          "type": "Foundation",
+          "focus": "Poverty, social policy, housing",
+          "geography": "UK",
+          "notes": "Open data: Partial"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "Nuffield Foundation",
+          "website": "https://www.nuffieldfoundation.org/",
+          "type": "Trust",
+          "focus": "Social policy, education, welfare research",
+          "geography": "UK",
+          "notes": "Open data: Partial"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "Royal Society",
+          "website": "https://royalsociety.org/",
+          "type": "Learned society/funder",
+          "focus": "Natural sciences, fellowships, research",
+          "geography": "UK",
+          "notes": "Open data: Partial"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "British Academy",
+          "website": "https://www.thebritishacademy.ac.uk/",
+          "type": "Learned society",
+          "focus": "Humanities & social sciences research",
+          "geography": "UK",
+          "notes": "Open data: Partial"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "National Lottery Community Fund",
+          "website": "https://www.tnlcommunityfund.org.uk/",
+          "type": "Public lottery fund",
+          "focus": "Community projects, social initiatives",
+          "geography": "UK",
+          "notes": "Open data: Yes (some)"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "National Lottery Heritage Fund",
+          "website": "https://www.heritagefund.org.uk/",
+          "type": "Lottery fund",
+          "focus": "Heritage projects",
+          "geography": "UK",
+          "notes": "Open data: Partial"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "Innovate UK",
+          "website": "https://innovateuk.ukri.org/",
+          "type": "Public innovation funder",
+          "focus": "Innovation, applied research, tech",
+          "geography": "UK",
+          "notes": "Open data: Yes"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "European Commission — Horizon Europe / European Research Council (ERC)",
+          "website": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/home",
+          "type": "Public international funder",
+          "focus": "Collaborative research, frontier research",
+          "geography": "EU + associated (check eligibility)",
+          "notes": "Open data: Yes"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "Sloan Foundation (Alfred P. Sloan)",
+          "website": "https://sloan.org/",
+          "type": "US foundation",
+          "focus": "Science, technology, economics, long-termism in science",
+          "geography": "Global",
+          "notes": "Open data: Partial"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "John Templeton Foundation",
+          "website": "https://www.templeton.org/",
+          "type": "US foundation",
+          "focus": "Science, big questions, long-term futures, integrative research",
+          "geography": "Global",
+          "notes": "Open data: Partial"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "Open Philanthropy",
+          "website": "https://www.openphilanthropy.org/",
+          "type": "Philanthropic funder",
+          "focus": "Long-term future risks, AI governance, biosecurity",
+          "geography": "Global",
+          "notes": "Open data: Partial"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "GrantNav / 360Giving",
+          "website": "https://grantnav.threesixtygiving.org/",
+          "type": "Open grants database",
+          "focus": "Aggregated grants data from many UK funders",
+          "geography": "UK-centric",
+          "notes": "Open data: Yes (CSV/JSON/API)"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "Garfield Weston Foundation",
+          "website": "https://garfieldweston.org/",
+          "type": "Independent family foundation",
+          "focus": "Community, arts, education, welfare",
+          "geography": "UK",
+          "notes": "Open data: Partial"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "Wolfson Foundation",
+          "website": "https://www.wolfson.org.uk/",
+          "type": "Independent foundation",
+          "focus": "Research infrastructure, education, science",
+          "geography": "UK",
+          "notes": "Open data: Partial"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "Sainsbury Family Charitable Trusts (incl. Gatsby)",
+          "website": "https://www.sfct.org.uk/",
+          "type": "Family trusts",
+          "focus": "Science, education, civil society",
+          "geography": "UK",
+          "notes": "Open data: Partial"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "Baring Foundation",
+          "website": "https://www.baringfoundation.org.uk/",
+          "type": "Foundation",
+          "focus": "Arts, social justice, legal advice",
+          "geography": "UK",
+          "notes": "Open data: Partial"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "City Bridge Trust",
+          "website": "https://www.cityoflondon.gov.uk/services/grants-and-funding/city-bridge-trust",
+          "type": "Local/city funder (City of London)",
+          "focus": "London-based community projects, culture, resilience",
+          "geography": "London (UK)",
+          "notes": "Open data: Yes (360Giving)"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "Blavatnik Family Foundation",
+          "website": "https://blavatnikfoundation.org/",
+          "type": "Family foundation",
+          "focus": "Science, arts, education",
+          "geography": "UK/US/Global",
+          "notes": "Open data: Partial"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "The Rockefeller Foundation",
+          "website": "https://www.rockefellerfoundation.org/",
+          "type": "US foundation",
+          "focus": "Global development, resilience, systems change",
+          "geography": "Global",
+          "notes": "Open data: Partial"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "Ford Foundation",
+          "website": "https://www.fordfoundation.org/",
+          "type": "US foundation",
+          "focus": "Social justice, democracy, inequality",
+          "geography": "Global",
+          "notes": "Open data: Partial"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "Open Society Foundations",
+          "website": "https://www.opensocietyfoundations.org/",
+          "type": "US philanthropic network",
+          "focus": "Human rights, democracy, governance (controversial)",
+          "geography": "Global",
+          "notes": "Open data: Partial"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "Chan Zuckerberg Initiative",
+          "website": "https://www.chanzuckerberg.com/",
+          "type": "Philanthropic org",
+          "focus": "Science, education, community",
+          "geography": "Global",
+          "notes": "Open data: Partial"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "MacArthur Foundation",
+          "website": "https://www.macfound.org/",
+          "type": "US foundation",
+          "focus": "Global challenges, resilience, social justice",
+          "geography": "Global",
+          "notes": "Open data: Partial"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "Rockefeller Brothers Fund",
+          "website": "https://www.rbf.org/",
+          "type": "Family foundation",
+          "focus": "Sustainability, climate, systems change",
+          "geography": "Global",
+          "notes": "Open data: Partial"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "Dana Foundation",
+          "website": "https://dana.org/",
+          "type": "Foundation",
+          "focus": "Brain research, neuroscience, ethics of AI",
+          "geography": "US/global",
+          "notes": "Open data: Partial"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "Carnegie UK Trust",
+          "website": "https://www.carnegieuktrust.org.uk/",
+          "type": "Foundation",
+          "focus": "Social change, public policy, civic participation",
+          "geography": "UK",
+          "notes": "Open data: Partial"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "Royal Society for the Encouragement of Arts (RSA)",
+          "website": "https://www.thersa.org/",
+          "type": "Charitable org",
+          "focus": "Social progress, civic innovation",
+          "geography": "UK",
+          "notes": "Open data: Partial"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "AHRC (Arts & Humanities Research Council)",
+          "website": "https://ahrc.ukri.org/",
+          "type": "Research council (UKRI)",
+          "focus": "Arts & humanities research",
+          "geography": "UK",
+          "notes": "Open data: Yes (via UKRI)"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "ESRC (Economic & Social Research Council)",
+          "website": "https://esrc.ukri.org/",
+          "type": "Research council (UKRI)",
+          "focus": "Social science research",
+          "geography": "UK",
+          "notes": "Open data: Yes"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "MRC (Medical Research Council)",
+          "website": "https://mrc.ukri.org/",
+          "type": "Research council (UKRI)",
+          "focus": "Medical research",
+          "geography": "UK",
+          "notes": "Open data: Yes"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "EPSRC (Engineering & Physical Sciences Research Council)",
+          "website": "https://epsrc.ukri.org/",
+          "type": "Research council (UKRI)",
+          "focus": "Engineering & physical sciences",
+          "geography": "UK",
+          "notes": "Open data: Yes"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "NERC (Natural Environment Research Council)",
+          "website": "https://nerc.ukri.org/",
+          "type": "Research council (UKRI)",
+          "focus": "Environmental and earth sciences",
+          "geography": "UK",
+          "notes": "Open data: Yes"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "European Research Council (ERC)",
+          "website": "https://erc.europa.eu/",
+          "type": "EU research funder",
+          "focus": "Frontier research",
+          "geography": "EU & associated",
+          "notes": "Open data: Yes"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "Horizon Europe",
+          "website": "https://research-and-innovation.ec.europa.eu/funding/funding-opportunities/horizon-europe_en",
+          "type": "EU programme",
+          "focus": "Collaborative research & innovation",
+          "geography": "EU & associated",
+          "notes": "Open data: Yes"
+        },
+        "reason": "No matching funder found in database"
+      },
+      {
+        "funder": {
+          "funderName": "NIHR (National Institute for Health Research)",
+          "website": "https://www.nihr.ac.uk/",
+          "type": "Public funder",
+          "focus": "Health & applied research",
+          "geography": "UK",
+          "notes": "Open data: Partial"
+        },
+        "reason": "No matching funder found in database"
+      }
+    ],
+    "existingFunders": [],
+    "newOpportunities": [
+      {
+        "opportunity": {
+          "externalId": "wellcome-trust-general",
+          "programName": "Wellcome Trust - General Funding",
+          "sourceUrl": "https://wellcome.org/",
+          "declaredFocus": [
+            "Biomedical research",
+            "open research",
+            "health"
+          ],
+          "geographies": [
+            "Global"
+          ],
+          "eligibleApplicantTypes": [
+            "UNIVERSITY",
+            "RESEARCH_INSTITUTE",
+            "CHARITY",
+            "NONPROFIT"
+          ],
+          "minAward": 10000,
+          "maxAward": 100000000,
+          "currency": "GBP",
+          "rawDescription": "Wellcome Trust is a Foundation focused on Biomedical research, open research, health. Geography: Global (UK origin). Typical award range: £10k - £100m.",
+          "status": "OPEN"
+        },
+        "funderName": "Wellcome Trust",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "uk-research-and-innovation-ukri-general",
+          "programName": "UK Research and Innovation (UKRI) - General Funding",
+          "sourceUrl": "https://www.ukri.org/",
+          "declaredFocus": [
+            "All research disciplines via councils (ESRC",
+            "AHRC",
+            "EPSRC",
+            "NERC",
+            "MRC",
+            "BBSRC)"
+          ],
+          "geographies": [
+            "UK"
+          ],
+          "eligibleApplicantTypes": [
+            "UNIVERSITY",
+            "RESEARCH_INSTITUTE"
+          ],
+          "minAward": 10000,
+          "currency": "GBP",
+          "rawDescription": "UK Research and Innovation (UKRI) is a Public research funder focused on All research disciplines via councils (ESRC, AHRC, EPSRC, NERC, MRC, BBSRC). Geography: UK. Typical award range: £10k - £millions.",
+          "status": "OPEN"
+        },
+        "funderName": "UK Research and Innovation (UKRI)",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "paul-hamlyn-foundation-general",
+          "programName": "Paul Hamlyn Foundation - General Funding",
+          "sourceUrl": "https://www.phf.org.uk/",
+          "declaredFocus": [
+            "Arts",
+            "education",
+            "social justice"
+          ],
+          "geographies": [
+            "UK",
+            "India"
+          ],
+          "eligibleApplicantTypes": [
+            "CHARITY",
+            "NONPROFIT"
+          ],
+          "minAward": 10000,
+          "maxAward": 1000000,
+          "currency": "GBP",
+          "rawDescription": "Paul Hamlyn Foundation is a Independent foundation focused on Arts, education, social justice. Geography: UK, India. Typical award range: £10k - £1m.",
+          "status": "OPEN"
+        },
+        "funderName": "Paul Hamlyn Foundation",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "esmee-fairbairn-foundation-general",
+          "programName": "Esmee Fairbairn Foundation - General Funding",
+          "sourceUrl": "https://esmeefairbairn.org.uk/",
+          "declaredFocus": [
+            "Environment",
+            "social justice",
+            "communities"
+          ],
+          "geographies": [
+            "UK"
+          ],
+          "eligibleApplicantTypes": [
+            "CHARITY",
+            "NONPROFIT"
+          ],
+          "minAward": 10000,
+          "maxAward": 1000000,
+          "currency": "GBP",
+          "rawDescription": "Esmee Fairbairn Foundation is a Foundation focused on Environment, social justice, communities. Geography: UK. Typical award range: £10k - £1m.",
+          "status": "OPEN"
+        },
+        "funderName": "Esmee Fairbairn Foundation",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "leverhulme-trust-general",
+          "programName": "Leverhulme Trust - General Funding",
+          "sourceUrl": "https://www.leverhulme.ac.uk/",
+          "declaredFocus": [
+            "Research",
+            "fellowships",
+            "interdisciplinary"
+          ],
+          "geographies": [
+            "UK"
+          ],
+          "eligibleApplicantTypes": [
+            "UNIVERSITY",
+            "RESEARCH_INSTITUTE"
+          ],
+          "minAward": 10000,
+          "maxAward": 500000,
+          "currency": "GBP",
+          "rawDescription": "Leverhulme Trust is a Trust focused on Research, fellowships, interdisciplinary. Geography: UK. Typical award range: £10k - £500k.",
+          "status": "OPEN"
+        },
+        "funderName": "Leverhulme Trust",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "gatsby-charitable-foundation-general",
+          "programName": "Gatsby Charitable Foundation - General Funding",
+          "sourceUrl": "https://www.gatsby.org.uk/",
+          "declaredFocus": [
+            "Science",
+            "policy",
+            "research",
+            "education"
+          ],
+          "geographies": [
+            "UK"
+          ],
+          "eligibleApplicantTypes": [
+            "UNIVERSITY",
+            "RESEARCH_INSTITUTE",
+            "CHARITY",
+            "NONPROFIT"
+          ],
+          "minAward": 50000,
+          "currency": "GBP",
+          "rawDescription": "Gatsby Charitable Foundation is a Foundation focused on Science, policy, research, education. Geography: UK. Typical award range: £50k - £m.",
+          "status": "OPEN"
+        },
+        "funderName": "Gatsby Charitable Foundation",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "nesta-general",
+          "programName": "Nesta - General Funding",
+          "sourceUrl": "https://www.nesta.org.uk/",
+          "declaredFocus": [
+            "Innovation",
+            "civic tech",
+            "research on futures"
+          ],
+          "geographies": [
+            "UK"
+          ],
+          "eligibleApplicantTypes": [
+            "UNIVERSITY",
+            "RESEARCH_INSTITUTE",
+            "CHARITY",
+            "NONPROFIT",
+            "STARTUP",
+            "SMALL_BUSINESS"
+          ],
+          "minAward": 5000,
+          "maxAward": 500000,
+          "currency": "GBP",
+          "rawDescription": "Nesta is a Innovation foundation/charity focused on Innovation, civic tech, research on futures. Geography: UK. Typical award range: £5k - £500k.",
+          "status": "OPEN"
+        },
+        "funderName": "Nesta",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "joseph-rowntree-foundation-general",
+          "programName": "Joseph Rowntree Foundation - General Funding",
+          "sourceUrl": "https://www.jrf.org.uk/",
+          "declaredFocus": [
+            "Poverty",
+            "social policy",
+            "housing"
+          ],
+          "geographies": [
+            "UK"
+          ],
+          "eligibleApplicantTypes": [
+            "CHARITY",
+            "NONPROFIT"
+          ],
+          "minAward": 10000,
+          "maxAward": 1000000,
+          "currency": "GBP",
+          "rawDescription": "Joseph Rowntree Foundation is a Foundation focused on Poverty, social policy, housing. Geography: UK. Typical award range: £10k - £1m.",
+          "status": "OPEN"
+        },
+        "funderName": "Joseph Rowntree Foundation",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "nuffield-foundation-general",
+          "programName": "Nuffield Foundation - General Funding",
+          "sourceUrl": "https://www.nuffieldfoundation.org/",
+          "declaredFocus": [
+            "Social policy",
+            "education",
+            "welfare research"
+          ],
+          "geographies": [
+            "UK"
+          ],
+          "eligibleApplicantTypes": [
+            "UNIVERSITY",
+            "RESEARCH_INSTITUTE",
+            "CHARITY",
+            "NONPROFIT"
+          ],
+          "minAward": 50000,
+          "maxAward": 1000000,
+          "currency": "GBP",
+          "rawDescription": "Nuffield Foundation is a Trust focused on Social policy, education, welfare research. Geography: UK. Typical award range: £50k - £1m.",
+          "status": "OPEN"
+        },
+        "funderName": "Nuffield Foundation",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "royal-society-general",
+          "programName": "Royal Society - General Funding",
+          "sourceUrl": "https://royalsociety.org/",
+          "declaredFocus": [
+            "Natural sciences",
+            "fellowships",
+            "research"
+          ],
+          "geographies": [
+            "UK"
+          ],
+          "eligibleApplicantTypes": [
+            "UNIVERSITY",
+            "RESEARCH_INSTITUTE"
+          ],
+          "minAward": 10000,
+          "currency": "GBP",
+          "rawDescription": "Royal Society is a Learned society/funder focused on Natural sciences, fellowships, research. Geography: UK. Typical award range: £10k - £m.",
+          "status": "OPEN"
+        },
+        "funderName": "Royal Society",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "british-academy-general",
+          "programName": "British Academy - General Funding",
+          "sourceUrl": "https://www.thebritishacademy.ac.uk/",
+          "declaredFocus": [
+            "Humanities & social sciences research"
+          ],
+          "geographies": [
+            "UK"
+          ],
+          "eligibleApplicantTypes": [
+            "UNIVERSITY",
+            "RESEARCH_INSTITUTE",
+            "CHARITY",
+            "NONPROFIT"
+          ],
+          "minAward": 10000,
+          "maxAward": 500000,
+          "currency": "GBP",
+          "rawDescription": "British Academy is a Learned society focused on Humanities & social sciences research. Geography: UK. Typical award range: £10k - £500k.",
+          "status": "OPEN"
+        },
+        "funderName": "British Academy",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "national-lottery-community-fund-general",
+          "programName": "National Lottery Community Fund - General Funding",
+          "sourceUrl": "https://www.tnlcommunityfund.org.uk/",
+          "declaredFocus": [
+            "Community projects",
+            "social initiatives"
+          ],
+          "geographies": [
+            "UK"
+          ],
+          "eligibleApplicantTypes": [
+            "CHARITY",
+            "NONPROFIT"
+          ],
+          "minAward": 1000,
+          "currency": "GBP",
+          "rawDescription": "National Lottery Community Fund is a Public lottery fund focused on Community projects, social initiatives. Geography: UK. Typical award range: £1k - £m.",
+          "status": "OPEN"
+        },
+        "funderName": "National Lottery Community Fund",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "national-lottery-heritage-fund-general",
+          "programName": "National Lottery Heritage Fund - General Funding",
+          "sourceUrl": "https://www.heritagefund.org.uk/",
+          "declaredFocus": [
+            "Heritage projects"
+          ],
+          "geographies": [
+            "UK"
+          ],
+          "eligibleApplicantTypes": [
+            "CHARITY",
+            "UNIVERSITY",
+            "RESEARCH_INSTITUTE"
+          ],
+          "minAward": 5000,
+          "currency": "GBP",
+          "rawDescription": "National Lottery Heritage Fund is a Lottery fund focused on Heritage projects. Geography: UK. Typical award range: £5k - £millions.",
+          "status": "OPEN"
+        },
+        "funderName": "National Lottery Heritage Fund",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "innovate-uk-general",
+          "programName": "Innovate UK - General Funding",
+          "sourceUrl": "https://innovateuk.ukri.org/",
+          "declaredFocus": [
+            "Innovation",
+            "applied research",
+            "tech"
+          ],
+          "geographies": [
+            "UK"
+          ],
+          "eligibleApplicantTypes": [
+            "UNIVERSITY",
+            "RESEARCH_INSTITUTE",
+            "STARTUP",
+            "SMALL_BUSINESS"
+          ],
+          "minAward": 25000,
+          "currency": "GBP",
+          "rawDescription": "Innovate UK is a Public innovation funder focused on Innovation, applied research, tech. Geography: UK. Typical award range: £25k - £m.",
+          "status": "OPEN"
+        },
+        "funderName": "Innovate UK",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "european-commission-horizon-europe-european-research-council-erc-general",
+          "programName": "European Commission — Horizon Europe / European Research Council (ERC) - General Funding",
+          "sourceUrl": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/home",
+          "declaredFocus": [
+            "Collaborative research",
+            "frontier research"
+          ],
+          "geographies": [
+            "EU + associated"
+          ],
+          "eligibleApplicantTypes": [
+            "UNIVERSITY",
+            "RESEARCH_INSTITUTE"
+          ],
+          "minAward": 100000,
+          "currency": "EUR",
+          "rawDescription": "European Commission — Horizon Europe / European Research Council (ERC) is a Public international funder focused on Collaborative research, frontier research. Geography: EU + associated (check eligibility). Typical award range: €100k - €m+.",
+          "status": "OPEN"
+        },
+        "funderName": "European Commission — Horizon Europe / European Research Council (ERC)",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "sloan-foundation-alfred-p-sloan-general",
+          "programName": "Sloan Foundation (Alfred P. Sloan) - General Funding",
+          "sourceUrl": "https://sloan.org/",
+          "declaredFocus": [
+            "Science",
+            "technology",
+            "economics",
+            "long-termism in science"
+          ],
+          "geographies": [
+            "Global"
+          ],
+          "eligibleApplicantTypes": [
+            "UNIVERSITY",
+            "RESEARCH_INSTITUTE",
+            "CHARITY",
+            "NONPROFIT",
+            "STARTUP",
+            "SMALL_BUSINESS"
+          ],
+          "minAward": 50000,
+          "currency": "USD",
+          "rawDescription": "Sloan Foundation (Alfred P. Sloan) is a US foundation focused on Science, technology, economics, long-termism in science. Geography: Global. Typical award range: $50k - $m.",
+          "status": "OPEN"
+        },
+        "funderName": "Sloan Foundation (Alfred P. Sloan)",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "john-templeton-foundation-general",
+          "programName": "John Templeton Foundation - General Funding",
+          "sourceUrl": "https://www.templeton.org/",
+          "declaredFocus": [
+            "Science",
+            "big questions",
+            "long-term futures",
+            "integrative research"
+          ],
+          "geographies": [
+            "Global"
+          ],
+          "eligibleApplicantTypes": [
+            "UNIVERSITY",
+            "RESEARCH_INSTITUTE",
+            "CHARITY",
+            "NONPROFIT"
+          ],
+          "minAward": 50000,
+          "currency": "USD",
+          "rawDescription": "John Templeton Foundation is a US foundation focused on Science, big questions, long-term futures, integrative research. Geography: Global. Typical award range: $50k - $m.",
+          "status": "OPEN"
+        },
+        "funderName": "John Templeton Foundation",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "open-philanthropy-general",
+          "programName": "Open Philanthropy - General Funding",
+          "sourceUrl": "https://www.openphilanthropy.org/",
+          "declaredFocus": [
+            "Long-term future risks",
+            "AI governance",
+            "biosecurity"
+          ],
+          "geographies": [
+            "Global"
+          ],
+          "eligibleApplicantTypes": [
+            "CHARITY",
+            "UNIVERSITY",
+            "RESEARCH_INSTITUTE"
+          ],
+          "minAward": 50000,
+          "currency": "USD",
+          "rawDescription": "Open Philanthropy is a Philanthropic funder focused on Long-term future risks, AI governance, biosecurity. Geography: Global. Typical award range: $50k - $m.",
+          "status": "OPEN"
+        },
+        "funderName": "Open Philanthropy",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "grantnav-360giving-general",
+          "programName": "GrantNav / 360Giving - General Funding",
+          "sourceUrl": "https://grantnav.threesixtygiving.org/",
+          "declaredFocus": [
+            "Aggregated grants data from many UK funders"
+          ],
+          "geographies": [
+            "UK-centric"
+          ],
+          "eligibleApplicantTypes": [
+            "CHARITY",
+            "UNIVERSITY",
+            "RESEARCH_INSTITUTE"
+          ],
+          "currency": "GBP",
+          "rawDescription": "GrantNav / 360Giving is a Open grants database focused on Aggregated grants data from many UK funders. Geography: UK-centric. Typical award range: N/A.",
+          "status": "OPEN"
+        },
+        "funderName": "GrantNav / 360Giving",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "garfield-weston-foundation-general",
+          "programName": "Garfield Weston Foundation - General Funding",
+          "sourceUrl": "https://garfieldweston.org/",
+          "declaredFocus": [
+            "Community",
+            "arts",
+            "education",
+            "welfare"
+          ],
+          "geographies": [
+            "UK"
+          ],
+          "eligibleApplicantTypes": [
+            "CHARITY",
+            "NONPROFIT"
+          ],
+          "minAward": 5000,
+          "maxAward": 1000000,
+          "currency": "GBP",
+          "rawDescription": "Garfield Weston Foundation is a Independent family foundation focused on Community, arts, education, welfare. Geography: UK. Typical award range: £5k - £1m.",
+          "status": "OPEN"
+        },
+        "funderName": "Garfield Weston Foundation",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "wolfson-foundation-general",
+          "programName": "Wolfson Foundation - General Funding",
+          "sourceUrl": "https://www.wolfson.org.uk/",
+          "declaredFocus": [
+            "Research infrastructure",
+            "education",
+            "science"
+          ],
+          "geographies": [
+            "UK"
+          ],
+          "eligibleApplicantTypes": [
+            "UNIVERSITY",
+            "RESEARCH_INSTITUTE",
+            "CHARITY",
+            "NONPROFIT"
+          ],
+          "minAward": 25000,
+          "currency": "GBP",
+          "rawDescription": "Wolfson Foundation is a Independent foundation focused on Research infrastructure, education, science. Geography: UK. Typical award range: £25k - £m.",
+          "status": "OPEN"
+        },
+        "funderName": "Wolfson Foundation",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "sainsbury-family-charitable-trusts-incl-gatsby-general",
+          "programName": "Sainsbury Family Charitable Trusts (incl. Gatsby) - General Funding",
+          "sourceUrl": "https://www.sfct.org.uk/",
+          "declaredFocus": [
+            "Science",
+            "education",
+            "civil society"
+          ],
+          "geographies": [
+            "UK"
+          ],
+          "eligibleApplicantTypes": [
+            "UNIVERSITY",
+            "RESEARCH_INSTITUTE"
+          ],
+          "minAward": 10000,
+          "currency": "GBP",
+          "rawDescription": "Sainsbury Family Charitable Trusts (incl. Gatsby) is a Family trusts focused on Science, education, civil society. Geography: UK. Typical award range: £10k - £m.",
+          "status": "OPEN"
+        },
+        "funderName": "Sainsbury Family Charitable Trusts (incl. Gatsby)",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "baring-foundation-general",
+          "programName": "Baring Foundation - General Funding",
+          "sourceUrl": "https://www.baringfoundation.org.uk/",
+          "declaredFocus": [
+            "Arts",
+            "social justice",
+            "legal advice"
+          ],
+          "geographies": [
+            "UK"
+          ],
+          "eligibleApplicantTypes": [
+            "CHARITY",
+            "NONPROFIT"
+          ],
+          "minAward": 5000,
+          "maxAward": 500000,
+          "currency": "GBP",
+          "rawDescription": "Baring Foundation is a Foundation focused on Arts, social justice, legal advice. Geography: UK. Typical award range: £5k - £500k.",
+          "status": "OPEN"
+        },
+        "funderName": "Baring Foundation",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "city-bridge-trust-general",
+          "programName": "City Bridge Trust - General Funding",
+          "sourceUrl": "https://www.cityoflondon.gov.uk/services/grants-and-funding/city-bridge-trust",
+          "declaredFocus": [
+            "London-based community projects",
+            "culture",
+            "resilience"
+          ],
+          "geographies": [
+            "London"
+          ],
+          "eligibleApplicantTypes": [
+            "CHARITY",
+            "NONPROFIT"
+          ],
+          "minAward": 5000,
+          "maxAward": 500000,
+          "currency": "GBP",
+          "rawDescription": "City Bridge Trust is a Local/city funder (City of London) focused on London-based community projects, culture, resilience. Geography: London (UK). Typical award range: £5k - £500k.",
+          "status": "OPEN"
+        },
+        "funderName": "City Bridge Trust",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "blavatnik-family-foundation-general",
+          "programName": "Blavatnik Family Foundation - General Funding",
+          "sourceUrl": "https://blavatnikfoundation.org/",
+          "declaredFocus": [
+            "Science",
+            "arts",
+            "education"
+          ],
+          "geographies": [
+            "UK",
+            "US",
+            "Global"
+          ],
+          "eligibleApplicantTypes": [
+            "UNIVERSITY",
+            "RESEARCH_INSTITUTE",
+            "CHARITY",
+            "NONPROFIT"
+          ],
+          "minAward": 10000,
+          "currency": "GBP",
+          "rawDescription": "Blavatnik Family Foundation is a Family foundation focused on Science, arts, education. Geography: UK/US/Global. Typical award range: £10k - £m.",
+          "status": "OPEN"
+        },
+        "funderName": "Blavatnik Family Foundation",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "the-rockefeller-foundation-general",
+          "programName": "The Rockefeller Foundation - General Funding",
+          "sourceUrl": "https://www.rockefellerfoundation.org/",
+          "declaredFocus": [
+            "Global development",
+            "resilience",
+            "systems change"
+          ],
+          "geographies": [
+            "Global"
+          ],
+          "eligibleApplicantTypes": [
+            "CHARITY",
+            "NONPROFIT"
+          ],
+          "minAward": 50000,
+          "currency": "USD",
+          "rawDescription": "The Rockefeller Foundation is a US foundation focused on Global development, resilience, systems change. Geography: Global. Typical award range: $50k - $m.",
+          "status": "OPEN"
+        },
+        "funderName": "The Rockefeller Foundation",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "ford-foundation-general",
+          "programName": "Ford Foundation - General Funding",
+          "sourceUrl": "https://www.fordfoundation.org/",
+          "declaredFocus": [
+            "Social justice",
+            "democracy",
+            "inequality"
+          ],
+          "geographies": [
+            "Global"
+          ],
+          "eligibleApplicantTypes": [
+            "CHARITY",
+            "NONPROFIT"
+          ],
+          "minAward": 50000,
+          "currency": "USD",
+          "rawDescription": "Ford Foundation is a US foundation focused on Social justice, democracy, inequality. Geography: Global. Typical award range: $50k - $m.",
+          "status": "OPEN"
+        },
+        "funderName": "Ford Foundation",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "open-society-foundations-general",
+          "programName": "Open Society Foundations - General Funding",
+          "sourceUrl": "https://www.opensocietyfoundations.org/",
+          "declaredFocus": [
+            "Human rights",
+            "democracy",
+            "governance (controversial)"
+          ],
+          "geographies": [
+            "Global"
+          ],
+          "eligibleApplicantTypes": [
+            "CHARITY",
+            "UNIVERSITY",
+            "RESEARCH_INSTITUTE"
+          ],
+          "minAward": 10000,
+          "currency": "USD",
+          "rawDescription": "Open Society Foundations is a US philanthropic network focused on Human rights, democracy, governance (controversial). Geography: Global. Typical award range: $10k - $m.",
+          "status": "OPEN"
+        },
+        "funderName": "Open Society Foundations",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "chan-zuckerberg-initiative-general",
+          "programName": "Chan Zuckerberg Initiative - General Funding",
+          "sourceUrl": "https://www.chanzuckerberg.com/",
+          "declaredFocus": [
+            "Science",
+            "education",
+            "community"
+          ],
+          "geographies": [
+            "Global"
+          ],
+          "eligibleApplicantTypes": [
+            "UNIVERSITY",
+            "RESEARCH_INSTITUTE",
+            "CHARITY",
+            "NONPROFIT"
+          ],
+          "minAward": 50000,
+          "currency": "USD",
+          "rawDescription": "Chan Zuckerberg Initiative is a Philanthropic org focused on Science, education, community. Geography: Global. Typical award range: $50k - $m.",
+          "status": "OPEN"
+        },
+        "funderName": "Chan Zuckerberg Initiative",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "macarthur-foundation-general",
+          "programName": "MacArthur Foundation - General Funding",
+          "sourceUrl": "https://www.macfound.org/",
+          "declaredFocus": [
+            "Global challenges",
+            "resilience",
+            "social justice"
+          ],
+          "geographies": [
+            "Global"
+          ],
+          "eligibleApplicantTypes": [
+            "CHARITY",
+            "NONPROFIT"
+          ],
+          "minAward": 50000,
+          "currency": "USD",
+          "rawDescription": "MacArthur Foundation is a US foundation focused on Global challenges, resilience, social justice. Geography: Global. Typical award range: $50k - $m.",
+          "status": "OPEN"
+        },
+        "funderName": "MacArthur Foundation",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "rockefeller-brothers-fund-general",
+          "programName": "Rockefeller Brothers Fund - General Funding",
+          "sourceUrl": "https://www.rbf.org/",
+          "declaredFocus": [
+            "Sustainability",
+            "climate",
+            "systems change"
+          ],
+          "geographies": [
+            "Global"
+          ],
+          "eligibleApplicantTypes": [
+            "CHARITY",
+            "NONPROFIT"
+          ],
+          "minAward": 50000,
+          "currency": "USD",
+          "rawDescription": "Rockefeller Brothers Fund is a Family foundation focused on Sustainability, climate, systems change. Geography: Global. Typical award range: $50k - $m.",
+          "status": "OPEN"
+        },
+        "funderName": "Rockefeller Brothers Fund",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "dana-foundation-general",
+          "programName": "Dana Foundation - General Funding",
+          "sourceUrl": "https://dana.org/",
+          "declaredFocus": [
+            "Brain research",
+            "neuroscience",
+            "ethics of AI"
+          ],
+          "geographies": [
+            "US",
+            "global"
+          ],
+          "eligibleApplicantTypes": [
+            "UNIVERSITY",
+            "RESEARCH_INSTITUTE",
+            "CHARITY",
+            "NONPROFIT"
+          ],
+          "minAward": 10000,
+          "maxAward": 500000,
+          "currency": "USD",
+          "rawDescription": "Dana Foundation is a Foundation focused on Brain research, neuroscience, ethics of AI. Geography: US/global. Typical award range: $10k - $500k.",
+          "status": "OPEN"
+        },
+        "funderName": "Dana Foundation",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "carnegie-uk-trust-general",
+          "programName": "Carnegie UK Trust - General Funding",
+          "sourceUrl": "https://www.carnegieuktrust.org.uk/",
+          "declaredFocus": [
+            "Social change",
+            "public policy",
+            "civic participation"
+          ],
+          "geographies": [
+            "UK"
+          ],
+          "eligibleApplicantTypes": [
+            "CHARITY",
+            "NONPROFIT"
+          ],
+          "minAward": 10000,
+          "maxAward": 500000,
+          "currency": "GBP",
+          "rawDescription": "Carnegie UK Trust is a Foundation focused on Social change, public policy, civic participation. Geography: UK. Typical award range: £10k - £500k.",
+          "status": "OPEN"
+        },
+        "funderName": "Carnegie UK Trust",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "royal-society-for-the-encouragement-of-arts-rsa-general",
+          "programName": "Royal Society for the Encouragement of Arts (RSA) - General Funding",
+          "sourceUrl": "https://www.thersa.org/",
+          "declaredFocus": [
+            "Social progress",
+            "civic innovation"
+          ],
+          "geographies": [
+            "UK"
+          ],
+          "eligibleApplicantTypes": [
+            "CHARITY",
+            "NONPROFIT",
+            "STARTUP",
+            "SMALL_BUSINESS"
+          ],
+          "currency": "GBP",
+          "rawDescription": "Royal Society for the Encouragement of Arts (RSA) is a Charitable org focused on Social progress, civic innovation. Geography: UK. Typical award range: Small grants, fellowships.",
+          "status": "OPEN"
+        },
+        "funderName": "Royal Society for the Encouragement of Arts (RSA)",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "ahrc-arts-humanities-research-council-general",
+          "programName": "AHRC (Arts & Humanities Research Council) - General Funding",
+          "sourceUrl": "https://ahrc.ukri.org/",
+          "declaredFocus": [
+            "Arts & humanities research"
+          ],
+          "geographies": [
+            "UK"
+          ],
+          "eligibleApplicantTypes": [
+            "UNIVERSITY",
+            "RESEARCH_INSTITUTE"
+          ],
+          "minAward": 10000,
+          "maxAward": 1000000,
+          "currency": "GBP",
+          "rawDescription": "AHRC (Arts & Humanities Research Council) is a Research council (UKRI) focused on Arts & humanities research. Geography: UK. Typical award range: £10k - £1m+.",
+          "status": "OPEN"
+        },
+        "funderName": "AHRC (Arts & Humanities Research Council)",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "esrc-economic-social-research-council-general",
+          "programName": "ESRC (Economic & Social Research Council) - General Funding",
+          "sourceUrl": "https://esrc.ukri.org/",
+          "declaredFocus": [
+            "Social science research"
+          ],
+          "geographies": [
+            "UK"
+          ],
+          "eligibleApplicantTypes": [
+            "UNIVERSITY",
+            "RESEARCH_INSTITUTE",
+            "CHARITY",
+            "NONPROFIT"
+          ],
+          "minAward": 10000,
+          "maxAward": 1000000,
+          "currency": "GBP",
+          "rawDescription": "ESRC (Economic & Social Research Council) is a Research council (UKRI) focused on Social science research. Geography: UK. Typical award range: £10k - £1m+.",
+          "status": "OPEN"
+        },
+        "funderName": "ESRC (Economic & Social Research Council)",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "mrc-medical-research-council-general",
+          "programName": "MRC (Medical Research Council) - General Funding",
+          "sourceUrl": "https://mrc.ukri.org/",
+          "declaredFocus": [
+            "Medical research"
+          ],
+          "geographies": [
+            "UK"
+          ],
+          "eligibleApplicantTypes": [
+            "UNIVERSITY",
+            "RESEARCH_INSTITUTE"
+          ],
+          "minAward": 50000,
+          "currency": "GBP",
+          "rawDescription": "MRC (Medical Research Council) is a Research council (UKRI) focused on Medical research. Geography: UK. Typical award range: £50k - £m.",
+          "status": "OPEN"
+        },
+        "funderName": "MRC (Medical Research Council)",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "epsrc-engineering-physical-sciences-research-council-general",
+          "programName": "EPSRC (Engineering & Physical Sciences Research Council) - General Funding",
+          "sourceUrl": "https://epsrc.ukri.org/",
+          "declaredFocus": [
+            "Engineering & physical sciences"
+          ],
+          "geographies": [
+            "UK"
+          ],
+          "eligibleApplicantTypes": [
+            "UNIVERSITY",
+            "RESEARCH_INSTITUTE"
+          ],
+          "minAward": 10000,
+          "currency": "GBP",
+          "rawDescription": "EPSRC (Engineering & Physical Sciences Research Council) is a Research council (UKRI) focused on Engineering & physical sciences. Geography: UK. Typical award range: £10k - £m.",
+          "status": "OPEN"
+        },
+        "funderName": "EPSRC (Engineering & Physical Sciences Research Council)",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "nerc-natural-environment-research-council-general",
+          "programName": "NERC (Natural Environment Research Council) - General Funding",
+          "sourceUrl": "https://nerc.ukri.org/",
+          "declaredFocus": [
+            "Environmental and earth sciences"
+          ],
+          "geographies": [
+            "UK"
+          ],
+          "eligibleApplicantTypes": [
+            "UNIVERSITY",
+            "RESEARCH_INSTITUTE"
+          ],
+          "minAward": 10000,
+          "currency": "GBP",
+          "rawDescription": "NERC (Natural Environment Research Council) is a Research council (UKRI) focused on Environmental and earth sciences. Geography: UK. Typical award range: £10k - £m.",
+          "status": "OPEN"
+        },
+        "funderName": "NERC (Natural Environment Research Council)",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "european-research-council-erc-general",
+          "programName": "European Research Council (ERC) - General Funding",
+          "sourceUrl": "https://erc.europa.eu/",
+          "declaredFocus": [
+            "Frontier research"
+          ],
+          "geographies": [
+            "EU & associated"
+          ],
+          "eligibleApplicantTypes": [
+            "UNIVERSITY",
+            "RESEARCH_INSTITUTE"
+          ],
+          "minAward": 150000,
+          "maxAward": 3000000,
+          "currency": "EUR",
+          "rawDescription": "European Research Council (ERC) is a EU research funder focused on Frontier research. Geography: EU & associated. Typical award range: €150k - €3m+.",
+          "status": "OPEN"
+        },
+        "funderName": "European Research Council (ERC)",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "horizon-europe-general",
+          "programName": "Horizon Europe - General Funding",
+          "sourceUrl": "https://research-and-innovation.ec.europa.eu/funding/funding-opportunities/horizon-europe_en",
+          "declaredFocus": [
+            "Collaborative research & innovation"
+          ],
+          "geographies": [
+            "EU & associated"
+          ],
+          "eligibleApplicantTypes": [
+            "UNIVERSITY",
+            "RESEARCH_INSTITUTE",
+            "STARTUP",
+            "SMALL_BUSINESS"
+          ],
+          "minAward": 100000,
+          "currency": "EUR",
+          "rawDescription": "Horizon Europe is a EU programme focused on Collaborative research & innovation. Geography: EU & associated. Typical award range: €100k - €m+.",
+          "status": "OPEN"
+        },
+        "funderName": "Horizon Europe",
+        "reason": "No matching opportunity found in database"
+      },
+      {
+        "opportunity": {
+          "externalId": "nihr-national-institute-for-health-research-general",
+          "programName": "NIHR (National Institute for Health Research) - General Funding",
+          "sourceUrl": "https://www.nihr.ac.uk/",
+          "declaredFocus": [
+            "Health & applied research"
+          ],
+          "geographies": [
+            "UK"
+          ],
+          "eligibleApplicantTypes": [
+            "UNIVERSITY",
+            "RESEARCH_INSTITUTE"
+          ],
+          "minAward": 50000,
+          "currency": "GBP",
+          "rawDescription": "NIHR (National Institute for Health Research) is a Public funder focused on Health & applied research. Geography: UK. Typical award range: £50k - £m.",
+          "status": "OPEN"
+        },
+        "funderName": "NIHR (National Institute for Health Research)",
+        "reason": "No matching opportunity found in database"
+      }
+    ],
+    "updatedOpportunities": [],
+    "unchangedOpportunities": []
+  },
+  "stats": {
+    "totalFundersInSource": 42,
+    "newFunders": 42,
+    "existingFunders": 0,
+    "totalOpportunities": 42,
+    "newOpportunities": 42,
+    "updatedOpportunities": 0,
+    "unchangedOpportunities": 0
+  },
+  "recommendations": [
+    "Create 42 new funders in the database",
+    "Create 42 new opportunities in the database",
+    "Trigger scoring and eligibility checks for new opportunities"
+  ],
+  "notes": [
+    "Catalogue contains 42 funders with basic metadata",
+    "Opportunities are placeholder entries - real opportunities should be scraped from funder websites"
+  ]
+}

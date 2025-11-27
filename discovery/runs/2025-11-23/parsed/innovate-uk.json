@@ -1,0 +1,35 @@
+{
+  "funder": {
+    "funderName": "Innovate UK",
+    "website": "https://innovateuk.ukri.org/",
+    "type": "Public innovation funder",
+    "focus": "Innovation, applied research, tech",
+    "geography": "UK",
+    "notes": "Open data: Yes"
+  },
+  "opportunities": [
+    {
+      "externalId": "innovate-uk-general",
+      "programName": "Innovate UK - General Funding",
+      "sourceUrl": "https://innovateuk.ukri.org/",
+      "declaredFocus": [
+        "Innovation",
+        "applied research",
+        "tech"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "eligibleApplicantTypes": [
+        "UNIVERSITY",
+        "RESEARCH_INSTITUTE",
+        "STARTUP",
+        "SMALL_BUSINESS"
+      ],
+      "minAward": 25000,
+      "currency": "GBP",
+      "rawDescription": "Innovate UK is a Public innovation funder focused on Innovation, applied research, tech. Geography: UK. Typical award range: £25k - £m.",
+      "status": "OPEN"
+    }
+  ]
+}

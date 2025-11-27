@@ -1,0 +1,34 @@
+{
+  "funder": {
+    "funderName": "Carnegie UK Trust",
+    "website": "https://www.carnegieuktrust.org.uk/",
+    "type": "Foundation",
+    "focus": "Social change, public policy, civic participation",
+    "geography": "UK",
+    "notes": "Open data: Partial"
+  },
+  "opportunities": [
+    {
+      "externalId": "carnegie-uk-trust-general",
+      "programName": "Carnegie UK Trust - General Funding",
+      "sourceUrl": "https://www.carnegieuktrust.org.uk/",
+      "declaredFocus": [
+        "Social change",
+        "public policy",
+        "civic participation"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "eligibleApplicantTypes": [
+        "CHARITY",
+        "NONPROFIT"
+      ],
+      "minAward": 10000,
+      "maxAward": 500000,
+      "currency": "GBP",
+      "rawDescription": "Carnegie UK Trust is a Foundation focused on Social change, public policy, civic participation. Geography: UK. Typical award range: £10k - £500k.",
+      "status": "OPEN"
+    }
+  ]
+}

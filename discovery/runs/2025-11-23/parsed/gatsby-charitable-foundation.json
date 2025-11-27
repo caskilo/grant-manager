@@ -1,0 +1,36 @@
+{
+  "funder": {
+    "funderName": "Gatsby Charitable Foundation",
+    "website": "https://www.gatsby.org.uk/",
+    "type": "Foundation",
+    "focus": "Science, policy, research, education",
+    "geography": "UK",
+    "notes": "Open data: Partial"
+  },
+  "opportunities": [
+    {
+      "externalId": "gatsby-charitable-foundation-general",
+      "programName": "Gatsby Charitable Foundation - General Funding",
+      "sourceUrl": "https://www.gatsby.org.uk/",
+      "declaredFocus": [
+        "Science",
+        "policy",
+        "research",
+        "education"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "eligibleApplicantTypes": [
+        "UNIVERSITY",
+        "RESEARCH_INSTITUTE",
+        "CHARITY",
+        "NONPROFIT"
+      ],
+      "minAward": 50000,
+      "currency": "GBP",
+      "rawDescription": "Gatsby Charitable Foundation is a Foundation focused on Science, policy, research, education. Geography: UK. Typical award range: £50k - £m.",
+      "status": "OPEN"
+    }
+  ]
+}
