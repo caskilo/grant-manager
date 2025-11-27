@@ -1,0 +1,38 @@
+{
+  "funder": {
+    "funderName": "Nesta",
+    "website": "https://www.nesta.org.uk/",
+    "type": "Innovation foundation/charity",
+    "focus": "Innovation, civic tech, research on futures",
+    "geography": "UK",
+    "notes": "Open data: Partial"
+  },
+  "opportunities": [
+    {
+      "externalId": "nesta-general",
+      "programName": "Nesta - General Funding",
+      "sourceUrl": "https://www.nesta.org.uk/",
+      "declaredFocus": [
+        "Innovation",
+        "civic tech",
+        "research on futures"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "eligibleApplicantTypes": [
+        "UNIVERSITY",
+        "RESEARCH_INSTITUTE",
+        "CHARITY",
+        "NONPROFIT",
+        "STARTUP",
+        "SMALL_BUSINESS"
+      ],
+      "minAward": 5000,
+      "maxAward": 500000,
+      "currency": "GBP",
+      "rawDescription": "Nesta is a Innovation foundation/charity focused on Innovation, civic tech, research on futures. Geography: UK. Typical award range: £5k - £500k.",
+      "status": "OPEN"
+    }
+  ]
+}

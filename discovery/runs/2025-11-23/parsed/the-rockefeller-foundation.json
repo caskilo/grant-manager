@@ -1,0 +1,33 @@
+{
+  "funder": {
+    "funderName": "The Rockefeller Foundation",
+    "website": "https://www.rockefellerfoundation.org/",
+    "type": "US foundation",
+    "focus": "Global development, resilience, systems change",
+    "geography": "Global",
+    "notes": "Open data: Partial"
+  },
+  "opportunities": [
+    {
+      "externalId": "the-rockefeller-foundation-general",
+      "programName": "The Rockefeller Foundation - General Funding",
+      "sourceUrl": "https://www.rockefellerfoundation.org/",
+      "declaredFocus": [
+        "Global development",
+        "resilience",
+        "systems change"
+      ],
+      "geographies": [
+        "Global"
+      ],
+      "eligibleApplicantTypes": [
+        "CHARITY",
+        "NONPROFIT"
+      ],
+      "minAward": 50000,
+      "currency": "USD",
+      "rawDescription": "The Rockefeller Foundation is a US foundation focused on Global development, resilience, systems change. Geography: Global. Typical award range: $50k - $m.",
+      "status": "OPEN"
+    }
+  ]
+}

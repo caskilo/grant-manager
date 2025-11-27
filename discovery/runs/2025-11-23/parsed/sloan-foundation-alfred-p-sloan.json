@@ -1,0 +1,38 @@
+{
+  "funder": {
+    "funderName": "Sloan Foundation (Alfred P. Sloan)",
+    "website": "https://sloan.org/",
+    "type": "US foundation",
+    "focus": "Science, technology, economics, long-termism in science",
+    "geography": "Global",
+    "notes": "Open data: Partial"
+  },
+  "opportunities": [
+    {
+      "externalId": "sloan-foundation-alfred-p-sloan-general",
+      "programName": "Sloan Foundation (Alfred P. Sloan) - General Funding",
+      "sourceUrl": "https://sloan.org/",
+      "declaredFocus": [
+        "Science",
+        "technology",
+        "economics",
+        "long-termism in science"
+      ],
+      "geographies": [
+        "Global"
+      ],
+      "eligibleApplicantTypes": [
+        "UNIVERSITY",
+        "RESEARCH_INSTITUTE",
+        "CHARITY",
+        "NONPROFIT",
+        "STARTUP",
+        "SMALL_BUSINESS"
+      ],
+      "minAward": 50000,
+      "currency": "USD",
+      "rawDescription": "Sloan Foundation (Alfred P. Sloan) is a US foundation focused on Science, technology, economics, long-termism in science. Geography: Global. Typical award range: $50k - $m.",
+      "status": "OPEN"
+    }
+  ]
+}

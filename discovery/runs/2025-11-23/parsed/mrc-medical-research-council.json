@@ -1,0 +1,31 @@
+{
+  "funder": {
+    "funderName": "MRC (Medical Research Council)",
+    "website": "https://mrc.ukri.org/",
+    "type": "Research council (UKRI)",
+    "focus": "Medical research",
+    "geography": "UK",
+    "notes": "Open data: Yes"
+  },
+  "opportunities": [
+    {
+      "externalId": "mrc-medical-research-council-general",
+      "programName": "MRC (Medical Research Council) - General Funding",
+      "sourceUrl": "https://mrc.ukri.org/",
+      "declaredFocus": [
+        "Medical research"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "eligibleApplicantTypes": [
+        "UNIVERSITY",
+        "RESEARCH_INSTITUTE"
+      ],
+      "minAward": 50000,
+      "currency": "GBP",
+      "rawDescription": "MRC (Medical Research Council) is a Research council (UKRI) focused on Medical research. Geography: UK. Typical award range: £50k - £m.",
+      "status": "OPEN"
+    }
+  ]
+}

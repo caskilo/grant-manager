@@ -1,0 +1,11 @@
+[
+  {
+    "id": "catalogue_v1",
+    "type": "catalogue",
+    "name": "Odyssean Funder Catalogue v1",
+    "pathOrUrl": "odyssean_funder_catalogue_v1.html",
+    "enabled": true,
+    "notes": "Initial seed list of 42 funders with basic metadata. HTML table format. Served from ../../public/.",
+    "lastRun": null
+  }
+]

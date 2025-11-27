@@ -1,0 +1,34 @@
+{
+  "funder": {
+    "funderName": "Open Philanthropy",
+    "website": "https://www.openphilanthropy.org/",
+    "type": "Philanthropic funder",
+    "focus": "Long-term future risks, AI governance, biosecurity",
+    "geography": "Global",
+    "notes": "Open data: Partial"
+  },
+  "opportunities": [
+    {
+      "externalId": "open-philanthropy-general",
+      "programName": "Open Philanthropy - General Funding",
+      "sourceUrl": "https://www.openphilanthropy.org/",
+      "declaredFocus": [
+        "Long-term future risks",
+        "AI governance",
+        "biosecurity"
+      ],
+      "geographies": [
+        "Global"
+      ],
+      "eligibleApplicantTypes": [
+        "CHARITY",
+        "UNIVERSITY",
+        "RESEARCH_INSTITUTE"
+      ],
+      "minAward": 50000,
+      "currency": "USD",
+      "rawDescription": "Open Philanthropy is a Philanthropic funder focused on Long-term future risks, AI governance, biosecurity. Geography: Global. Typical award range: $50k - $m.",
+      "status": "OPEN"
+    }
+  ]
+}
