@@ -85,12 +85,13 @@ export class DiscoveryRunService {
 
   /**
    * Load source configuration from sources.json
+   * Sources are stored in frontend/discovery/sources/ (client-owned)
    */
   private async loadSource(sourceId: string): Promise<DiscoverySource> {
     const sourcesPath = path.join(
       process.cwd(),
       '..',
-      '.project',
+      'frontend',
       'discovery',
       'sources',
       'sources.json'
@@ -113,12 +114,13 @@ export class DiscoveryRunService {
 
   /**
    * Initialize run folder structure
+   * Run outputs are stored in frontend/discovery/runs/ (client-owned)
    */
   private async initializeRunFolder(runDate: string): Promise<string> {
     const runFolder = path.join(
       process.cwd(),
       '..',
-      '.project',
+      'frontend',
       'discovery',
       'runs',
       runDate
@@ -145,25 +147,36 @@ export class DiscoveryRunService {
 
   /**
    * Collect raw data from source
+   * Supports both file paths and HTTP(S) URLs
    */
   private async collectRawData(source: DiscoverySource, runFolder: string): Promise<string> {
     const rawFolder = path.join(runFolder, 'raw');
 
     if (source.type === 'catalogue') {
-      // Copy catalogue HTML to raw folder
-      const sourcePath = path.join(
-        process.cwd(),
-        '..',
-        '.project',
-        'discovery',
-        'sources',
-        source.pathOrUrl
-      );
-
       const destPath = path.join(rawFolder, 'catalogue_v1.html');
-      await fs.copyFile(sourcePath, destPath);
+      
+      // Check if pathOrUrl is a URL (http/https) or a file path
+      if (source.pathOrUrl.startsWith('http://') || source.pathOrUrl.startsWith('https://')) {
+        // Fetch from HTTP(S) URL
+        const axios = require('axios');
+        this.logger.log(`Fetching catalogue from URL: ${source.pathOrUrl}`);
+        const response = await axios.get(source.pathOrUrl);
+        await fs.writeFile(destPath, response.data, 'utf-8');
+        this.logger.log(`Downloaded catalogue to ${destPath}`);
+      } else {
+        // Treat as a relative file path (for local development)
+        const sourcePath = path.join(
+          process.cwd(),
+          '..',
+          'frontend',
+          'discovery',
+          'sources',
+          source.pathOrUrl
+        );
+        await fs.copyFile(sourcePath, destPath);
+        this.logger.log(`Copied catalogue to ${destPath}`);
+      }
 
-      this.logger.log(`Copied catalogue to ${destPath}`);
       return destPath;
     }
 
