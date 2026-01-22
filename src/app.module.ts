@@ -20,6 +20,7 @@ import { QueueModule } from './queue/queue.module';
 import { DiscoveryModule } from './discovery/discovery.module';
 import { ImportModule } from './import/import.module';
 import { HarvestModule } from './harvest/harvest.module';
+import { CatalogueModule } from './catalogue/catalogue.module';
 import { HealthController } from './health/health.controller';
 
 @Module({
@@ -48,6 +49,7 @@ import { HealthController } from './health/health.controller';
     DiscoveryModule,
     ImportModule,
     HarvestModule,
+    CatalogueModule,
   ],
   controllers: [HealthController],
 })

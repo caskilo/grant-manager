@@ -89,27 +89,34 @@ export class DiscoveryRunService {
    */
   private async loadSource(sourceId: string): Promise<DiscoverySource> {
     const sourcesPath = path.join(
-      process.cwd(),
-      '..',
+      __dirname,
+      '../../../..',
       'frontend',
       'discovery',
       'sources',
       'sources.json'
     );
 
-    const content = await fs.readFile(sourcesPath, 'utf-8');
-    const sources: DiscoverySource[] = JSON.parse(content);
+    this.logger.log(`Loading sources from: ${sourcesPath}`);
 
-    const source = sources.find(s => s.id === sourceId);
-    if (!source) {
-      throw new Error(`Source ${sourceId} not found in sources.json`);
+    try {
+      const content = await fs.readFile(sourcesPath, 'utf-8');
+      const sources: DiscoverySource[] = JSON.parse(content);
+
+      const source = sources.find(s => s.id === sourceId);
+      if (!source) {
+        throw new Error(`Source ${sourceId} not found in sources.json`);
+      }
+
+      if (!source.enabled) {
+        throw new Error(`Source ${sourceId} is disabled`);
+      }
+
+      return source;
+    } catch (error: any) {
+      this.logger.error(`Failed to load source: ${error.message}`);
+      throw error;
     }
-
-    if (!source.enabled) {
-      throw new Error(`Source ${sourceId} is disabled`);
-    }
-
-    return source;
   }
 
   /**
@@ -118,13 +125,15 @@ export class DiscoveryRunService {
    */
   private async initializeRunFolder(runDate: string): Promise<string> {
     const runFolder = path.join(
-      process.cwd(),
-      '..',
+      __dirname,
+      '../../../..',
       'frontend',
       'discovery',
       'runs',
       runDate
     );
+
+    this.logger.log(`Initializing run folder: ${runFolder}`);
 
     // Create folders
     await fs.mkdir(path.join(runFolder, 'raw'), { recursive: true });
@@ -166,13 +175,14 @@ export class DiscoveryRunService {
       } else {
         // Treat as a relative file path (for local development)
         const sourcePath = path.join(
-          process.cwd(),
-          '..',
+          __dirname,
+          '../../../..',
           'frontend',
           'discovery',
           'sources',
           source.pathOrUrl
         );
+        this.logger.log(`Copying catalogue from: ${sourcePath}`);
         await fs.copyFile(sourcePath, destPath);
         this.logger.log(`Copied catalogue to ${destPath}`);
       }

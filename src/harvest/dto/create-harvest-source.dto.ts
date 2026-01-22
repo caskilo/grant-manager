@@ -1,4 +1,4 @@
-import { IsString, IsBoolean, IsOptional, IsObject } from 'class-validator';
+import { IsString, IsBoolean, IsOptional, IsObject, IsUUID } from 'class-validator';
 
 export class CreateHarvestSourceDto {
   @IsString()
@@ -18,4 +18,8 @@ export class CreateHarvestSourceDto {
   @IsOptional()
   @IsObject()
   config?: any;
+
+  @IsOptional()
+  @IsUUID()
+  funderId?: string;
 }

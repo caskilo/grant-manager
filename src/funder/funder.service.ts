@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from '../audit/audit.service';
 import { CreateFunderDto, UpdateFunderDto, FunderQueryDto } from './dto/funder.dto';
@@ -6,6 +6,8 @@ import { AuditActionType } from '@prisma/client';
 
 @Injectable()
 export class FunderService {
+  private readonly logger = new Logger(FunderService.name);
+
   constructor(
     private prisma: PrismaService,
     private auditService: AuditService,
@@ -38,6 +40,12 @@ export class FunderService {
               contacts: true,
             },
           },
+          opportunities: {
+            select: {
+              aiFitScore: true,
+              tags: true,
+            },
+          },
         },
         orderBy: { createdAt: 'desc' },
         skip,
@@ -46,8 +54,53 @@ export class FunderService {
       this.prisma.funder.count({ where }),
     ]);
 
+    // Compute statistics for each funder
+    const fundersWithStats = funders.map(funder => {
+      const opportunities = funder.opportunities || [];
+      
+      // Calculate fit score statistics
+      const scoresWithValues = opportunities
+        .map(opp => opp.aiFitScore ? Number(opp.aiFitScore) : null)
+        .filter((score): score is number => score !== null);
+      
+      const avgFitScore = scoresWithValues.length > 0
+        ? scoresWithValues.reduce((sum, score) => sum + score, 0) / scoresWithValues.length
+        : null;
+      
+      const highFitCount = scoresWithValues.filter(score => score >= 7).length;
+      
+      // Extract alignment scores from tags
+      const alignmentScores = opportunities
+        .flatMap(opp => opp.tags || [])
+        .filter(tag => tag.startsWith('alignment:'))
+        .map(tag => {
+          const match = tag.match(/alignment:(\d+)%/);
+          return match ? parseInt(match[1], 10) : null;
+        })
+        .filter((score): score is number => score !== null);
+      
+      const avgAlignment = alignmentScores.length > 0
+        ? alignmentScores.reduce((sum, score) => sum + score, 0) / alignmentScores.length
+        : null;
+      
+      const highAlignmentCount = alignmentScores.filter(score => score >= 70).length;
+      
+      // Remove opportunities array from response, keep only stats
+      const { opportunities: _, ...funderWithoutOpps } = funder;
+      
+      return {
+        ...funderWithoutOpps,
+        stats: {
+          avgFitScore,
+          highFitCount,
+          avgAlignment,
+          highAlignmentCount,
+        },
+      };
+    });
+
     return {
-      data: funders,
+      data: fundersWithStats,
       meta: {
         total,
         page,
@@ -60,18 +113,40 @@ export class FunderService {
   async findOne(id: string) {
     const funder = await this.prisma.funder.findUnique({
       where: { id },
-      include: {
+      select: {
+        id: true,
+        name: true,
+        type: true,
+        websiteUrl: true,
+        description: true,
+        geographies: true,
+        tags: true,
+        notes: true,
+        createdById: true,
+        createdAt: true,
+        updatedAt: true,
         opportunities: {
           select: {
             id: true,
             programName: true,
             status: true,
             aiFitScore: true,
+            tags: true,
             createdAt: true,
           },
           orderBy: { createdAt: 'desc' },
         },
         contacts: true,
+        harvestSources: {
+          select: {
+            id: true,
+            name: true,
+            baseUrl: true,
+            enabled: true,
+            lastRunAt: true,
+            lastSuccessAt: true,
+          },
+        },
         _count: {
           select: {
             opportunities: true,

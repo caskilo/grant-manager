@@ -160,10 +160,11 @@ model Funder {
   updatedAt   DateTime    @updatedAt @map("updated_at") @db.Timestamptz
 
   // Relations
-  createdBy     User          @relation(fields: [createdById], references: [id])
-  opportunities Opportunity[]
-  contacts      Contact[]
-  attachments   Attachment[]
+  createdBy      User            @relation(fields: [createdById], references: [id])
+  opportunities  Opportunity[]
+  contacts       Contact[]
+  attachments    Attachment[]
+  harvestSources HarvestSource[]
 
   @@index([name(ops: raw("gin_trgm_ops"))], type: Gin)
   @@index([tags], type: Gin)
@@ -189,7 +190,8 @@ model Opportunity {
   deadlines                Json                @default("[]")
   reportingRequirements    String?             @map("reporting_requirements")
   processSteps             String[]            @default([]) @map("process_steps")
-  rawDescription           String?             @map("raw_description")
+  description              String?             // Concise summary of opportunity (from scraper/harvest)
+  rawDescription           String?             @map("raw_description") // Full unedited description from source
   aiFitScore               Decimal?            @map("ai_fit_score") @db.Decimal(3, 1)
   aiFitReasons             String[]            @default([]) @map("ai_fit_reasons")
   aiRecommendedAction      RecommendedAction?  @map("ai_recommended_action")
@@ -471,6 +473,10 @@ model HarvestSource {
   config        Json      @default("{}")
   lastRunAt     DateTime? @map("last_run_at") @db.Timestamptz
   lastSuccessAt DateTime? @map("last_success_at") @db.Timestamptz
+  funderId      String?   @map("funder_id") @db.Uuid
+
+  // Relations
+  funder Funder? @relation(fields: [funderId], references: [id], onDelete: Cascade)
 
   @@map("harvest_sources")
 }

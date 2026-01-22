@@ -4,6 +4,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ScoringProcessor } from './processors/scoring.processor';
 import { ImportProcessor } from './processors/import.processor';
 import { HarvestProcessor } from './processors/harvest.processor';
+import { SourceDiscoveryProcessor } from './processors/source-discovery.processor';
+import { IntelligentDiscoveryService } from '@/harvest/intelligent-discovery.service';
+import { NavigationAnalyzerService } from '../harvest/navigation-analyzer.service';
+import { GrantPageExtractorService } from '../harvest/grant-page-extractor.service';
 import { ScoringModule } from '../scoring/scoring.module';
 import { PrismaModule } from '../prisma/prisma.module';
 import { HarvestModule } from '../harvest/harvest.module';
@@ -58,7 +62,15 @@ import { HarvestModule } from '../harvest/harvest.module';
     PrismaModule,
     HarvestModule,
   ],
-  providers: [ScoringProcessor, ImportProcessor, HarvestProcessor],
+  providers: [
+    ScoringProcessor,
+    ImportProcessor,
+    HarvestProcessor,
+    SourceDiscoveryProcessor,
+    IntelligentDiscoveryService,
+    NavigationAnalyzerService,
+    GrantPageExtractorService,
+  ],
   exports: [BullModule],
 })
 export class QueueModule {}

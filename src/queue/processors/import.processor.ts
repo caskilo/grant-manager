@@ -2,6 +2,7 @@ import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Logger, BadRequestException } from '@nestjs/common';
 import { Job } from 'bullmq';
 import { PrismaService } from '../../prisma/prisma.service';
+import { FunderType } from '@prisma/client';
 import * as csv from 'csv-parse/sync';
 import * as fs from 'fs/promises';
 
@@ -11,6 +12,32 @@ export class ImportProcessor extends WorkerHost {
 
   constructor(private prisma: PrismaService) {
     super();
+  }
+
+  /**
+   * Map catalogue-friendly type names to FunderType enum
+   */
+  private mapFunderType(catalogueType: string | null | undefined): FunderType {
+    if (!catalogueType) return FunderType.PHILANTHROPIC;
+    
+    const normalized = catalogueType.toLowerCase().trim();
+    
+    // Map common catalogue types
+    if (normalized.includes('foundation')) return FunderType.PHILANTHROPIC;
+    if (normalized.includes('trust')) return FunderType.PHILANTHROPIC;
+    if (normalized.includes('charity')) return FunderType.PHILANTHROPIC;
+    if (normalized.includes('public') || normalized.includes('research council') || normalized.includes('government')) return FunderType.PUBLIC;
+    if (normalized.includes('corporate') || normalized.includes('company')) return FunderType.PRIVATE;
+    
+    return FunderType.PHILANTHROPIC; // Default
+  }
+
+  /**
+   * Get catalogue type tag for storage
+   */
+  private getCatalogueTypeTag(catalogueType: string | null | undefined): string | null {
+    if (!catalogueType) return null;
+    return `CATALOGUE_TYPE:${catalogueType}`;
   }
 
   async process(job: Job<any>): Promise<any> {
@@ -95,24 +122,41 @@ export class ImportProcessor extends WorkerHost {
         });
 
         if (existing) {
+          const tags = record.tags
+            ? record.tags.split(',').map((t: string) => t.trim())
+            : existing.tags;
+          
+          // Add catalogue type tag if record has a type
+          if (record.type && !tags.some((t: string) => t.startsWith('CATALOGUE_TYPE:'))) {
+            tags.push(this.getCatalogueTypeTag(record.type));
+          }
+
           await this.prisma.funder.update({
             where: { id: existing.id },
             data: {
-              type: record.type || existing.type,
+              type: record.type ? this.mapFunderType(record.type) : existing.type,
               websiteUrl: record.websiteUrl || existing.websiteUrl,
-              tags: record.tags
-                ? record.tags.split(',').map((t: string) => t.trim())
-                : existing.tags,
+              tags: tags.filter((t: string): t is string => t !== null),
             },
           });
           updated++;
         } else {
+          const tags = record.tags ? record.tags.split(',').map((t: string) => t.trim()) : [];
+          
+          // Add catalogue type tag if record has a type
+          if (record.type) {
+            const catalogueTypeTag = this.getCatalogueTypeTag(record.type);
+            if (catalogueTypeTag) {
+              tags.push(catalogueTypeTag);
+            }
+          }
+
           await this.prisma.funder.create({
             data: {
               name: record.name,
-              type: record.type || 'PHILANTHROPIC',
+              type: record.type ? this.mapFunderType(record.type) : FunderType.PHILANTHROPIC,
               websiteUrl: record.websiteUrl,
-              tags: record.tags ? record.tags.split(',').map((t: string) => t.trim()) : [],
+              tags,
               createdById: userId,
             },
           });
@@ -160,10 +204,21 @@ export class ImportProcessor extends WorkerHost {
         });
 
         if (!funder) {
+          const tags: string[] = [];
+          
+          // Add catalogue type tag if record has a type
+          if (record.type) {
+            const catalogueTypeTag = this.getCatalogueTypeTag(record.type);
+            if (catalogueTypeTag) {
+              tags.push(catalogueTypeTag);
+            }
+          }
+
           funder = await this.prisma.funder.create({
             data: {
               name: record.funderName,
-              type: 'PHILANTHROPIC',
+              type: record.type ? this.mapFunderType(record.type) : FunderType.PHILANTHROPIC,
+              tags,
               createdById: userId,
             },
           });
