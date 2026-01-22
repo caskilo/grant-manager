@@ -1,9 +1,9 @@
 import { Modal, Stack, Paper, Text, Group, Button, TextInput, ActionIcon, Anchor, Divider, Alert, Progress, Badge, Checkbox, Select } from '@mantine/core';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { IconAlertCircle, IconCheck, IconExternalLink, IconSearch, IconPlus, IconTrash, IconX } from '@tabler/icons-react';
 import { modals } from '@mantine/modals';
-import { harvestApi, SuggestedSourcesResponse, HarvestSource } from '../../lib/harvest';
+import { harvestApi } from '../../lib/harvest';
 
 interface HarvestManagementModalProps {
   opened: boolean;

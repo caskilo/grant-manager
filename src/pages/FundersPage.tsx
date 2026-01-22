@@ -1,4 +1,4 @@
-import { Container, Title, Button, Group, Stack, Table, Badge, Text, Tooltip, Modal, Alert, TextInput, Paper, Anchor, SimpleGrid } from '@mantine/core';
+import { Container, Title, Button, Group, Stack, Badge, Text, Tooltip, Modal, Alert, TextInput, Paper, Anchor } from '@mantine/core';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
@@ -37,11 +37,6 @@ interface FundersResponse {
     totalPages: number;
   };
 }
-
-const truncateText = (text: string | null, maxLength: number): string => {
-  if (!text) return '—';
-  return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
-};
 
 const isCatalogueFunder = (tags: string[]): boolean => {
   return tags.some(tag => tag.includes('DISCOVERY') || tag.includes('CATALOGUE'));
