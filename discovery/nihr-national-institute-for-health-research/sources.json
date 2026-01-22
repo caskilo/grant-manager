@@ -1,0 +1,34 @@
+{
+  "funderId": "43184621-3725-4b52-8a49-d67b5e99407a",
+  "funderName": "NIHR (National Institute for Health Research)",
+  "seedUrl": "https://www.nihr.ac.uk/",
+  "discoveredAt": "2026-01-22T21:45:57.560Z",
+  "sources": [
+    {
+      "url": "https://www.nihr.ac.uk/funding-opportunities",
+      "anchorText": "Funding opportunities",
+      "title": "detail",
+      "score": 1,
+      "discoveredAt": "2026-01-22T21:45:57.560Z",
+      "pageTitle": "Funding opportunities",
+      "keywords": [
+        "Found in \"Find a funding opportunity\" menu",
+        "Extraction: heuristic",
+        "Program: Funding opportunities",
+        "No deadline found",
+        "No award info"
+      ],
+      "lastDiscoveredAt": "2026-01-22T21:45:57.560Z"
+    }
+  ],
+  "stats": {
+    "totalLinksFound": 1,
+    "linksScored": 1,
+    "topSourcesReturned": 1,
+    "manualLinksProvided": 0,
+    "manualLinksProcessed": 0,
+    "seedUrlProcessed": true,
+    "totalUniqueSources": 1,
+    "newSourcesThisRun": 1
+  }
+}

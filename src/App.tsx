@@ -16,6 +16,7 @@ import InteractionsPage from './pages/InteractionsPage';
 import InteractionDetailPage from './pages/InteractionDetailPage';
 import ImportPage from './pages/ImportPage';
 import AdminUsersPage from './pages/AdminUsersPage';
+import CatalogueEditorPage from './pages/CatalogueEditorPage';
 import AppHeader from './components/layout/AppHeader';
 import AppNavbar from './components/layout/AppNavbar';
 
@@ -166,6 +167,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <ImportPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/catalogue"
+              element={
+                <ProtectedRoute>
+                  <CatalogueEditorPage />
                 </ProtectedRoute>
               }
             />
