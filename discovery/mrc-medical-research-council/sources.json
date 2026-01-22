@@ -1,0 +1,34 @@
+{
+  "funderId": "a0ae628b-f3bf-4c6c-adcf-23f4340386a1",
+  "funderName": "MRC (Medical Research Council)",
+  "seedUrl": "https://mrc.ukri.org/",
+  "discoveredAt": "2026-01-22T21:29:28.796Z",
+  "sources": [
+    {
+      "url": "https://mrc.ukri.org/councils/mrc/funding-assessment-and-award-management/",
+      "anchorText": "Medical Research Council (MRC)",
+      "title": "detail",
+      "score": 1,
+      "discoveredAt": "2026-01-22T21:29:28.796Z",
+      "pageTitle": "Medical Research Council (MRC)",
+      "keywords": [
+        "Found in \"Funding, assessment and award management\" menu",
+        "Extraction: heuristic",
+        "Program: Medical Research Council (MRC)",
+        "No deadline found",
+        "Max award: GBP3000000"
+      ],
+      "lastDiscoveredAt": "2026-01-22T21:29:28.796Z"
+    }
+  ],
+  "stats": {
+    "totalLinksFound": 1,
+    "linksScored": 1,
+    "topSourcesReturned": 1,
+    "manualLinksProvided": 0,
+    "manualLinksProcessed": 0,
+    "seedUrlProcessed": true,
+    "totalUniqueSources": 1,
+    "newSourcesThisRun": 1
+  }
+}
