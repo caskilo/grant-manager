@@ -84,39 +84,33 @@ export class DiscoveryRunService {
   }
 
   /**
-   * Load source configuration from sources.json
-   * Sources are stored in frontend/discovery/sources/ (client-owned)
+   * Load source configuration
+   * In production, sources are hardcoded. In development, can be extended to read from file.
    */
   private async loadSource(sourceId: string): Promise<DiscoverySource> {
-    const sourcesPath = path.join(
-      __dirname,
-      '../../../..',
-      'frontend',
-      'discovery',
-      'sources',
-      'sources.json'
-    );
+    // Hardcoded sources that work in both development and production
+    const sources: DiscoverySource[] = [
+      {
+        id: 'catalogue_v1',
+        type: 'catalogue',
+        name: 'Odyssean Funder Catalogue v1',
+        pathOrUrl: process.env.CATALOGUE_URL || 'https://caskilo.github.io/grant-manager/catalogue.json',
+        enabled: true,
+        notes: 'Funder catalogue fetched from deployed frontend',
+      },
+    ];
 
-    this.logger.log(`Loading sources from: ${sourcesPath}`);
-
-    try {
-      const content = await fs.readFile(sourcesPath, 'utf-8');
-      const sources: DiscoverySource[] = JSON.parse(content);
-
-      const source = sources.find(s => s.id === sourceId);
-      if (!source) {
-        throw new Error(`Source ${sourceId} not found in sources.json`);
-      }
-
-      if (!source.enabled) {
-        throw new Error(`Source ${sourceId} is disabled`);
-      }
-
-      return source;
-    } catch (error: any) {
-      this.logger.error(`Failed to load source: ${error.message}`);
-      throw error;
+    const source = sources.find(s => s.id === sourceId);
+    if (!source) {
+      throw new Error(`Source ${sourceId} not found`);
     }
+
+    if (!source.enabled) {
+      throw new Error(`Source ${sourceId} is disabled`);
+    }
+
+    this.logger.log(`Loaded source: ${source.name} from ${source.pathOrUrl}`);
+    return source;
   }
 
   /**
@@ -156,13 +150,13 @@ export class DiscoveryRunService {
 
   /**
    * Collect raw data from source
-   * Supports both file paths and HTTP(S) URLs
    */
   private async collectRawData(source: DiscoverySource, runFolder: string): Promise<string> {
     const rawFolder = path.join(runFolder, 'raw');
+    await fs.mkdir(rawFolder, { recursive: true });
 
     if (source.type === 'catalogue') {
-      const destPath = path.join(rawFolder, 'catalogue_v1.html');
+      const destPath = path.join(rawFolder, 'catalogue_v1.json');
       
       // Check if pathOrUrl is a URL (http/https) or a file path
       if (source.pathOrUrl.startsWith('http://') || source.pathOrUrl.startsWith('https://')) {
@@ -170,7 +164,7 @@ export class DiscoveryRunService {
         const axios = require('axios');
         this.logger.log(`Fetching catalogue from URL: ${source.pathOrUrl}`);
         const response = await axios.get(source.pathOrUrl);
-        await fs.writeFile(destPath, response.data, 'utf-8');
+        await fs.writeFile(destPath, JSON.stringify(response.data, null, 2), 'utf-8');
         this.logger.log(`Downloaded catalogue to ${destPath}`);
       } else {
         // Treat as a relative file path (for local development)
@@ -178,9 +172,8 @@ export class DiscoveryRunService {
           __dirname,
           '../../../..',
           'frontend',
-          'discovery',
-          'sources',
-          source.pathOrUrl
+          'public',
+          'catalogue.json'
         );
         this.logger.log(`Copying catalogue from: ${sourcePath}`);
         await fs.copyFile(sourcePath, destPath);
@@ -204,8 +197,35 @@ export class DiscoveryRunService {
     const parsedFolder = path.join(runFolder, 'parsed');
 
     if (source.type === 'catalogue') {
-      const html = await fs.readFile(rawPath, 'utf-8');
-      const entries = this.catalogueParser.parse(html);
+      const content = await fs.readFile(rawPath, 'utf-8');
+      const catalogueData = JSON.parse(content);
+      
+      // Convert catalogue JSON format to ParsedCatalogueEntry format
+      const entries: ParsedCatalogueEntry[] = catalogueData.funders.map((funder: any) => ({
+        funder: {
+          funderName: funder.name,
+          website: funder.websiteUrl,
+          type: funder.type,
+          focus: funder.focus?.join(', ') || '',
+          geography: funder.geographies?.join(', ') || '',
+          notes: funder.notes || '',
+        },
+        opportunities: [
+          {
+            externalId: `${this.slugify(funder.name)}-general`,
+            programName: `${funder.name} - General Funding`,
+            sourceUrl: funder.websiteUrl,
+            declaredFocus: funder.focus || [],
+            geographies: funder.geographies || [],
+            eligibleApplicantTypes: ['CHARITY', 'UNIVERSITY', 'RESEARCH_INSTITUTE'],
+            minAward: funder.typicalAwardMin,
+            maxAward: funder.typicalAwardMax,
+            currency: funder.currency || 'GBP',
+            rawDescription: `${funder.name} is a ${funder.type}. Focus: ${funder.focus?.join(', ') || 'N/A'}. Geography: ${funder.geographies?.join(', ') || 'N/A'}.`,
+            status: 'OPEN',
+          },
+        ],
+      }));
 
       // Write each entry to a separate JSON file
       for (let i = 0; i < entries.length; i++) {
