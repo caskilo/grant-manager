@@ -1,0 +1,37 @@
+{
+  "funder": {
+    "funderName": "Dana Foundation",
+    "website": "https://dana.org/",
+    "type": "Foundation",
+    "focus": "Brain research, neuroscience, ethics of AI",
+    "geography": "US/global",
+    "notes": "Open data: Partial"
+  },
+  "opportunities": [
+    {
+      "externalId": "dana-foundation-general",
+      "programName": "Dana Foundation - General Funding",
+      "sourceUrl": "https://dana.org/",
+      "declaredFocus": [
+        "Brain research",
+        "neuroscience",
+        "ethics of AI"
+      ],
+      "geographies": [
+        "US",
+        "global"
+      ],
+      "eligibleApplicantTypes": [
+        "UNIVERSITY",
+        "RESEARCH_INSTITUTE",
+        "CHARITY",
+        "NONPROFIT"
+      ],
+      "minAward": 10000,
+      "maxAward": 500000,
+      "currency": "USD",
+      "rawDescription": "Dana Foundation is a Foundation focused on Brain research, neuroscience, ethics of AI. Geography: US/global. Typical award range: $10k - $500k.",
+      "status": "OPEN"
+    }
+  ]
+}

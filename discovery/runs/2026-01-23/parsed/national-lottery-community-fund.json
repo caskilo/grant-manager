@@ -1,0 +1,32 @@
+{
+  "funder": {
+    "funderName": "National Lottery Community Fund",
+    "website": "https://www.tnlcommunityfund.org.uk/",
+    "type": "Public lottery fund",
+    "focus": "Community projects, social initiatives",
+    "geography": "UK",
+    "notes": "Open data: Yes (some)"
+  },
+  "opportunities": [
+    {
+      "externalId": "national-lottery-community-fund-general",
+      "programName": "National Lottery Community Fund - General Funding",
+      "sourceUrl": "https://www.tnlcommunityfund.org.uk/",
+      "declaredFocus": [
+        "Community projects",
+        "social initiatives"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "eligibleApplicantTypes": [
+        "CHARITY",
+        "NONPROFIT"
+      ],
+      "minAward": 1000,
+      "currency": "GBP",
+      "rawDescription": "National Lottery Community Fund is a Public lottery fund focused on Community projects, social initiatives. Geography: UK. Typical award range: £1k - £m.",
+      "status": "OPEN"
+    }
+  ]
+}
