@@ -50,9 +50,7 @@ const getCatalogueType = (tags: string[]): string | null => {
 export default function FundersPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [discoveryModalOpen, setDiscoveryModalOpen] = useState(false);
   const [integrationModalOpen, setIntegrationModalOpen] = useState(false);
-  const [lastRunDate, setLastRunDate] = useState<string | null>(null);
   const [selectedFunder, setSelectedFunder] = useState<Funder | null>(null);
   const [harvestModalOpen, setHarvestModalOpen] = useState(false);
   const [searchFilter, setSearchFilter] = useState('');
@@ -82,20 +80,11 @@ export default function FundersPage() {
     );
   }) || [];
 
-  const runDiscoveryMutation = useMutation({
+  const integrateCatalogueMutation = useMutation({
     mutationFn: () => discoveryApi.runCatalogue(),
-    onSuccess: (result) => {
-      setLastRunDate(result.runDate);
-      setDiscoveryModalOpen(true);
-    },
-  });
-
-  const integrateMutation = useMutation({
-    mutationFn: (runDate: string) => discoveryApi.integrateRun(runDate, false),
     onSuccess: () => {
       setIntegrationModalOpen(true);
       queryClient.invalidateQueries({ queryKey: ['funders'] });
-      setLastRunDate(null);
     },
   });
 
@@ -106,30 +95,14 @@ export default function FundersPage() {
           <Title order={1}>Funders</Title>
           <Group>
             <Button
-              loading={runDiscoveryMutation.isPending}
-              onClick={() => runDiscoveryMutation.mutate()}
+              loading={integrateCatalogueMutation.isPending}
+              onClick={() => integrateCatalogueMutation.mutate()}
             >
               Update from Catalogue
             </Button>
             <Button onClick={() => navigate('/catalogue')}>Edit Catalogue</Button>
           </Group>
         </Group>
-
-        {lastRunDate && (
-          <Alert color="green">
-            <Text size="sm">
-              Discovery run completed! Integration ready for: {new Date(lastRunDate).toLocaleString()}
-            </Text>
-            <Button
-              size="xs"
-              mt="xs"
-              loading={integrateMutation.isPending}
-              onClick={() => integrateMutation.mutate(lastRunDate)}
-            >
-              Integrate Now
-            </Button>
-          </Alert>
-        )}
 
         {/* Search Bar */}
         <TextInput
@@ -272,50 +245,26 @@ export default function FundersPage() {
         `}</style>
       </Stack>
 
-      {discoveryModalOpen && (
-        <Modal
-          opened={discoveryModalOpen}
-          onClose={() => setDiscoveryModalOpen(false)}
-          title="Discovery Run Complete"
-        >
-          <Alert icon={<IconCheck size={16} />} color="green">
-            Discovery run completed successfully! Check the results and integrate when ready.
-          </Alert>
-        </Modal>
-      )}
-
       {integrationModalOpen && (
         <Modal
           opened={integrationModalOpen}
           onClose={() => setIntegrationModalOpen(false)}
-          title="Integration Complete"
+          title="Catalogue Integration Complete"
         >
           <Alert icon={<IconCheck size={16} />} color="green">
-            Funders have been successfully integrated!
+            Catalogue entries have been successfully integrated as funders!
           </Alert>
         </Modal>
       )}
 
-      {runDiscoveryMutation.isError && (
+      {integrateCatalogueMutation.isError && (
         <Modal
-          opened={runDiscoveryMutation.isError}
-          onClose={() => runDiscoveryMutation.reset()}
-          title="Discovery Failed"
-        >
-          <Alert icon={<IconAlertCircle size={16} />} color="red">
-            {(runDiscoveryMutation.error as Error)?.message || 'An error occurred'}
-          </Alert>
-        </Modal>
-      )}
-
-      {integrateMutation.isError && (
-        <Modal
-          opened={integrateMutation.isError}
-          onClose={() => integrateMutation.reset()}
+          opened={integrateCatalogueMutation.isError}
+          onClose={() => integrateCatalogueMutation.reset()}
           title="Integration Failed"
         >
           <Alert icon={<IconAlertCircle size={16} />} color="red">
-            {(integrateMutation.error as Error)?.message || 'An error occurred'}
+            {(integrateCatalogueMutation.error as Error)?.message || 'An error occurred'}
           </Alert>
         </Modal>
       )}

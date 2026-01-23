@@ -1,32 +1,24 @@
 import api from './api';
 
-export interface DiscoveryStats {
-  totalFundersInSource: number;
-  newFunders: number;
-  existingFunders: number;
-  totalOpportunities: number;
-  newOpportunities: number;
-  updatedOpportunities: number;
-  unchangedOpportunities: number;
+export interface CatalogueEntry {
+  id: string;
+  name: string;
+  type: string;
+  websiteUrl: string;
+  description?: string;
+  geographies?: string[];
+  focusAreas?: string[];
+  currency?: string;
+  openData?: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
-export interface DiscoveryMetadata {
-  runDate: string;
-  sourceId: string;
-  sourceName: string;
-  startTime: string;
-  endTime?: string;
-  status: 'running' | 'completed' | 'failed';
-  error?: string;
-}
-
-export interface DiscoveryRunResult {
-  message: string;
-  runDate: string;
-  sourceId: string;
-  stats: DiscoveryStats;
-  metadata: DiscoveryMetadata;
-  recommendations: string[];
+export interface CatalogueResponse {
+  data: CatalogueEntry[];
+  meta: {
+    total: number;
+  };
 }
 
 export interface IntegrationResult {
@@ -38,24 +30,53 @@ export interface IntegrationResult {
   dryRun: boolean;
 }
 
-export interface IntegrateRunResponse {
-  message: string;
-  result: IntegrationResult;
-}
-
 export const discoveryApi = {
-  runCatalogue: async (params?: { sourceId?: string; runDate?: string }): Promise<DiscoveryRunResult> => {
-    const response = await api.post('/discovery/runs/catalogue', params || {});
+  // Get all catalogue entries
+  getCatalogue: async (): Promise<CatalogueResponse> => {
+    const response = await api.get('/catalogue');
     return response.data;
   },
 
-  getSummary: async (runDate: string): Promise<any> => {
-    const response = await api.get(`/discovery/runs/${runDate}/summary`);
+  // Run catalogue discovery and integration (import catalogue entries as funders)
+  runCatalogue: async (): Promise<IntegrationResult> => {
+    // Step 1: Run discovery
+    const runResponse = await api.post('/discovery/runs/catalogue', {});
+    const runDate = runResponse.data.runDate;
+    
+    // Step 2: Integrate the run immediately
+    const integrateResponse = await api.post(`/discovery/runs/${runDate}/integrate`, { dryRun: false });
+    return integrateResponse.data.result;
+  },
+
+  // Import catalogue entry from HTML
+  importFromHtml: async (html: string): Promise<CatalogueEntry> => {
+    const response = await api.post('/catalogue/import', { html });
     return response.data;
   },
 
-  integrateRun: async (runDate: string, dryRun = false): Promise<IntegrateRunResponse> => {
-    const response = await api.post(`/discovery/runs/${runDate}/integrate`, { dryRun });
+  // Scrape URL to create catalogue entry
+  scrapeUrl: async (url: string): Promise<CatalogueEntry> => {
+    const response = await api.post('/catalogue/scrape', { url });
+    return response.data;
+  },
+
+  // CRUD operations for catalogue
+  createEntry: async (entry: Partial<CatalogueEntry>): Promise<CatalogueEntry> => {
+    const response = await api.post('/catalogue', entry);
+    return response.data;
+  },
+
+  updateEntry: async (id: string, entry: Partial<CatalogueEntry>): Promise<CatalogueEntry> => {
+    const response = await api.patch(`/catalogue/${id}`, entry);
+    return response.data;
+  },
+
+  deleteEntry: async (id: string): Promise<void> => {
+    await api.delete(`/catalogue/${id}`);
+  },
+
+  getEnums: async (): Promise<any> => {
+    const response = await api.get('/catalogue/enums');
     return response.data;
   },
 };
