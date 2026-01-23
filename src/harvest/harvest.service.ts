@@ -287,13 +287,11 @@ export class HarvestService {
     const path = require('path');
     
     const funderSlug = this.slugify(funder.name);
-    const funderDiscoveryPath = path.join(
-      process.cwd(),
-      '..',
-      'frontend',
-      'discovery',
-      funderSlug,
-    );
+    const isProduction = process.env.NODE_ENV === 'production' || process.env.APP_ENV === 'production';
+    
+    const funderDiscoveryPath = isProduction
+      ? path.join('/tmp', 'discovery', funderSlug)
+      : path.join(process.cwd(), '..', 'frontend', 'discovery', funderSlug);
 
     try {
       await fs.access(funderDiscoveryPath);

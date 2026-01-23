@@ -116,14 +116,11 @@ export class HarvestProcessor extends WorkerHost {
       // Generate run ID and directories
       const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
       const runId = `${this.slugify(source.name)}_${timestamp}`;
-      const harvestDir = path.join(
-        process.cwd(),
-        '..',
-        'frontend',
-        'harvest',
-        'runs',
-        runId,
-      );
+      const isProduction = process.env.NODE_ENV === 'production' || process.env.APP_ENV === 'production';
+      
+      const harvestDir = isProduction
+        ? path.join('/tmp', 'harvest', 'runs', runId)
+        : path.join(process.cwd(), '..', 'frontend', 'harvest', 'runs', runId);
 
       await fs.mkdir(harvestDir, { recursive: true });
 

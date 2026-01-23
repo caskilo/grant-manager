@@ -271,15 +271,11 @@ export class HarvestIntegrationService {
    * Get summary for a harvest run
    */
   async getSummary(runId: string): Promise<HarvestRunSummary> {
-    const summaryPath = path.join(
-      process.cwd(),
-      '..',
-      'frontend',
-      'harvest',
-      'runs',
-      runId,
-      'summary.json',
-    );
+    const isProduction = process.env.NODE_ENV === 'production' || process.env.APP_ENV === 'production';
+    
+    const summaryPath = isProduction
+      ? path.join('/tmp', 'harvest', 'runs', runId, 'summary.json')
+      : path.join(process.cwd(), '..', 'frontend', 'harvest', 'runs', runId, 'summary.json');
 
     try {
       const summaryJson = await fs.readFile(summaryPath, 'utf-8');
@@ -295,15 +291,11 @@ export class HarvestIntegrationService {
    * Load harvest run plan from filesystem
    */
   private async loadPlan(runId: string): Promise<HarvestRunPlan> {
-    const planPath = path.join(
-      process.cwd(),
-      '..',
-      'frontend',
-      'harvest',
-      'runs',
-      runId,
-      'plan.json',
-    );
+    const isProduction = process.env.NODE_ENV === 'production' || process.env.APP_ENV === 'production';
+    
+    const planPath = isProduction
+      ? path.join('/tmp', 'harvest', 'runs', runId, 'plan.json')
+      : path.join(process.cwd(), '..', 'frontend', 'harvest', 'runs', runId, 'plan.json');
 
     try {
       const planJson = await fs.readFile(planPath, 'utf-8');
@@ -324,13 +316,11 @@ export class HarvestIntegrationService {
       stats: HarvestRunSummary['stats'];
     }>
   > {
-    const runsBasePath = path.join(
-      process.cwd(),
-      '..',
-      'frontend',
-      'harvest',
-      'runs',
-    );
+    const isProduction = process.env.NODE_ENV === 'production' || process.env.APP_ENV === 'production';
+    
+    const runsBasePath = isProduction
+      ? path.join('/tmp', 'harvest', 'runs')
+      : path.join(process.cwd(), '..', 'frontend', 'harvest', 'runs');
 
     try {
       await fs.access(runsBasePath);

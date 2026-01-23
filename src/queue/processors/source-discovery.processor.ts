@@ -192,13 +192,11 @@ export class SourceDiscoveryProcessor extends WorkerHost {
       };
 
       // Write results to filesystem in funder-specific directory (single directory per funder)
-      const discoveryDir = path.join(
-        process.cwd(),
-        '..',
-        'frontend',
-        'discovery',
-        funderSlug,
-      );
+      const isProduction = process.env.NODE_ENV === 'production' || process.env.APP_ENV === 'production';
+      
+      const discoveryDir = isProduction
+        ? path.join('/tmp', 'discovery', funderSlug)
+        : path.join(process.cwd(), '..', 'frontend', 'discovery', funderSlug);
 
       await fs.mkdir(discoveryDir, { recursive: true });
 
@@ -325,13 +323,11 @@ export class SourceDiscoveryProcessor extends WorkerHost {
           select: { name: true },
         });
         const funderSlug = funder ? this.slugify(funder.name) : 'unknown';
-        const errorDir = path.join(
-          process.cwd(),
-          '..',
-          'frontend',
-          'discovery',
-          funderSlug,
-        );
+        const isProduction = process.env.NODE_ENV === 'production' || process.env.APP_ENV === 'production';
+        
+        const errorDir = isProduction
+          ? path.join('/tmp', 'discovery', funderSlug)
+          : path.join(process.cwd(), '..', 'frontend', 'discovery', funderSlug);
 
         // Append error to runs.json
         const runsPath = path.join(errorDir, 'runs.json');
