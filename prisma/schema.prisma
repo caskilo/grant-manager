@@ -481,6 +481,26 @@ model HarvestSource {
   @@map("harvest_sources")
 }
 
+model Catalogue {
+  id               String   @id @default(uuid()) @db.Uuid
+  name             String
+  description      String?
+  type             String
+  focus            String[]  @default([])
+  geographies      String[]  @default([])
+  websiteUrl       String    @map("website_url")
+  typicalAwardMin  Decimal?  @map("typical_award_min") @db.Decimal(14, 2)
+  typicalAwardMax  Decimal?  @map("typical_award_max") @db.Decimal(14, 2)
+  currency         String    @default("GBP")
+  openData         String    @map("open_data") @default("No")
+  notes            String?
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt        DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@index([name(ops: raw("gin_trgm_ops"))], type: Gin)
+  @@map("catalogue")
+}
+
 model AuditLog {
   id         String          @id @default(uuid()) @db.Uuid
   userId     String?         @map("user_id") @db.Uuid

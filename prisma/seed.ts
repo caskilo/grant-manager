@@ -1,5 +1,7 @@
 import { PrismaClient, UserRole } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
+import * as fs from 'fs';
+import * as path from 'path';
 
 const prisma = new PrismaClient({
   datasources: {
@@ -161,6 +163,43 @@ Odyssean Institute`,
     },
   });
   console.log('✅ Created outreach template');
+
+  // Seed catalogue from catalogue.json
+  const cataloguePath = path.join(__dirname, '../../frontend/discovery/catalogue.json');
+  if (fs.existsSync(cataloguePath)) {
+    console.log('📚 Seeding catalogue from catalogue.json...');
+    const catalogueData = JSON.parse(fs.readFileSync(cataloguePath, 'utf-8'));
+    
+    let catalogueCount = 0;
+    for (const funder of catalogueData.funders) {
+      const existing = await prisma.catalogue.findFirst({
+        where: { name: { equals: funder.name, mode: 'insensitive' } },
+      });
+      
+      if (!existing) {
+        await prisma.catalogue.create({
+          data: {
+            id: funder.id,
+            name: funder.name,
+            description: funder.focus ? funder.focus.join(', ') : null,
+            type: funder.type,
+            focus: funder.focus || [],
+            geographies: funder.geographies || [],
+            websiteUrl: funder.websiteUrl,
+            typicalAwardMin: funder.typicalAwardMin,
+            typicalAwardMax: funder.typicalAwardMax,
+            currency: funder.currency || 'GBP',
+            openData: funder.openData || 'No',
+            notes: funder.notes || '',
+          },
+        });
+        catalogueCount++;
+      }
+    }
+    console.log(`✅ Seeded ${catalogueCount} catalogue entries`);
+  } else {
+    console.log('⚠️  catalogue.json not found, skipping catalogue seeding');
+  }
 
   console.log('🎉 Seeding completed successfully!');
   console.log('\n📝 Default credentials:');

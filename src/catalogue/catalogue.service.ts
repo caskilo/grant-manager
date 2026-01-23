@@ -1,10 +1,7 @@
 import { Injectable, Logger, NotFoundException, BadRequestException } from '@nestjs/common';
-import * as fs from 'fs/promises';
-import * as path from 'path';
-import { v4 as uuidv4 } from 'uuid';
 import * as cheerio from 'cheerio';
+import { PrismaService } from '../prisma/prisma.service';
 import {
-  CatalogueDatabase,
   CatalogueEntry,
   FUNDER_TYPES,
   CURRENCIES,
@@ -13,34 +10,15 @@ import {
   COMMON_FOCUS_AREAS,
 } from './types';
 import { CreateCatalogueEntryDto, UpdateCatalogueEntryDto } from './dto/catalogue-entry.dto';
+import { Catalogue } from '@prisma/client';
 
 @Injectable()
 export class CatalogueService {
   private readonly logger = new Logger(CatalogueService.name);
-  private readonly cataloguePath: string;
   private llmExtractor: any = null;
   private scraper: any = null;
 
-  constructor() {
-    // Use /tmp on Heroku (ephemeral but writable), local path for development
-    const isProduction = process.env.NODE_ENV === 'production' || process.env.APP_ENV === 'production';
-    
-    if (isProduction) {
-      // Heroku: use /tmp directory (ephemeral but writable)
-      this.cataloguePath = '/tmp/catalogue.json';
-    } else {
-      // Local development: use frontend directory
-      this.cataloguePath = path.join(
-        __dirname,
-        '../../../..',
-        'frontend',
-        'discovery',
-        'catalogue.json'
-      );
-    }
-    
-    this.logger.log(`Catalogue path: ${this.cataloguePath}`);
-    
+  constructor(private prisma: PrismaService) {
     // Lazy load harvest services to avoid circular dependencies
     this.initializeHarvestServices();
   }
@@ -65,97 +43,74 @@ export class CatalogueService {
     }
   }
 
-  async getCatalogue(): Promise<CatalogueDatabase> {
-    try {
-      const content = await fs.readFile(this.cataloguePath, 'utf-8');
-      return JSON.parse(content);
-    } catch (error: any) {
-      if (error.code === 'ENOENT') {
-        const emptyDb: CatalogueDatabase = {
-          version: '2.0',
-          lastModified: new Date().toISOString(),
-          funders: [],
-        };
-        await this.saveCatalogue(emptyDb);
-        return emptyDb;
-      }
-      throw error;
-    }
-  }
-
   async getAll(): Promise<CatalogueEntry[]> {
-    const catalogue = await this.getCatalogue();
-    return catalogue.funders;
+    const entries = await this.prisma.catalogue.findMany({
+      orderBy: { name: 'asc' },
+    });
+    return entries.map(this.mapToEntry);
   }
 
   async getById(id: string): Promise<CatalogueEntry> {
-    const catalogue = await this.getCatalogue();
-    const entry = catalogue.funders.find(f => f.id === id);
+    const entry = await this.prisma.catalogue.findUnique({
+      where: { id },
+    });
     
     if (!entry) {
       throw new NotFoundException(`Catalogue entry with id ${id} not found`);
     }
     
-    return entry;
+    return this.mapToEntry(entry);
   }
 
   async create(dto: CreateCatalogueEntryDto): Promise<CatalogueEntry> {
-    const catalogue = await this.getCatalogue();
+    const entry = await this.prisma.catalogue.create({
+      data: {
+        name: dto.name,
+        description: dto.description,
+        type: dto.type,
+        focus: dto.focus,
+        geographies: dto.geographies,
+        websiteUrl: dto.websiteUrl,
+        typicalAwardMin: dto.typicalAwardMin,
+        typicalAwardMax: dto.typicalAwardMax,
+        currency: dto.currency,
+        openData: dto.openData,
+        notes: dto.notes || '',
+      },
+    });
     
-    const now = new Date().toISOString();
-    const newEntry: CatalogueEntry = {
-      id: uuidv4(),
-      ...dto,
-      createdAt: now,
-      updatedAt: now,
-    };
-    
-    catalogue.funders.push(newEntry);
-    catalogue.lastModified = now;
-    
-    await this.saveCatalogue(catalogue);
-    
-    this.logger.log(`Created catalogue entry: ${newEntry.name} (${newEntry.id})`);
-    return newEntry;
+    this.logger.log(`Created catalogue entry: ${entry.name} (${entry.id})`);
+    return this.mapToEntry(entry);
   }
 
   async update(id: string, dto: UpdateCatalogueEntryDto): Promise<CatalogueEntry> {
-    const catalogue = await this.getCatalogue();
-    const index = catalogue.funders.findIndex(f => f.id === id);
+    const entry = await this.prisma.catalogue.update({
+      where: { id },
+      data: {
+        name: dto.name,
+        description: dto.description,
+        type: dto.type,
+        focus: dto.focus,
+        geographies: dto.geographies,
+        websiteUrl: dto.websiteUrl,
+        typicalAwardMin: dto.typicalAwardMin,
+        typicalAwardMax: dto.typicalAwardMax,
+        currency: dto.currency,
+        openData: dto.openData,
+        notes: dto.notes,
+      },
+    });
     
-    if (index === -1) {
-      throw new NotFoundException(`Catalogue entry with id ${id} not found`);
-    }
-    
-    const now = new Date().toISOString();
-    catalogue.funders[index] = {
-      ...catalogue.funders[index],
-      ...dto,
-      updatedAt: now,
-    };
-    
-    catalogue.lastModified = now;
-    await this.saveCatalogue(catalogue);
-    
-    this.logger.log(`Updated catalogue entry: ${catalogue.funders[index].name} (${id})`);
-    return catalogue.funders[index];
+    this.logger.log(`Updated catalogue entry: ${entry.name} (${id})`);
+    return this.mapToEntry(entry);
   }
 
   async delete(id: string): Promise<void> {
-    const catalogue = await this.getCatalogue();
-    const index = catalogue.funders.findIndex(f => f.id === id);
+    const entry = await this.prisma.catalogue.delete({
+      where: { id },
+    });
     
-    if (index === -1) {
-      throw new NotFoundException(`Catalogue entry with id ${id} not found`);
-    }
-    
-    const deletedEntry = catalogue.funders[index];
-    catalogue.funders.splice(index, 1);
-    catalogue.lastModified = new Date().toISOString();
-    
-    await this.saveCatalogue(catalogue);
-    
-    this.logger.log(`Deleted catalogue entry: ${deletedEntry.name} (${id})`);
+    this.logger.log(`Deleted catalogue entry: ${entry.name} (${id})`);
   }
 
   async getEnums() {
@@ -173,48 +128,41 @@ export class CatalogueService {
     const parser = new CatalogueParser();
     
     const entries = parser.parse(html);
-    const catalogue = await this.getCatalogue();
     
     let imported = 0;
     let skipped = 0;
     
     for (const entry of entries) {
-      const exists = catalogue.funders.some(
-        f => f.name.toLowerCase() === entry.funder.funderName.toLowerCase()
-      );
+      const exists = await this.prisma.catalogue.findFirst({
+        where: {
+          name: { equals: entry.funder.funderName, mode: 'insensitive' },
+        },
+      });
       
       if (exists) {
         skipped++;
         continue;
       }
       
-      const now = new Date().toISOString();
-      const newEntry: CatalogueEntry = {
-        id: uuidv4(),
-        name: entry.funder.funderName,
-        type: entry.funder.type || 'Other',
-        focus: entry.funder.focus ? entry.funder.focus.split(',').map(f => f.trim()) : [],
-        geographies: entry.funder.geography 
-          ? entry.funder.geography.split(/[,\/]/).map(g => g.trim()).filter(Boolean)
-          : [],
-        websiteUrl: entry.funder.website || '',
-        typicalAwardMin: entry.opportunities[0]?.minAward,
-        typicalAwardMax: entry.opportunities[0]?.maxAward,
-        currency: entry.opportunities[0]?.currency || 'GBP',
-        openData: entry.funder.notes?.includes('Yes') ? 'Yes' : 
-                  entry.funder.notes?.includes('Partial') ? 'Partial' : 'No',
-        notes: entry.funder.notes || '',
-        createdAt: now,
-        updatedAt: now,
-      };
+      await this.prisma.catalogue.create({
+        data: {
+          name: entry.funder.funderName,
+          type: entry.funder.type || 'Other',
+          focus: entry.funder.focus ? entry.funder.focus.split(',').map(f => f.trim()) : [],
+          geographies: entry.funder.geography 
+            ? entry.funder.geography.split(/[,\/]/).map(g => g.trim()).filter(Boolean)
+            : [],
+          websiteUrl: entry.funder.website || '',
+          typicalAwardMin: entry.opportunities[0]?.minAward,
+          typicalAwardMax: entry.opportunities[0]?.maxAward,
+          currency: entry.opportunities[0]?.currency || 'GBP',
+          openData: entry.funder.notes?.includes('Yes') ? 'Yes' : 
+                    entry.funder.notes?.includes('Partial') ? 'Partial' : 'No',
+          notes: entry.funder.notes || '',
+        },
+      });
       
-      catalogue.funders.push(newEntry);
       imported++;
-    }
-    
-    if (imported > 0) {
-      catalogue.lastModified = new Date().toISOString();
-      await this.saveCatalogue(catalogue);
     }
     
     this.logger.log(`Imported ${imported} entries, skipped ${skipped} duplicates`);
@@ -417,11 +365,22 @@ export class CatalogueService {
     };
   }
 
-  private async saveCatalogue(catalogue: CatalogueDatabase): Promise<void> {
-    await fs.writeFile(
-      this.cataloguePath,
-      JSON.stringify(catalogue, null, 2),
-      'utf-8'
-    );
+  private mapToEntry(catalogue: Catalogue): CatalogueEntry {
+    return {
+      id: catalogue.id,
+      name: catalogue.name,
+      description: catalogue.description || undefined,
+      type: catalogue.type,
+      focus: catalogue.focus,
+      geographies: catalogue.geographies,
+      websiteUrl: catalogue.websiteUrl,
+      typicalAwardMin: catalogue.typicalAwardMin ? Number(catalogue.typicalAwardMin) : undefined,
+      typicalAwardMax: catalogue.typicalAwardMax ? Number(catalogue.typicalAwardMax) : undefined,
+      currency: catalogue.currency,
+      openData: catalogue.openData,
+      notes: catalogue.notes || '',
+      createdAt: catalogue.createdAt.toISOString(),
+      updatedAt: catalogue.updatedAt.toISOString(),
+    };
   }
 }
