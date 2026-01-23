@@ -11,7 +11,7 @@ async function populateCatalogue() {
   console.log('🚀 Starting catalogue population from HTML...');
 
   const htmlPath = path.join(__dirname, '../../frontend/public/odyssean_funder_catalogue_v1.html');
-  const cataloguePath = path.join(__dirname, '../../frontend/discovery/catalogue.json');
+  const cataloguePath = path.join(__dirname, '../../frontend/public/catalogue.json');
 
   try {
     // Read HTML catalogue

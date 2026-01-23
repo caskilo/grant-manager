@@ -165,10 +165,41 @@ Odyssean Institute`,
   console.log('✅ Created outreach template');
 
   // Seed catalogue from catalogue.json
-  const cataloguePath = path.join(__dirname, '../../frontend/discovery/catalogue.json');
-  if (fs.existsSync(cataloguePath)) {
-    console.log('📚 Seeding catalogue from catalogue.json...');
-    const catalogueData = JSON.parse(fs.readFileSync(cataloguePath, 'utf-8'));
+  console.log('📚 Seeding catalogue...');
+  
+  let catalogueData;
+  const isProduction = process.env.NODE_ENV === 'production' || process.env.APP_ENV === 'production';
+  
+  if (isProduction) {
+    // Production: Fetch from deployed frontend
+    const frontendUrl = process.env.FRONTEND_URL || 'https://caskilo.github.io/grant-manager';
+    const catalogueUrl = `${frontendUrl}/catalogue.json`;
+    console.log(`📥 Fetching catalogue from: ${catalogueUrl}`);
+    
+    try {
+      const response = await fetch(catalogueUrl);
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      catalogueData = await response.json();
+    } catch (error) {
+      console.error('❌ Failed to fetch catalogue from frontend:', error);
+      console.log('⚠️  Skipping catalogue seeding');
+      catalogueData = null;
+    }
+  } else {
+    // Development: Read from local file
+    const cataloguePath = path.join(__dirname, '../../frontend/public/catalogue.json');
+    if (fs.existsSync(cataloguePath)) {
+      console.log(`📖 Reading local catalogue from: ${cataloguePath}`);
+      catalogueData = JSON.parse(fs.readFileSync(cataloguePath, 'utf-8'));
+    } else {
+      console.log('⚠️  Local catalogue.json not found, skipping catalogue seeding');
+      catalogueData = null;
+    }
+  }
+  
+  if (catalogueData) {
     
     let catalogueCount = 0;
     for (const funder of catalogueData.funders) {
