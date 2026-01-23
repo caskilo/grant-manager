@@ -250,7 +250,7 @@ export default function FunderDetailPage() {
                 <Card withBorder>
                   <Stack gap="sm">
                     <Group justify="space-between">
-                      <Title order={4}>Harvest Sources</Title>
+                      <Title order={4}>Sources</Title>
                       <Badge>{funder.harvestSources.length}</Badge>
                     </Group>
                     {funder.harvestSources.length > 0 ? (
@@ -273,7 +273,7 @@ export default function FunderDetailPage() {
                         ))}
                       </Stack>
                     ) : (
-                      <Text size="sm" c="dimmed">No harvest sources configured</Text>
+                      <Text size="sm" c="dimmed">No sources configured</Text>
                     )}
                   </Stack>
                 </Card>
