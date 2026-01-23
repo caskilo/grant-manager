@@ -597,6 +597,9 @@ export class IntelligentDiscoveryService {
     if (errorMsg.includes('HTTP 403')) {
       return `Access forbidden (403). The website "${new URL(url).hostname}" is blocking automated access. Try adding a different page URL manually.`;
     }
+    if (errorMsg.includes('HTTP 405')) {
+      return `Method not allowed (405). The website "${new URL(url).hostname}" is blocking automated requests. Try manually adding specific grant page URLs instead of the homepage.`;
+    }
     if (errorMsg.includes('HTTP 401')) {
       return `Authentication required (401). The page "${url}" requires login credentials.`;
     }

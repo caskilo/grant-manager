@@ -151,8 +151,12 @@ export class SourceDiscoveryProcessor extends WorkerHost {
       await job.updateProgress({ phase: 'finalizing', percent: 90 });
 
       // Check if we found anything
-      if (allDiscoveredSources.length === 0 && status.errors.length > 0) {
-        throw new Error(`Discovery failed - no sources found. Errors: ${status.errors.join('; ')}`);
+      if (allDiscoveredSources.length === 0) {
+        if (status.errors.length > 0) {
+          throw new Error(`Discovery failed - no sources found. Errors: ${status.errors.join('; ')}`);
+        } else {
+          this.logger.warn('No sources discovered, but no errors occurred either');
+        }
       }
 
       const discoveredSources = allDiscoveredSources;
@@ -328,6 +332,9 @@ export class SourceDiscoveryProcessor extends WorkerHost {
         const errorDir = isProduction
           ? path.join('/tmp', 'discovery', funderSlug)
           : path.join(process.cwd(), '..', 'frontend', 'discovery', funderSlug);
+
+        // Ensure directory exists before writing
+        await fs.mkdir(errorDir, { recursive: true });
 
         // Append error to runs.json
         const runsPath = path.join(errorDir, 'runs.json');
