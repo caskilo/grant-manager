@@ -153,7 +153,7 @@ export default function HarvestManagementModal({ opened, funder, onClose }: Harv
 
   const confirmDeleteSource = (sourceId: string, sourceName: string) => {
     modals.openConfirmModal({
-      title: 'Delete Harvest Source',
+      title: 'Delete Source',
       children: (
         <Text size="sm">
           Are you sure you want to delete "{sourceName}"? This action cannot be undone.
@@ -201,7 +201,7 @@ export default function HarvestManagementModal({ opened, funder, onClose }: Harv
     );
 
     selectedSources.forEach((source) => {
-      const name = source.anchorText || source.title || new URL(source.url).pathname.split('/').filter(Boolean).join(' ') || 'Harvest Source';
+      const name = source.anchorText || source.title || new URL(source.url).pathname.split('/').filter(Boolean).join(' ') || 'Source';
       
       createSourceMutation.mutate({
         name,
@@ -214,7 +214,7 @@ export default function HarvestManagementModal({ opened, funder, onClose }: Harv
   if (!funderId || !funder) return null;
 
   return (
-    <Modal opened={opened} onClose={onClose} title={`Harvest: ${funder.name}`} size="xl">
+    <Modal opened={opened} onClose={onClose} title={`Inspect: ${funder.name}`} size="xl">
       <Stack gap="lg">
         {/* Section A: Source Discovery */}
         <Paper withBorder p="md">
@@ -453,7 +453,7 @@ export default function HarvestManagementModal({ opened, funder, onClose }: Harv
                     onClick={createSourcesFromSelected}
                     loading={createSourceMutation.isPending}
                   >
-                    Create {selectedSuggestions.size} Harvest Source{selectedSuggestions.size > 1 ? 's' : ''}
+                    Create {selectedSuggestions.size} Source{selectedSuggestions.size > 1 ? 's' : ''}
                   </Button>
                 )}
               </Stack>
@@ -488,17 +488,17 @@ export default function HarvestManagementModal({ opened, funder, onClose }: Harv
 
         <Divider />
 
-        {/* Section B: Configured Harvest Sources */}
+        {/* Section B: Configured Sources */}
         <Paper withBorder p="md">
           <Stack gap="md">
             <div>
-              <Text fw={600} size="lg">Configured Harvest Sources</Text>
+              <Text fw={600} size="lg">Configured Sources</Text>
               <Text size="sm" c="dimmed">
-                Active harvest sources for this funder
+                Active sources for this funder
               </Text>
             </div>
 
-            {/* Harvest Progress */}
+            {/* Progress */}
             {harvestStatus === 'running' && harvestProgress && (
               <Paper p="md" withBorder bg="amber.0">
                 <Stack gap="sm">
@@ -518,18 +518,18 @@ export default function HarvestManagementModal({ opened, funder, onClose }: Harv
 
             {harvestStatus === 'completed' && (
               <Alert icon={<IconCheck size={16} />} color="green">
-                Harvest completed successfully!
+                Inspection completed successfully!
               </Alert>
             )}
 
             {harvestStatus === 'failed' && (
               <Alert icon={<IconAlertCircle size={16} />} color="red">
-                Harvest failed. Please check the logs and try again.
+                Inspection failed. Please check the logs and try again.
               </Alert>
             )}
 
             {isLoading ? (
-              <Text size="sm" c="dimmed">Loading harvest sources...</Text>
+              <Text size="sm" c="dimmed">Loading sources...</Text>
             ) : sources?.data?.length ? (
               <Stack gap="xs">
                 {sources.data.map((source) => (
@@ -560,7 +560,7 @@ export default function HarvestManagementModal({ opened, funder, onClose }: Harv
                           disabled={!source.enabled}
                           onClick={() => triggerMutation.mutate(source.id)}
                         >
-                          Run Harvest
+                          Inspect Source
                         </Button>
                         <ActionIcon
                           size="sm"
@@ -579,26 +579,26 @@ export default function HarvestManagementModal({ opened, funder, onClose }: Harv
             ) : (
               <Alert color="gray">
                 <Text size="sm">
-                  No harvest sources configured yet. Create sources from discoveries above.
+                  No sources configured yet. Create sources from discoveries above.
                 </Text>
               </Alert>
             )}
 
             {triggerMutation.isSuccess && (
               <Alert icon={<IconCheck size={16} />} color="green">
-                Harvest job started successfully! Job ID: {triggerMutation.data.jobId}
+                Job started successfully! ID: {triggerMutation.data.jobId}
               </Alert>
             )}
 
             {triggerMutation.isError && (
               <Alert icon={<IconAlertCircle size={16} />} color="red">
-                {(triggerMutation.error as Error)?.message || 'Failed to start harvest'}
+                {(triggerMutation.error as Error)?.message || 'Failed to start inspection'}
               </Alert>
             )}
 
             {createSourceMutation.isSuccess && (
               <Alert icon={<IconCheck size={16} />} color="green">
-                Harvest source(s) created successfully!
+                Source(s) created successfully!
               </Alert>
             )}
           </Stack>
