@@ -60,16 +60,11 @@ export class DiscoveryIntegrationService {
       `${dryRun ? 'DRY RUN: ' : ''}Applying discovery run for ${runDate}`,
     );
 
-    const summaryPath = path.join(
-      __dirname,
-      '../../../..',
-      'frontend',
-      'discovery',
-      'runs',
-      runDate,
-      'summary',
-      'discovery-summary.json',
-    );
+    const isProduction = process.env.NODE_ENV === 'production' || process.env.APP_ENV === 'production';
+    
+    const summaryPath = isProduction
+      ? path.join('/tmp', 'discovery-runs', runDate, 'summary', 'discovery-summary.json')
+      : path.join(__dirname, '../../../..', 'frontend', 'discovery', 'runs', runDate, 'summary', 'discovery-summary.json');
 
     this.logger.log(`Loading summary from: ${summaryPath}`);
 
@@ -236,16 +231,11 @@ export class DiscoveryIntegrationService {
   }
 
   async getSummary(runDate: string): Promise<DiscoverySummary> {
-    const summaryPath = path.join(
-      __dirname,
-      '../../../..',
-      'frontend',
-      'discovery',
-      'runs',
-      runDate,
-      'summary',
-      'discovery-summary.json',
-    );
+    const isProduction = process.env.NODE_ENV === 'production' || process.env.APP_ENV === 'production';
+    
+    const summaryPath = isProduction
+      ? path.join('/tmp', 'discovery-runs', runDate, 'summary', 'discovery-summary.json')
+      : path.join(__dirname, '../../../..', 'frontend', 'discovery', 'runs', runDate, 'summary', 'discovery-summary.json');
 
     this.logger.log(`Loading summary from: ${summaryPath}`);
 

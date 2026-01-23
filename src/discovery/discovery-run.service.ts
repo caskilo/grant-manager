@@ -115,17 +115,15 @@ export class DiscoveryRunService {
 
   /**
    * Initialize run folder structure
-   * Run outputs are stored in frontend/discovery/runs/ (client-owned)
+   * Production: Uses /tmp (ephemeral but writable on Heroku)
+   * Development: Uses frontend/discovery/runs/ (client-owned)
    */
   private async initializeRunFolder(runDate: string): Promise<string> {
-    const runFolder = path.join(
-      __dirname,
-      '../../../..',
-      'frontend',
-      'discovery',
-      'runs',
-      runDate
-    );
+    const isProduction = process.env.NODE_ENV === 'production' || process.env.APP_ENV === 'production';
+    
+    const runFolder = isProduction
+      ? path.join('/tmp', 'discovery-runs', runDate)
+      : path.join(__dirname, '../../../..', 'frontend', 'discovery', 'runs', runDate);
 
     this.logger.log(`Initializing run folder: ${runFolder}`);
 
