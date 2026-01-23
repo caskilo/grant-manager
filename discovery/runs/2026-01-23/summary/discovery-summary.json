@@ -1,0 +1,704 @@
+{
+  "metadata": {
+    "runDate": "2026-01-23",
+    "sourceId": "catalogue_v1",
+    "sourceName": "Odyssean Funder Catalogue v1",
+    "startTime": "2026-01-23T01:37:58.521Z",
+    "status": "running"
+  },
+  "plan": {
+    "newFunders": [],
+    "existingFunders": [
+      {
+        "id": "40163c7b-cefb-4953-b8ac-020bf6b69a90",
+        "name": "Wellcome Trust",
+        "matched": {
+          "funderName": "Wellcome Trust",
+          "website": "https://wellcome.org/",
+          "type": "Foundation",
+          "focus": "Biomedical research, open research, health",
+          "geography": "Global (UK origin)",
+          "notes": "Open data: Yes (grants database)"
+        }
+      },
+      {
+        "id": "375380fe-f257-4902-9281-29485ac6ac46",
+        "name": "UK Research and Innovation (UKRI)",
+        "matched": {
+          "funderName": "UK Research and Innovation (UKRI)",
+          "website": "https://www.ukri.org/",
+          "type": "Public research funder",
+          "focus": "All research disciplines via councils (ESRC, AHRC, EPSRC, NERC, MRC, BBSRC)",
+          "geography": "UK",
+          "notes": "Open data: Yes (funding finder)"
+        }
+      },
+      {
+        "id": "ab6752f9-fda2-4c6f-8607-d14434ea55bf",
+        "name": "Paul Hamlyn Foundation",
+        "matched": {
+          "funderName": "Paul Hamlyn Foundation",
+          "website": "https://www.phf.org.uk/",
+          "type": "Independent foundation",
+          "focus": "Arts, education, social justice",
+          "geography": "UK, India",
+          "notes": "Open data: Yes (grants database)"
+        }
+      },
+      {
+        "id": "149e531a-69e2-4202-b286-a25be7c11ba4",
+        "name": "Esmee Fairbairn Foundation",
+        "matched": {
+          "funderName": "Esmee Fairbairn Foundation",
+          "website": "https://esmeefairbairn.org.uk/",
+          "type": "Foundation",
+          "focus": "Environment, social justice, communities",
+          "geography": "UK",
+          "notes": "Open data: Partial"
+        }
+      },
+      {
+        "id": "89672203-739d-4b09-a136-525f6f01f92a",
+        "name": "Leverhulme Trust",
+        "matched": {
+          "funderName": "Leverhulme Trust",
+          "website": "https://www.leverhulme.ac.uk/",
+          "type": "Trust",
+          "focus": "Research, fellowships, interdisciplinary",
+          "geography": "UK",
+          "notes": "Open data: No (schemes listed)"
+        }
+      },
+      {
+        "id": "d7917a6e-348f-4401-a44e-a60262c6677b",
+        "name": "Gatsby Charitable Foundation",
+        "matched": {
+          "funderName": "Gatsby Charitable Foundation",
+          "website": "https://www.gatsby.org.uk/",
+          "type": "Foundation",
+          "focus": "Science, policy, research, education",
+          "geography": "UK",
+          "notes": "Open data: Partial"
+        }
+      },
+      {
+        "id": "a2bfd24c-5051-48ec-8065-aafdf32f6a67",
+        "name": "Nesta",
+        "matched": {
+          "funderName": "Nesta",
+          "website": "https://www.nesta.org.uk/",
+          "type": "Innovation foundation/charity",
+          "focus": "Innovation, civic tech, research on futures",
+          "geography": "UK",
+          "notes": "Open data: Partial"
+        }
+      },
+      {
+        "id": "c50894f8-889b-4512-be87-b893dc4eff38",
+        "name": "Joseph Rowntree Foundation",
+        "matched": {
+          "funderName": "Joseph Rowntree Foundation",
+          "website": "https://www.jrf.org.uk/",
+          "type": "Foundation",
+          "focus": "Poverty, social policy, housing",
+          "geography": "UK",
+          "notes": "Open data: Partial"
+        }
+      },
+      {
+        "id": "7b575234-08bb-4402-bc87-3f98fa253d9c",
+        "name": "Nuffield Foundation",
+        "matched": {
+          "funderName": "Nuffield Foundation",
+          "website": "https://www.nuffieldfoundation.org/",
+          "type": "Trust",
+          "focus": "Social policy, education, welfare research",
+          "geography": "UK",
+          "notes": "Open data: Partial"
+        }
+      },
+      {
+        "id": "ee45ee38-777e-4ee2-9785-f1af986793c2",
+        "name": "Royal Society",
+        "matched": {
+          "funderName": "Royal Society",
+          "website": "https://royalsociety.org/",
+          "type": "Learned society/funder",
+          "focus": "Natural sciences, fellowships, research",
+          "geography": "UK",
+          "notes": "Open data: Partial"
+        }
+      },
+      {
+        "id": "7e8d9e1b-2802-4eb0-a4f4-13497b49a4d2",
+        "name": "British Academy",
+        "matched": {
+          "funderName": "British Academy",
+          "website": "https://www.thebritishacademy.ac.uk/",
+          "type": "Learned society",
+          "focus": "Humanities & social sciences research",
+          "geography": "UK",
+          "notes": "Open data: Partial"
+        }
+      },
+      {
+        "id": "232e0efd-182d-494b-9edd-1a1f9449dd02",
+        "name": "National Lottery Community Fund",
+        "matched": {
+          "funderName": "National Lottery Community Fund",
+          "website": "https://www.tnlcommunityfund.org.uk/",
+          "type": "Public lottery fund",
+          "focus": "Community projects, social initiatives",
+          "geography": "UK",
+          "notes": "Open data: Yes (some)"
+        }
+      },
+      {
+        "id": "56841327-5c33-4e84-9e56-75f7ad67fbf6",
+        "name": "National Lottery Heritage Fund",
+        "matched": {
+          "funderName": "National Lottery Heritage Fund",
+          "website": "https://www.heritagefund.org.uk/",
+          "type": "Lottery fund",
+          "focus": "Heritage projects",
+          "geography": "UK",
+          "notes": "Open data: Partial"
+        }
+      },
+      {
+        "id": "d79ce7d5-99ba-4fd0-afbf-9e21233a9121",
+        "name": "Innovate UK",
+        "matched": {
+          "funderName": "Innovate UK",
+          "website": "https://innovateuk.ukri.org/",
+          "type": "Public innovation funder",
+          "focus": "Innovation, applied research, tech",
+          "geography": "UK",
+          "notes": "Open data: Yes"
+        }
+      },
+      {
+        "id": "98553bd7-8e20-4b2d-a19e-568f43f7ca4a",
+        "name": "European Commission — Horizon Europe / European Research Council (ERC)",
+        "matched": {
+          "funderName": "European Commission — Horizon Europe / European Research Council (ERC)",
+          "website": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/home",
+          "type": "Public international funder",
+          "focus": "Collaborative research, frontier research",
+          "geography": "EU + associated (check eligibility)",
+          "notes": "Open data: Yes"
+        }
+      },
+      {
+        "id": "984b7cce-2a4b-455c-a405-6c8d6614a4c3",
+        "name": "Sloan Foundation (Alfred P. Sloan)",
+        "matched": {
+          "funderName": "Sloan Foundation (Alfred P. Sloan)",
+          "website": "https://sloan.org/",
+          "type": "US foundation",
+          "focus": "Science, technology, economics, long-termism in science",
+          "geography": "Global",
+          "notes": "Open data: Partial"
+        }
+      },
+      {
+        "id": "6e1a2564-6c58-4ebc-981b-4b141b1af609",
+        "name": "John Templeton Foundation",
+        "matched": {
+          "funderName": "John Templeton Foundation",
+          "website": "https://www.templeton.org/",
+          "type": "US foundation",
+          "focus": "Science, big questions, long-term futures, integrative research",
+          "geography": "Global",
+          "notes": "Open data: Partial"
+        }
+      },
+      {
+        "id": "21c91165-4315-481b-a3bc-f0ce279f820f",
+        "name": "Open Philanthropy",
+        "matched": {
+          "funderName": "Open Philanthropy",
+          "website": "https://www.openphilanthropy.org/",
+          "type": "Philanthropic funder",
+          "focus": "Long-term future risks, AI governance, biosecurity",
+          "geography": "Global",
+          "notes": "Open data: Partial"
+        }
+      },
+      {
+        "id": "b60bb060-ebc8-48c2-a422-8132f6cbe3d6",
+        "name": "GrantNav / 360Giving",
+        "matched": {
+          "funderName": "GrantNav / 360Giving",
+          "website": "https://grantnav.threesixtygiving.org/",
+          "type": "Open grants database",
+          "focus": "Aggregated grants data from many UK funders",
+          "geography": "UK-centric",
+          "notes": "Open data: Yes (CSV/JSON/API)"
+        }
+      },
+      {
+        "id": "d811e41b-c997-4c4e-a865-18053e4ca00e",
+        "name": "Garfield Weston Foundation",
+        "matched": {
+          "funderName": "Garfield Weston Foundation",
+          "website": "https://garfieldweston.org/",
+          "type": "Independent family foundation",
+          "focus": "Community, arts, education, welfare",
+          "geography": "UK",
+          "notes": "Open data: Partial"
+        }
+      },
+      {
+        "id": "d222399b-dddf-4056-95f5-b08136900bea",
+        "name": "Wolfson Foundation",
+        "matched": {
+          "funderName": "Wolfson Foundation",
+          "website": "https://www.wolfson.org.uk/",
+          "type": "Independent foundation",
+          "focus": "Research infrastructure, education, science",
+          "geography": "UK",
+          "notes": "Open data: Partial"
+        }
+      },
+      {
+        "id": "6bcf83b7-7204-43de-9fac-84455d84aaa7",
+        "name": "Sainsbury Family Charitable Trusts (incl. Gatsby)",
+        "matched": {
+          "funderName": "Sainsbury Family Charitable Trusts (incl. Gatsby)",
+          "website": "https://www.sfct.org.uk/",
+          "type": "Family trusts",
+          "focus": "Science, education, civil society",
+          "geography": "UK",
+          "notes": "Open data: Partial"
+        }
+      },
+      {
+        "id": "1e61c6fa-bc97-4a28-8965-26fb979ef2fe",
+        "name": "Baring Foundation",
+        "matched": {
+          "funderName": "Baring Foundation",
+          "website": "https://www.baringfoundation.org.uk/",
+          "type": "Foundation",
+          "focus": "Arts, social justice, legal advice",
+          "geography": "UK",
+          "notes": "Open data: Partial"
+        }
+      },
+      {
+        "id": "22e8a76e-a94b-467b-9c2b-e1ab63a59466",
+        "name": "City Bridge Trust",
+        "matched": {
+          "funderName": "City Bridge Trust",
+          "website": "https://www.cityoflondon.gov.uk/services/grants-and-funding/city-bridge-trust",
+          "type": "Local/city funder (City of London)",
+          "focus": "London-based community projects, culture, resilience",
+          "geography": "London (UK)",
+          "notes": "Open data: Yes (360Giving)"
+        }
+      },
+      {
+        "id": "d47e8086-a8f4-462b-a59f-7acf67d351c5",
+        "name": "Blavatnik Family Foundation",
+        "matched": {
+          "funderName": "Blavatnik Family Foundation",
+          "website": "https://blavatnikfoundation.org/",
+          "type": "Family foundation",
+          "focus": "Science, arts, education",
+          "geography": "UK/US/Global",
+          "notes": "Open data: Partial"
+        }
+      },
+      {
+        "id": "a0ace03a-10d8-490a-8354-fa97034ea355",
+        "name": "The Rockefeller Foundation",
+        "matched": {
+          "funderName": "The Rockefeller Foundation",
+          "website": "https://www.rockefellerfoundation.org/",
+          "type": "US foundation",
+          "focus": "Global development, resilience, systems change",
+          "geography": "Global",
+          "notes": "Open data: Partial"
+        }
+      },
+      {
+        "id": "a974fca7-e3c8-401e-9c3f-aea215c8b527",
+        "name": "Ford Foundation",
+        "matched": {
+          "funderName": "Ford Foundation",
+          "website": "https://www.fordfoundation.org/",
+          "type": "US foundation",
+          "focus": "Social justice, democracy, inequality",
+          "geography": "Global",
+          "notes": "Open data: Partial"
+        }
+      },
+      {
+        "id": "57abb0b5-3dc1-47ff-ba0a-4533ba4b9de5",
+        "name": "Open Society Foundations",
+        "matched": {
+          "funderName": "Open Society Foundations",
+          "website": "https://www.opensocietyfoundations.org/",
+          "type": "US philanthropic network",
+          "focus": "Human rights, democracy, governance (controversial)",
+          "geography": "Global",
+          "notes": "Open data: Partial"
+        }
+      },
+      {
+        "id": "aba054da-c0a5-4037-8e76-a9166a061d32",
+        "name": "Chan Zuckerberg Initiative",
+        "matched": {
+          "funderName": "Chan Zuckerberg Initiative",
+          "website": "https://www.chanzuckerberg.com/",
+          "type": "Philanthropic org",
+          "focus": "Science, education, community",
+          "geography": "Global",
+          "notes": "Open data: Partial"
+        }
+      },
+      {
+        "id": "90803123-8a61-4bdd-bca5-30dfb8736910",
+        "name": "MacArthur Foundation",
+        "matched": {
+          "funderName": "MacArthur Foundation",
+          "website": "https://www.macfound.org/",
+          "type": "US foundation",
+          "focus": "Global challenges, resilience, social justice",
+          "geography": "Global",
+          "notes": "Open data: Partial"
+        }
+      },
+      {
+        "id": "fc033950-7e63-4f78-b5b9-2bb8b1aff210",
+        "name": "Rockefeller Brothers Fund",
+        "matched": {
+          "funderName": "Rockefeller Brothers Fund",
+          "website": "https://www.rbf.org/",
+          "type": "Family foundation",
+          "focus": "Sustainability, climate, systems change",
+          "geography": "Global",
+          "notes": "Open data: Partial"
+        }
+      },
+      {
+        "id": "fc33452f-f072-4cfb-9601-b586db74a1be",
+        "name": "Dana Foundation",
+        "matched": {
+          "funderName": "Dana Foundation",
+          "website": "https://dana.org/",
+          "type": "Foundation",
+          "focus": "Brain research, neuroscience, ethics of AI",
+          "geography": "US/global",
+          "notes": "Open data: Partial"
+        }
+      },
+      {
+        "id": "eba5f50b-0f5d-4ad2-942d-0542d604e71c",
+        "name": "Carnegie UK Trust",
+        "matched": {
+          "funderName": "Carnegie UK Trust",
+          "website": "https://www.carnegieuktrust.org.uk/",
+          "type": "Foundation",
+          "focus": "Social change, public policy, civic participation",
+          "geography": "UK",
+          "notes": "Open data: Partial"
+        }
+      },
+      {
+        "id": "4524d90d-5794-4a50-8d09-22977280e1ac",
+        "name": "Royal Society for the Encouragement of Arts (RSA)",
+        "matched": {
+          "funderName": "Royal Society for the Encouragement of Arts (RSA)",
+          "website": "https://www.thersa.org/",
+          "type": "Charitable org",
+          "focus": "Social progress, civic innovation",
+          "geography": "UK",
+          "notes": "Open data: Partial"
+        }
+      },
+      {
+        "id": "48220fbd-950b-43bd-88ed-2b3b2c755066",
+        "name": "AHRC (Arts & Humanities Research Council)",
+        "matched": {
+          "funderName": "AHRC (Arts & Humanities Research Council)",
+          "website": "https://ahrc.ukri.org/",
+          "type": "Research council (UKRI)",
+          "focus": "Arts & humanities research",
+          "geography": "UK",
+          "notes": "Open data: Yes (via UKRI)"
+        }
+      },
+      {
+        "id": "396be6eb-cb4d-4973-9925-b7ecc501385d",
+        "name": "ESRC (Economic & Social Research Council)",
+        "matched": {
+          "funderName": "ESRC (Economic & Social Research Council)",
+          "website": "https://esrc.ukri.org/",
+          "type": "Research council (UKRI)",
+          "focus": "Social science research",
+          "geography": "UK",
+          "notes": "Open data: Yes"
+        }
+      },
+      {
+        "id": "a0ae628b-f3bf-4c6c-adcf-23f4340386a1",
+        "name": "MRC (Medical Research Council)",
+        "matched": {
+          "funderName": "MRC (Medical Research Council)",
+          "website": "https://mrc.ukri.org/",
+          "type": "Research council (UKRI)",
+          "focus": "Medical research",
+          "geography": "UK",
+          "notes": "Open data: Yes"
+        }
+      },
+      {
+        "id": "575fb2cf-41cf-4dc3-a580-96456dbce3f5",
+        "name": "EPSRC (Engineering & Physical Sciences Research Council)",
+        "matched": {
+          "funderName": "EPSRC (Engineering & Physical Sciences Research Council)",
+          "website": "https://epsrc.ukri.org/",
+          "type": "Research council (UKRI)",
+          "focus": "Engineering & physical sciences",
+          "geography": "UK",
+          "notes": "Open data: Yes"
+        }
+      },
+      {
+        "id": "215e7cf9-48cc-4771-9199-37a49951b3cc",
+        "name": "NERC (Natural Environment Research Council)",
+        "matched": {
+          "funderName": "NERC (Natural Environment Research Council)",
+          "website": "https://nerc.ukri.org/",
+          "type": "Research council (UKRI)",
+          "focus": "Environmental and earth sciences",
+          "geography": "UK",
+          "notes": "Open data: Yes"
+        }
+      },
+      {
+        "id": "7df51ff9-a90a-47a1-b3e6-fcb745b1d606",
+        "name": "European Research Council (ERC)",
+        "matched": {
+          "funderName": "European Research Council (ERC)",
+          "website": "https://erc.europa.eu/",
+          "type": "EU research funder",
+          "focus": "Frontier research",
+          "geography": "EU & associated",
+          "notes": "Open data: Yes"
+        }
+      },
+      {
+        "id": "9d960e8a-bafc-426a-a666-6f8c485d1436",
+        "name": "Horizon Europe",
+        "matched": {
+          "funderName": "Horizon Europe",
+          "website": "https://research-and-innovation.ec.europa.eu/funding/funding-opportunities/horizon-europe_en",
+          "type": "EU programme",
+          "focus": "Collaborative research & innovation",
+          "geography": "EU & associated",
+          "notes": "Open data: Yes"
+        }
+      },
+      {
+        "id": "43184621-3725-4b52-8a49-d67b5e99407a",
+        "name": "NIHR (National Institute for Health Research)",
+        "matched": {
+          "funderName": "NIHR (National Institute for Health Research)",
+          "website": "https://www.nihr.ac.uk/",
+          "type": "Public funder",
+          "focus": "Health & applied research",
+          "geography": "UK",
+          "notes": "Open data: Partial"
+        }
+      }
+    ],
+    "newOpportunities": [],
+    "updatedOpportunities": [],
+    "unchangedOpportunities": [
+      {
+        "id": "4555fa01-7906-4537-8e9d-7b80c46a28a0",
+        "programName": "Wellcome Trust - General Funding"
+      },
+      {
+        "id": "a69e057a-33ba-4596-af13-86f69c50a8df",
+        "programName": "UK Research and Innovation (UKRI) - General Funding"
+      },
+      {
+        "id": "1560c0e1-8094-4eac-ab84-176941251271",
+        "programName": "Paul Hamlyn Foundation - General Funding"
+      },
+      {
+        "id": "ece7c9bb-377c-4690-b0e5-7bf778e00f40",
+        "programName": "Esmee Fairbairn Foundation - General Funding"
+      },
+      {
+        "id": "9cb25806-03ac-488f-9747-50e1ab3b3671",
+        "programName": "Leverhulme Trust - General Funding"
+      },
+      {
+        "id": "8946ea90-7fda-4fe7-bf39-7e89fa0cde98",
+        "programName": "Gatsby Charitable Foundation - General Funding"
+      },
+      {
+        "id": "7c87555d-b9da-405c-9173-4bc4094bf841",
+        "programName": "Nesta - General Funding"
+      },
+      {
+        "id": "8210d081-e697-43ad-a90c-126e1c14b605",
+        "programName": "Joseph Rowntree Foundation - General Funding"
+      },
+      {
+        "id": "fe691943-3148-4543-8a46-0eeb97e7c3ba",
+        "programName": "Nuffield Foundation - General Funding"
+      },
+      {
+        "id": "71c83629-1acc-489a-bc40-a23d1d7e7a42",
+        "programName": "Royal Society - General Funding"
+      },
+      {
+        "id": "0663af92-5284-4556-97c7-abe3f3b90ce4",
+        "programName": "British Academy - General Funding"
+      },
+      {
+        "id": "12e7b1fd-cab1-4c3f-947b-eeaa705da196",
+        "programName": "National Lottery Community Fund - General Funding"
+      },
+      {
+        "id": "862ec992-bd34-4093-be4b-67880a86d6ee",
+        "programName": "National Lottery Heritage Fund - General Funding"
+      },
+      {
+        "id": "bd60713c-e347-415c-93d6-c87213cdf4d8",
+        "programName": "Innovate UK - General Funding"
+      },
+      {
+        "id": "6b4e2088-d1f8-4111-b255-a4635e1ee48c",
+        "programName": "European Commission — Horizon Europe / European Research Council (ERC) - General Funding"
+      },
+      {
+        "id": "8e992d38-a6ce-46de-bbc9-a006bc0e9d3b",
+        "programName": "Sloan Foundation (Alfred P. Sloan) - General Funding"
+      },
+      {
+        "id": "74da3d41-90e5-43b8-892a-b0286913be8e",
+        "programName": "John Templeton Foundation - General Funding"
+      },
+      {
+        "id": "3561661a-05a1-45a0-882b-f51e4fd9931e",
+        "programName": "Open Philanthropy - General Funding"
+      },
+      {
+        "id": "f4c491b1-01f9-48b9-aba1-461e9d302d5f",
+        "programName": "GrantNav / 360Giving - General Funding"
+      },
+      {
+        "id": "89b1775f-c954-43f3-9892-2be17aee2341",
+        "programName": "Garfield Weston Foundation - General Funding"
+      },
+      {
+        "id": "5073c3c2-5d96-48d2-a718-0a7f6f2bb078",
+        "programName": "Wolfson Foundation - General Funding"
+      },
+      {
+        "id": "e4fc5c82-fb50-4d76-88df-e4a836665663",
+        "programName": "Sainsbury Family Charitable Trusts (incl. Gatsby) - General Funding"
+      },
+      {
+        "id": "5d73e09a-c1ef-4a3c-8c67-501e2ad65557",
+        "programName": "Baring Foundation - General Funding"
+      },
+      {
+        "id": "7908ce2d-0d00-486c-9d1d-85ec56b646b3",
+        "programName": "City Bridge Trust - General Funding"
+      },
+      {
+        "id": "33955614-4ebe-4fce-bbaa-b287df6fdad4",
+        "programName": "Blavatnik Family Foundation - General Funding"
+      },
+      {
+        "id": "68e51737-e962-4055-a273-bfa31c0f0b26",
+        "programName": "The Rockefeller Foundation - General Funding"
+      },
+      {
+        "id": "cd2bdb7f-1129-4688-a6b8-ec99140cf41e",
+        "programName": "Ford Foundation - General Funding"
+      },
+      {
+        "id": "279f5e76-bf2d-43b8-b628-f2e465472897",
+        "programName": "Open Society Foundations - General Funding"
+      },
+      {
+        "id": "50e5ee6b-1396-4ab9-9061-749052ba1d03",
+        "programName": "Chan Zuckerberg Initiative - General Funding"
+      },
+      {
+        "id": "8757fa7a-b28a-44b5-8687-6a094b72df89",
+        "programName": "MacArthur Foundation - General Funding"
+      },
+      {
+        "id": "3cffa5ab-5fad-4297-9e69-f4b734576056",
+        "programName": "Rockefeller Brothers Fund - General Funding"
+      },
+      {
+        "id": "c0f31d2d-9157-4a06-bff5-35df7fd3671e",
+        "programName": "Dana Foundation - General Funding"
+      },
+      {
+        "id": "d4b99746-6586-4323-bea6-0df650b85bd6",
+        "programName": "Carnegie UK Trust - General Funding"
+      },
+      {
+        "id": "6e00b918-b76d-44b0-8262-9a0e1efea268",
+        "programName": "Royal Society for the Encouragement of Arts (RSA) - General Funding"
+      },
+      {
+        "id": "51492f0c-3edb-4a61-ba3e-d91698b807db",
+        "programName": "AHRC (Arts & Humanities Research Council) - General Funding"
+      },
+      {
+        "id": "dffe1c3f-a456-4c44-b12d-04a505c75488",
+        "programName": "ESRC (Economic & Social Research Council) - General Funding"
+      },
+      {
+        "id": "b39506d4-579c-4712-ae8f-2b6e60f326bc",
+        "programName": "MRC (Medical Research Council) - General Funding"
+      },
+      {
+        "id": "72933d22-225a-490d-b8bc-ecfcc1161b64",
+        "programName": "EPSRC (Engineering & Physical Sciences Research Council) - General Funding"
+      },
+      {
+        "id": "9645c1b8-7fe5-44d4-ad67-47f8e1d4a756",
+        "programName": "NERC (Natural Environment Research Council) - General Funding"
+      },
+      {
+        "id": "daa49896-0361-4a3c-b83f-98615ff1c01c",
+        "programName": "European Research Council (ERC) - General Funding"
+      },
+      {
+        "id": "823e420f-ea73-4f9b-b183-9db00253fe28",
+        "programName": "Horizon Europe - General Funding"
+      },
+      {
+        "id": "b851e3a4-3e6f-4118-b5f9-5f2ccda138ba",
+        "programName": "NIHR (National Institute for Health Research) - General Funding"
+      }
+    ]
+  },
+  "stats": {
+    "totalFundersInSource": 42,
+    "newFunders": 0,
+    "existingFunders": 42,
+    "totalOpportunities": 42,
+    "newOpportunities": 0,
+    "updatedOpportunities": 0,
+    "unchangedOpportunities": 42
+  },
+  "recommendations": [],
+  "notes": [
+    "Catalogue contains 42 funders with basic metadata",
+    "Opportunities are placeholder entries - real opportunities should be scraped from funder websites"
+  ]
+}

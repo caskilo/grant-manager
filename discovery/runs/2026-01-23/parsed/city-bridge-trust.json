@@ -1,0 +1,34 @@
+{
+  "funder": {
+    "funderName": "City Bridge Trust",
+    "website": "https://www.cityoflondon.gov.uk/services/grants-and-funding/city-bridge-trust",
+    "type": "Local/city funder (City of London)",
+    "focus": "London-based community projects, culture, resilience",
+    "geography": "London (UK)",
+    "notes": "Open data: Yes (360Giving)"
+  },
+  "opportunities": [
+    {
+      "externalId": "city-bridge-trust-general",
+      "programName": "City Bridge Trust - General Funding",
+      "sourceUrl": "https://www.cityoflondon.gov.uk/services/grants-and-funding/city-bridge-trust",
+      "declaredFocus": [
+        "London-based community projects",
+        "culture",
+        "resilience"
+      ],
+      "geographies": [
+        "London"
+      ],
+      "eligibleApplicantTypes": [
+        "CHARITY",
+        "NONPROFIT"
+      ],
+      "minAward": 5000,
+      "maxAward": 500000,
+      "currency": "GBP",
+      "rawDescription": "City Bridge Trust is a Local/city funder (City of London) focused on London-based community projects, culture, resilience. Geography: London (UK). Typical award range: £5k - £500k.",
+      "status": "OPEN"
+    }
+  ]
+}

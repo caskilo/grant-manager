@@ -1,0 +1,36 @@
+{
+  "funder": {
+    "funderName": "John Templeton Foundation",
+    "website": "https://www.templeton.org/",
+    "type": "US foundation",
+    "focus": "Science, big questions, long-term futures, integrative research",
+    "geography": "Global",
+    "notes": "Open data: Partial"
+  },
+  "opportunities": [
+    {
+      "externalId": "john-templeton-foundation-general",
+      "programName": "John Templeton Foundation - General Funding",
+      "sourceUrl": "https://www.templeton.org/",
+      "declaredFocus": [
+        "Science",
+        "big questions",
+        "long-term futures",
+        "integrative research"
+      ],
+      "geographies": [
+        "Global"
+      ],
+      "eligibleApplicantTypes": [
+        "UNIVERSITY",
+        "RESEARCH_INSTITUTE",
+        "CHARITY",
+        "NONPROFIT"
+      ],
+      "minAward": 50000,
+      "currency": "USD",
+      "rawDescription": "John Templeton Foundation is a US foundation focused on Science, big questions, long-term futures, integrative research. Geography: Global. Typical award range: $50k - $m.",
+      "status": "OPEN"
+    }
+  ]
+}

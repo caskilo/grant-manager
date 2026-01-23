@@ -1,0 +1,31 @@
+{
+  "funder": {
+    "funderName": "GrantNav / 360Giving",
+    "website": "https://grantnav.threesixtygiving.org/",
+    "type": "Open grants database",
+    "focus": "Aggregated grants data from many UK funders",
+    "geography": "UK-centric",
+    "notes": "Open data: Yes (CSV/JSON/API)"
+  },
+  "opportunities": [
+    {
+      "externalId": "grantnav-360giving-general",
+      "programName": "GrantNav / 360Giving - General Funding",
+      "sourceUrl": "https://grantnav.threesixtygiving.org/",
+      "declaredFocus": [
+        "Aggregated grants data from many UK funders"
+      ],
+      "geographies": [
+        "UK-centric"
+      ],
+      "eligibleApplicantTypes": [
+        "CHARITY",
+        "UNIVERSITY",
+        "RESEARCH_INSTITUTE"
+      ],
+      "currency": "GBP",
+      "rawDescription": "GrantNav / 360Giving is a Open grants database focused on Aggregated grants data from many UK funders. Geography: UK-centric. Typical award range: N/A.",
+      "status": "OPEN"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "funder": {
+    "funderName": "Royal Society",
+    "website": "https://royalsociety.org/",
+    "type": "Learned society/funder",
+    "focus": "Natural sciences, fellowships, research",
+    "geography": "UK",
+    "notes": "Open data: Partial"
+  },
+  "opportunities": [
+    {
+      "externalId": "royal-society-general",
+      "programName": "Royal Society - General Funding",
+      "sourceUrl": "https://royalsociety.org/",
+      "declaredFocus": [
+        "Natural sciences",
+        "fellowships",
+        "research"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "eligibleApplicantTypes": [
+        "UNIVERSITY",
+        "RESEARCH_INSTITUTE"
+      ],
+      "minAward": 10000,
+      "currency": "GBP",
+      "rawDescription": "Royal Society is a Learned society/funder focused on Natural sciences, fellowships, research. Geography: UK. Typical award range: £10k - £m.",
+      "status": "OPEN"
+    }
+  ]
+}
