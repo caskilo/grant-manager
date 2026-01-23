@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import * as cheerio from 'cheerio';
-import puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer-core';
 
 /**
  * ScraperService - Protocol-based web scraping for grant opportunities
