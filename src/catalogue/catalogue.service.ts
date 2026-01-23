@@ -22,13 +22,24 @@ export class CatalogueService {
   private scraper: any = null;
 
   constructor() {
-    this.cataloguePath = path.join(
-      __dirname,
-      '../../../..',
-      'frontend',
-      'discovery',
-      'catalogue.json'
-    );
+    // Use /tmp on Heroku (ephemeral but writable), local path for development
+    const isProduction = process.env.NODE_ENV === 'production' || process.env.APP_ENV === 'production';
+    
+    if (isProduction) {
+      // Heroku: use /tmp directory (ephemeral but writable)
+      this.cataloguePath = '/tmp/catalogue.json';
+    } else {
+      // Local development: use frontend directory
+      this.cataloguePath = path.join(
+        __dirname,
+        '../../../..',
+        'frontend',
+        'discovery',
+        'catalogue.json'
+      );
+    }
+    
+    this.logger.log(`Catalogue path: ${this.cataloguePath}`);
     
     // Lazy load harvest services to avoid circular dependencies
     this.initializeHarvestServices();
