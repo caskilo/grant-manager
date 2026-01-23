@@ -229,7 +229,7 @@ export default function FundersPage() {
                       setHarvestModalOpen(true);
                     }}
                   >
-                    Harvest
+                    Inspect
                   </Button>
                 </Group>
               </Paper>
