@@ -280,17 +280,19 @@ ${content}`;
 
       const parsed = JSON.parse(jsonMatch[0]);
 
+      const toArr = (v: any): string[] | undefined => Array.isArray(v) ? v : (v ? [String(v)] : undefined);
+
       return {
-        organizationTypes: parsed.organizationTypes || null,
-        geographicRestrictions: parsed.geographicRestrictions || null,
-        careerStage: parsed.careerStage || null,
-        disciplineRestrictions: parsed.disciplineRestrictions || null,
+        organizationTypes: toArr(parsed.organizationTypes),
+        geographicRestrictions: toArr(parsed.geographicRestrictions),
+        careerStage: toArr(parsed.careerStage),
+        disciplineRestrictions: toArr(parsed.disciplineRestrictions),
         fundingHistory: parsed.fundingHistory || null,
         collaborationRequirements: parsed.collaborationRequirements || null,
         otherCriteria: parsed.otherCriteria || null,
         confidence: parsed.confidence || 0.5,
         completeness: parsed.completeness || 0.5,
-        uncertainties: parsed.uncertainties || [],
+        uncertainties: toArr(parsed.uncertainties) || [],
         reasoning: parsed.reasoning || 'No reasoning provided',
         extractionMethod: parsed.extractionMethod || 'unknown',
       };
@@ -345,21 +347,26 @@ ${content}`;
    */
   formatEligibilityForDisplay(eligibility: EligibilityExtraction): string {
     const parts: string[] = [];
+    const asArr = (v: any): string[] => Array.isArray(v) ? v : (v ? [String(v)] : []);
 
-    if (eligibility.organizationTypes && eligibility.organizationTypes.length > 0) {
-      parts.push(`**Eligible organizations:** ${eligibility.organizationTypes.join(', ')}`);
+    const orgTypes = asArr(eligibility.organizationTypes);
+    if (orgTypes.length > 0) {
+      parts.push(`**Eligible organizations:** ${orgTypes.join(', ')}`);
     }
 
-    if (eligibility.geographicRestrictions && eligibility.geographicRestrictions.length > 0) {
-      parts.push(`**Geographic restrictions:** ${eligibility.geographicRestrictions.join(', ')}`);
+    const geoRestrictions = asArr(eligibility.geographicRestrictions);
+    if (geoRestrictions.length > 0) {
+      parts.push(`**Geographic restrictions:** ${geoRestrictions.join(', ')}`);
     }
 
-    if (eligibility.careerStage && eligibility.careerStage.length > 0) {
-      parts.push(`**Career stage:** ${eligibility.careerStage.join(', ')}`);
+    const career = asArr(eligibility.careerStage);
+    if (career.length > 0) {
+      parts.push(`**Career stage:** ${career.join(', ')}`);
     }
 
-    if (eligibility.disciplineRestrictions && eligibility.disciplineRestrictions.length > 0) {
-      parts.push(`**Discipline restrictions:** ${eligibility.disciplineRestrictions.join(', ')}`);
+    const disciplines = asArr(eligibility.disciplineRestrictions);
+    if (disciplines.length > 0) {
+      parts.push(`**Discipline restrictions:** ${disciplines.join(', ')}`);
     }
 
     if (eligibility.fundingHistory) {
@@ -370,12 +377,14 @@ ${content}`;
       parts.push(`**Collaboration:** ${eligibility.collaborationRequirements}`);
     }
 
-    if (eligibility.otherCriteria && eligibility.otherCriteria.length > 0) {
-      parts.push(`**Other criteria:** ${eligibility.otherCriteria.join('; ')}`);
+    const other = asArr(eligibility.otherCriteria);
+    if (other.length > 0) {
+      parts.push(`**Other criteria:** ${other.join('; ')}`);
     }
 
-    if (eligibility.uncertainties.length > 0) {
-      parts.push(`\n**Note:** Some information could not be determined: ${eligibility.uncertainties.join(', ')}`);
+    const uncertainties = asArr(eligibility.uncertainties);
+    if (uncertainties.length > 0) {
+      parts.push(`\n**Note:** Some information could not be determined: ${uncertainties.join(', ')}`);
     }
 
     parts.push(`\n*Confidence: ${(eligibility.confidence * 100).toFixed(0)}% | Completeness: ${(eligibility.completeness * 100).toFixed(0)}% | Method: ${eligibility.extractionMethod}*`);

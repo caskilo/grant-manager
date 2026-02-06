@@ -180,11 +180,12 @@ export class HarvestIntegrationService {
         const aiConfidence = grant.confidence || grant.alignmentScore?.confidence;
         
         // Build processSteps from eligibility details
+        const toArray = (v: any): string[] => Array.isArray(v) ? v : (v ? [String(v)] : []);
         const processSteps: string[] = [];
-        if (ed?.careerStage) processSteps.push(`Career stage: ${ed.careerStage.join(', ')}`);
+        if (ed?.careerStage) processSteps.push(`Career stage: ${toArray(ed.careerStage).join(', ')}`);
         if (ed?.collaborationRequirements) processSteps.push(`Collaboration: ${ed.collaborationRequirements}`);
         if (ed?.fundingHistory) processSteps.push(`Funding history: ${ed.fundingHistory}`);
-        if (ed?.uncertainties?.length) processSteps.push(`Uncertainties: ${ed.uncertainties.join('; ')}`);
+        if (ed?.uncertainties?.length) processSteps.push(`Uncertainties: ${toArray(ed.uncertainties).join('; ')}`);
         
         // Store alignment dimensions as JSON in deadlines metadata
         // We'll store the full alignment data in tags for now
