@@ -199,6 +199,7 @@ export class DiscoveryRunService {
       const catalogueData = JSON.parse(content);
       
       // Convert catalogue JSON format to ParsedCatalogueEntry format
+      // Only funders are created from the catalogue — real opportunities come from the harvest/inspection pipeline
       const entries: ParsedCatalogueEntry[] = catalogueData.funders.map((funder: any) => ({
         funder: {
           funderName: funder.name,
@@ -208,21 +209,7 @@ export class DiscoveryRunService {
           geography: funder.geographies?.join(', ') || '',
           notes: funder.notes || '',
         },
-        opportunities: [
-          {
-            externalId: `${this.slugify(funder.name)}-general`,
-            programName: `${funder.name} - General Funding`,
-            sourceUrl: funder.websiteUrl,
-            declaredFocus: funder.focus || [],
-            geographies: funder.geographies || [],
-            eligibleApplicantTypes: ['CHARITY', 'UNIVERSITY', 'RESEARCH_INSTITUTE'],
-            minAward: funder.typicalAwardMin,
-            maxAward: funder.typicalAwardMax,
-            currency: funder.currency || 'GBP',
-            rawDescription: `${funder.name} is a ${funder.type}. Focus: ${funder.focus?.join(', ') || 'N/A'}. Geography: ${funder.geographies?.join(', ') || 'N/A'}.`,
-            status: 'OPEN',
-          },
-        ],
+        opportunities: [],
       }));
 
       // Write each entry to a separate JSON file
@@ -348,7 +335,7 @@ export class DiscoveryRunService {
       `Catalogue contains ${totalEntries} funders with basic metadata`
     );
     notes.push(
-      `Opportunities are placeholder entries - real opportunities should be scraped from funder websites`
+      `Opportunities are created via the harvest/inspection pipeline, not from the catalogue`
     );
 
     return {

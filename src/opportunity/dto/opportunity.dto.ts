@@ -30,6 +30,10 @@ export class CreateOpportunityDto {
   sourceUrl: string;
 
   @IsOptional()
+  @IsUrl()
+  opportunityUrl?: string;
+
+  @IsOptional()
   @IsEnum(OpportunityStatus)
   status?: OpportunityStatus;
 

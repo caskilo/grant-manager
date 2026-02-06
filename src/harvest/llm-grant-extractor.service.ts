@@ -22,6 +22,7 @@ import { LLMEligibilityExtractorService, EligibilityExtraction } from './llm-eli
 export interface ExtractedGrant {
   programName: string;
   description: string;
+  url?: string; // Direct URL to the specific opportunity page (if different from source URL)
   eligibility?: string; // Simple string for backward compatibility
   eligibilityDetailed?: EligibilityExtraction; // Detailed multi-step extraction
   fundingAmount?: {
@@ -203,6 +204,20 @@ export class LLMGrantExtractorService {
     const root = mainContent || $('body');
 
     // Convert to markdown-like text with structure
+    // First, convert <a> tags to markdown links inline so URLs are preserved
+    root.find('a[href]').each((_, el) => {
+      const $a = $(el);
+      const href = $a.attr('href');
+      const text = $a.text().trim();
+      if (href && text && text.length > 2) {
+        // Resolve relative URLs
+        const absoluteUrl = href.startsWith('http') ? href : (href.startsWith('/') ? href : '');
+        if (absoluteUrl) {
+          $a.replaceWith(`[${text}](${absoluteUrl})`);
+        }
+      }
+    });
+
     const lines: string[] = [];
     
     root.find('h1, h2, h3, h4, h5, h6, p, li, dt, dd, th, td').each((_, el) => {
@@ -255,6 +270,7 @@ URL: ${url}
 **For each grant found, extract ONLY if explicitly stated:**
 - **Program name** (required) - The exact name as it appears
 - **Description** (required) - Summary of what the grant is for
+- **URL** - If the page contains a link to a dedicated page for this specific grant/opportunity (e.g. an "Apply" or "Learn more" link), extract that URL. If the current page IS the grant page, use the current URL. Set to null if no specific link is found.
 - **Funding amount** - Specific numbers with currency (e.g., "£100,000 to £500,000")
 - **Deadline** - Exact date or "rolling" if stated
 - **Duration** - Number of months/years if specified
@@ -281,6 +297,7 @@ URL: ${url}
     {
       "programName": "Exact Program Name From Page",
       "description": "Description as it appears on page",
+      "url": "https://example.com/grants/specific-grant" or null,
       "fundingAmount": {
         "min": 100000,
         "max": 500000,
@@ -337,6 +354,7 @@ ${content}`;
         grants: parsed.grants.map((g: any) => ({
           programName: g.programName || 'Unknown Program',
           description: g.description || '',
+          url: g.url || undefined,
           eligibility: g.eligibility,
           fundingAmount: g.fundingAmount,
           deadline: g.deadline,
@@ -370,6 +388,7 @@ ${content}`;
     return {
       programName: grant.programName,
       description: grant.description,
+      url: grant.url,
       sourceUrl,
       geographies: grant.geographies,
       deadline: grant.deadline?.date || grant.deadline?.description,

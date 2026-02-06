@@ -176,6 +176,7 @@ model Opportunity {
   funderId                 String              @map("funder_id") @db.Uuid
   programName              String              @map("program_name")
   sourceUrl                String              @map("source_url")
+  opportunityUrl           String?             @map("opportunity_url")
   status                   OpportunityStatus   @default(OPEN)
   lastFetched              DateTime?           @map("last_fetched") @db.Timestamptz
   declaredFocus            String[]            @default([]) @map("declared_focus")

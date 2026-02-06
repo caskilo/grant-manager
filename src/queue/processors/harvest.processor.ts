@@ -4,6 +4,7 @@ import { Job } from 'bullmq';
 import { PrismaService } from '../../prisma/prisma.service';
 import { LLMGrantExtractorService } from '../../harvest/llm-grant-extractor.service';
 import { OdysseanAlignmentService } from '../../harvest/odyssean-alignment.service';
+import { HarvestIntegrationService } from '../../harvest/harvest-integration.service';
 import { HarvestRunPlan, HarvestRunSummary } from '../../harvest/types';
 import * as fs from 'fs/promises';
 import * as path from 'path';
@@ -27,6 +28,7 @@ export class HarvestProcessor extends WorkerHost {
     private prisma: PrismaService,
     private llmExtractor: LLMGrantExtractorService,
     private odysseanAlignment: OdysseanAlignmentService,
+    private integrationService: HarvestIntegrationService,
   ) {
     super();
   }
@@ -241,9 +243,30 @@ export class HarvestProcessor extends WorkerHost {
       );
       this.logger.log(`   ✓ Summary generated`);
 
-      // Phase 5: Finalize
-      await job.updateProgress({ phase: 'finalizing', percent: 90 });
-      this.logger.log(`\n✅ PHASE 5: Finalizing`);
+      // Phase 5: Auto-integrate opportunities into DB
+      await job.updateProgress({ phase: 'integrating', percent: 80 });
+      this.logger.log(`\n🔗 PHASE 5: Auto-integrating opportunities into database`);
+
+      let integrationResult;
+      try {
+        integrationResult = await this.integrationService.applyRun(runId, {
+          funderId: funder.id,
+          dryRun: false,
+        });
+        this.logger.log(`   ✓ Created: ${integrationResult.opportunitiesCreated}`);
+        this.logger.log(`   ✓ Updated: ${integrationResult.opportunitiesUpdated}`);
+        this.logger.log(`   ✓ Scored: ${integrationResult.opportunitiesScored}`);
+        if (integrationResult.warnings.length > 0) {
+          integrationResult.warnings.forEach(w => this.logger.warn(`   ⚠ ${w}`));
+        }
+      } catch (error: any) {
+        this.logger.error(`   ✗ Auto-integration failed: ${error.message}`);
+        this.logger.error(`   Opportunities saved to plan.json but not yet in DB. Run manual integration.`);
+      }
+
+      // Phase 6: Finalize
+      await job.updateProgress({ phase: 'finalizing', percent: 95 });
+      this.logger.log(`\n✅ PHASE 6: Finalizing`);
       
       // Update harvest source success metadata
       await this.prisma.harvestSource.update({
@@ -256,6 +279,7 @@ export class HarvestProcessor extends WorkerHost {
       this.logger.log(`🎉 HARVEST JOB COMPLETED SUCCESSFULLY`);
       this.logger.log(`   Run ID: ${runId}`);
       this.logger.log(`   Grants extracted: ${scoredGrants.length}`);
+      this.logger.log(`   Opportunities created: ${integrationResult?.opportunitiesCreated ?? 'N/A'}`);
       this.logger.log(`   Tokens used: ${totalTokens}`);
       this.logger.log(`   Extraction confidence: ${(extractionResult.confidence * 100).toFixed(0)}%`);
       this.logger.log(`${'='.repeat(80)}\n`);
@@ -264,6 +288,8 @@ export class HarvestProcessor extends WorkerHost {
         success: true,
         runId,
         grantsExtracted: scoredGrants.length,
+        opportunitiesCreated: integrationResult?.opportunitiesCreated ?? 0,
+        opportunitiesUpdated: integrationResult?.opportunitiesUpdated ?? 0,
         tokensUsed: totalTokens,
         extractionConfidence: extractionResult.confidence,
         harvestPath: harvestDir,
