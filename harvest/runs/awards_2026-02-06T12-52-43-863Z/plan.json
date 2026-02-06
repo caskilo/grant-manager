@@ -1,0 +1,320 @@
+{
+  "runId": "awards_2026-02-06T12-52-43-863Z",
+  "sourceType": "llm_extraction",
+  "sourceName": "Awards",
+  "sourceUrl": "https://www.thersa.org/awards/",
+  "funderId": "42c324cb-2419-4c88-823d-fd97baca8a39",
+  "funderName": "Royal Society for the Encouragement of Arts (RSA)",
+  "config": {
+    "extractionMethod": "llm",
+    "tokensUsed": 22447,
+    "extractionConfidence": 0.8
+  },
+  "timestamp": "2026-02-06T12:53:03.592Z",
+  "stats": {
+    "totalOpportunities": 5,
+    "newOpportunities": 5,
+    "updatedOpportunities": 0,
+    "unchangedOpportunities": 0
+  },
+  "opportunities": [
+    {
+      "programName": "Royal Designers for Industry",
+      "description": "The RDI is the highest accolade for designers in the UK. Only 200 designers can hold the title.",
+      "url": "https://www.thersa.org/about/royal-designers-for-industry/",
+      "eligibility": "\n**Note:** Some information could not be determined: Failed to parse LLM response\n\n\n*Confidence: 20% | Completeness: 10% | Method: explicit*",
+      "confidence": 1,
+      "reasoning": "The program name, description, and URL are clearly stated on the page.",
+      "eligibilityDetailed": {
+        "organizationTypes": null,
+        "geographicRestrictions": null,
+        "careerStage": null,
+        "disciplineRestrictions": null,
+        "fundingHistory": null,
+        "collaborationRequirements": null,
+        "otherCriteria": null,
+        "confidence": 0.2,
+        "completeness": 0.1,
+        "uncertainties": [
+          "Failed to parse LLM response"
+        ],
+        "reasoning": "First pass: The website does not provide any explicit information about the eligibility criteria for the Royal Designers for Industry program. The content is focused on describing the program and its history, but does not mention any requirements for who can apply or what the criteria are.\n\nSecond pass: Parsing error",
+        "extractionMethod": "explicit"
+      },
+      "alignmentScore": {
+        "overall": 0.255,
+        "dimensions": {
+          "researchStrandMatch": 0.2,
+          "methodologicalFit": 0.2,
+          "thematicAlignment": 0.3,
+          "impactPotential": 0.3,
+          "practicalFeasibility": 0.4
+        },
+        "matchedStrands": [
+          {
+            "strand": "Odyssean Process",
+            "relevance": 0.2,
+            "reasoning": "The RDI grant focuses on design and does not directly address the Odyssean Institute's research areas around decision-making under uncertainty, democratic innovation, or participatory governance."
+          }
+        ],
+        "strengths": [
+          "The RDI grant supports high-impact designers who could potentially contribute to systemic change and institutional innovation, which aligns with some of the Odyssean Institute's cross-cutting priorities.",
+          "The grant provides funding at a scale that could be relevant for the Odyssean Institute's projects."
+        ],
+        "concerns": [
+          "The RDI grant is primarily focused on individual designer recognition rather than on systemic research and interventions.",
+          "The methodologies and research approaches supported by the RDI grant do not appear to closely match the Odyssean Institute's focus on futures methods, DMDU modeling, citizen assemblies, and participatory research.",
+          "The eligibility criteria for the RDI grant are limited to UK-based designers, which may not align with the Odyssean Institute's global scope and focus on strategically important regions.",
+          "The RDI grant does not explicitly address the Odyssean Institute's key themes around collapse/extinction risk mitigation, public engagement, and policy influence."
+        ],
+        "recommendation": "not_relevant",
+        "confidence": 0.7,
+        "reasoning": "Overall, the RDI grant from the RSA does not appear to be a strong fit for the Odyssean Institute's research agenda. While there are some potential synergies around supporting high-impact designers and institutional innovation, the grant's focus, methodologies, and eligibility criteria do not closely align with the Odyssean Institute's core research strands, cross-cutting priorities, and desired grant characteristics.",
+        "tokensUsed": 1788
+      }
+    },
+    {
+      "programName": "Student Design Awards",
+      "description": "The Student Design Awards were the world's longest-running design competition, celebrating 100 years of recognising innovative ideas by 2024.",
+      "url": "https://www.thersa.org/student-design-awards/",
+      "eligibility": "**Eligible organizations:** university, individual\n\n**Career stage:** student\n\n\n**Note:** Some information could not be determined: Discipline restrictions not mentioned, Funding history requirements not mentioned, Collaboration requirements not mentioned, Other eligibility criteria not mentioned\n\n\n*Confidence: 90% | Completeness: 80% | Method: inferred*",
+      "confidence": 1,
+      "reasoning": "The program name, description, and URL are clearly stated on the page.",
+      "eligibilityDetailed": {
+        "organizationTypes": [
+          "university",
+          "individual"
+        ],
+        "geographicRestrictions": null,
+        "careerStage": [
+          "student"
+        ],
+        "disciplineRestrictions": null,
+        "fundingHistory": null,
+        "collaborationRequirements": null,
+        "otherCriteria": null,
+        "confidence": 0.9,
+        "completeness": 0.8,
+        "uncertainties": [
+          "Discipline restrictions not mentioned",
+          "Funding history requirements not mentioned",
+          "Collaboration requirements not mentioned",
+          "Other eligibility criteria not mentioned"
+        ],
+        "reasoning": "First pass: The page explicitly states that the Student Design Awards are for students, but does not provide any other details about the eligibility criteria. The information is limited, so there are several uncertainties about the other eligibility requirements.\n\nSecond pass: Based on the information provided, the Student Design Awards are open to students, which suggests the program is likely focused on recognizing innovative ideas from emerging designers and creatives. While the geographic scope is not explicitly stated, the RSA is a UK-based organization, so the awards are likely open to students within the UK or potentially other Commonwealth countries. However, the specific discipline restrictions, funding history requirements, collaboration requirements, and any other eligibility criteria are still unclear from the information provided on the website.",
+        "extractionMethod": "inferred"
+      },
+      "alignmentScore": {
+        "overall": 0.41000000000000003,
+        "dimensions": {
+          "researchStrandMatch": 0.3,
+          "methodologicalFit": 0.4,
+          "thematicAlignment": 0.4,
+          "impactPotential": 0.5,
+          "practicalFeasibility": 0.7
+        },
+        "matchedStrands": [
+          {
+            "strand": "Aeonic Flourishing",
+            "relevance": 0.4,
+            "reasoning": "The Student Design Awards focus on innovative ideas, which could potentially contribute to long-term human flourishing. However, the grant does not explicitly address the integration of wellbeing, justice, and ecological sustainability."
+          }
+        ],
+        "strengths": [
+          "The grant supports student-led research and innovation, which aligns with the Odyssean Institute's focus on interdisciplinary collaboration and capacity building.",
+          "The funding amount and timeline seem feasible for the Odyssean Institute to pursue.",
+          "The global scope of the grant could allow for strategically important regions to be targeted."
+        ],
+        "concerns": [
+          "The grant does not appear to directly address the Odyssean Institute's key research strands, such as decision-making under uncertainty, building resilience against global collapse, or long-term human flourishing.",
+          "The methodologies supported by the grant, such as student design projects, may not fully align with the Odyssean Institute's focus on futures methods, DMDU modeling, and participatory governance approaches.",
+          "The impact potential of student design projects may be limited in terms of policy influence and institutional change, which are priorities for the Odyssean Institute."
+        ],
+        "recommendation": "somewhat_relevant",
+        "confidence": 0.8,
+        "reasoning": "While the Student Design Awards grant has some potential alignment with the Odyssean Institute's research agenda, particularly in the area of Aeonic Flourishing, the overall fit is limited. The grant does not strongly support the institute's core research strands or methodological approaches, and the impact potential may not be as high as the institute's priorities. However, the practical feasibility and support for interdisciplinary collaboration make it a somewhat relevant opportunity worth further consideration.",
+        "tokensUsed": 1822
+      }
+    },
+    {
+      "programName": "Albert Medal",
+      "description": "The RSA Albert Medal honours outstanding, regenerative and impactful innovation that is enabling people, places and the planet to flourish in harmony.",
+      "url": "https://www.thersa.org/about/albert-medal/",
+      "eligibility": "**Other criteria:** The Albert Medal honors outstanding, regenerative and impactful innovation that is enabling people, places and the planet to flourish in harmony.\n\n\n**Note:** Some information could not be determined: The webpage does not explicitly state any other eligibility criteria for the Albert Medal.\n\n\n*Confidence: 70% | Completeness: 70% | Method: inferred*",
+      "confidence": 1,
+      "reasoning": "The program name, description, and URL are clearly stated on the page.",
+      "eligibilityDetailed": {
+        "organizationTypes": null,
+        "geographicRestrictions": null,
+        "careerStage": null,
+        "disciplineRestrictions": null,
+        "fundingHistory": null,
+        "collaborationRequirements": null,
+        "otherCriteria": [
+          "The Albert Medal honors outstanding, regenerative and impactful innovation that is enabling people, places and the planet to flourish in harmony."
+        ],
+        "confidence": 0.7,
+        "completeness": 0.7,
+        "uncertainties": [
+          "The webpage does not explicitly state any other eligibility criteria for the Albert Medal."
+        ],
+        "reasoning": "First pass: The webpage provides a brief description of the Albert Medal, but does not mention any explicit eligibility criteria. The information available is very limited, so I cannot confidently extract any of the requested criteria.\n\nSecond pass: Based on the description of the Albert Medal on the webpage, the key eligibility criteria appears to be that the award honors 'outstanding, regenerative and impactful innovation that is enabling people, places and the planet to flourish in harmony'. This suggests the award is focused on recognizing innovative work that has a positive societal and environmental impact. However, the webpage does not provide any other explicit details on eligibility, such as geographic restrictions, career stage, disciplinary focus, or funding history requirements. So while I can infer this core criteria, there are still some remaining uncertainties around the full eligibility parameters.",
+        "extractionMethod": "inferred"
+      },
+      "alignmentScore": {
+        "overall": 0.73,
+        "dimensions": {
+          "researchStrandMatch": 0.7,
+          "methodologicalFit": 0.8,
+          "thematicAlignment": 0.8,
+          "impactPotential": 0.7,
+          "practicalFeasibility": 0.6
+        },
+        "matchedStrands": [
+          {
+            "strand": "Odyssean Process",
+            "relevance": 0.8,
+            "reasoning": "The Albert Medal focuses on 'outstanding, regenerative and impactful innovation', which aligns well with the Odyssean Process strand's focus on decision-making under uncertainty, democratic innovation, and public trust. The emphasis on enabling 'people, places and the planet to flourish in harmony' also connects to the Odyssean Process goals."
+          },
+          {
+            "strand": "Aeonic Flourishing",
+            "relevance": 0.7,
+            "reasoning": "The Albert Medal's focus on 'enabling people, places and the planet to flourish in harmony' has clear connections to the Aeonic Flourishing strand's goals of long-term human flourishing within planetary boundaries, integrating wellbeing, justice, and ecological sustainability."
+          }
+        ],
+        "strengths": [
+          "The Albert Medal's emphasis on 'regenerative and impactful innovation' aligns well with the Odyssean Institute's focus on ambitious, systemic interventions and real-world impact.",
+          "The grant supports methodologies used by the OI, such as participatory and futures-oriented approaches.",
+          "The thematic focus on enabling people, places, and the planet to flourish in harmony connects to the OI's cross-cutting priorities around systemic change, collapse/extinction risk mitigation, and ecological sustainability.",
+          "The potential for policy influence and institutional change through the Albert Medal is a good fit for the OI's goals."
+        ],
+        "concerns": [
+          "The lack of explicit eligibility criteria on the website makes it difficult to assess the practical feasibility for the OI, as the funding amount and timeline are not specified.",
+          "The geographic scope of the Albert Medal is not clearly defined, which may be a concern if the OI is primarily focused on the UK, Europe, or strategically important regions."
+        ],
+        "recommendation": "relevant",
+        "confidence": 0.8,
+        "reasoning": "The Albert Medal grant opportunity aligns well with the Odyssean Institute's research agenda, particularly in the Odyssean Process and Aeonic Flourishing strands. The methodological fit, thematic alignment, and impact potential are all strong. However, the lack of specific eligibility and funding details introduces some uncertainty around the practical feasibility for the OI. Overall, this grant is a relevant opportunity that the OI should further explore.",
+        "tokensUsed": 1971
+      }
+    },
+    {
+      "programName": "Benjamin Franklin Medal",
+      "description": "The Benjamin Franklin Medal is awarded to an American who reflects the values of inquiry, civic empowerment, and a desire to improve society",
+      "url": "https://www.thersa.org/about/benjamin-franklin-medal/",
+      "eligibility": "**Eligible organizations:** individual\n\n**Geographic restrictions:** American\n\n**Other criteria:** Reflects the values of inquiry, civic empowerment, and a desire to improve society\n\n\n**Note:** Some information could not be determined: Failed to parse LLM response\n\n\n*Confidence: 80% | Completeness: 60% | Method: explicit*",
+      "confidence": 1,
+      "reasoning": "The program name, description, and URL are clearly stated on the page.",
+      "eligibilityDetailed": {
+        "organizationTypes": [
+          "individual"
+        ],
+        "geographicRestrictions": [
+          "American"
+        ],
+        "careerStage": null,
+        "disciplineRestrictions": null,
+        "fundingHistory": null,
+        "collaborationRequirements": null,
+        "otherCriteria": [
+          "Reflects the values of inquiry, civic empowerment, and a desire to improve society"
+        ],
+        "confidence": 0.8,
+        "completeness": 0.6,
+        "uncertainties": [
+          "Failed to parse LLM response"
+        ],
+        "reasoning": "First pass: The eligibility criteria explicitly state that the Benjamin Franklin Medal is awarded to an American who reflects the values of inquiry, civic empowerment, and a desire to improve society. However, the other eligibility criteria such as career stage, discipline restrictions, funding history, and collaboration requirements are not explicitly mentioned.\n\nSecond pass: Parsing error",
+        "extractionMethod": "explicit"
+      },
+      "alignmentScore": {
+        "overall": 0.7050000000000001,
+        "dimensions": {
+          "researchStrandMatch": 0.7,
+          "methodologicalFit": 0.6,
+          "thematicAlignment": 0.8,
+          "impactPotential": 0.8,
+          "practicalFeasibility": 0.6
+        },
+        "matchedStrands": [
+          {
+            "strand": "Odyssean Process",
+            "relevance": 0.8,
+            "reasoning": "The Benjamin Franklin Medal aligns well with the Odyssean Process strand, as it focuses on values of inquiry, civic empowerment, and improving society - key elements of the Odyssean Process approach to decision-making under uncertainty."
+          }
+        ],
+        "strengths": [
+          "Aligns with Odyssean Process focus on democratic innovation, participatory governance, and public trust",
+          "Supports values of inquiry and civic empowerment, which are central to the Odyssean Institute's mission",
+          "Potential for real-world impact and policy influence through an American recipient who reflects these values",
+          "Interdisciplinary and futures-oriented approach fits well with OI's cross-cutting priorities"
+        ],
+        "concerns": [
+          "Geographic restriction to American recipients may limit the global reach and applicability of the work",
+          "Unclear if the funding amount and timeline would be sufficient for the ambitious, systemic interventions preferred by OI"
+        ],
+        "recommendation": "relevant",
+        "confidence": 0.8,
+        "reasoning": "The Benjamin Franklin Medal grant opportunity aligns well with the Odyssean Institute's research agenda, particularly the Odyssean Process strand and its focus on democratic innovation, participatory governance, and public trust. The grant's emphasis on values of inquiry, civic empowerment, and societal improvement are a strong fit. However, the geographic restriction to American recipients and uncertainty around the funding details introduce some concerns about the practical feasibility and global reach of the work.",
+        "tokensUsed": 1769
+      }
+    },
+    {
+      "programName": "Bicentenary Medal",
+      "description": "The RSA Bicentenary Medal was instituted in 1954 to commemorate the founding of the RSA over two hundred years earlier",
+      "url": "https://www.thersa.org/about/bicentenary-medal/",
+      "eligibility": "**Other criteria:** Individuals who have made significant contributions to the work of the RSA\n\n\n**Note:** Some information could not be determined: The specific eligibility criteria for the Bicentenary Medal are not explicitly stated on the website.\n\n\n*Confidence: 70% | Completeness: 70% | Method: inferred*",
+      "confidence": 1,
+      "reasoning": "The program name, description, and URL are clearly stated on the page.",
+      "eligibilityDetailed": {
+        "organizationTypes": null,
+        "geographicRestrictions": null,
+        "careerStage": null,
+        "disciplineRestrictions": null,
+        "fundingHistory": null,
+        "collaborationRequirements": null,
+        "otherCriteria": [
+          "Individuals who have made significant contributions to the work of the RSA"
+        ],
+        "confidence": 0.7,
+        "completeness": 0.7,
+        "uncertainties": [
+          "The specific eligibility criteria for the Bicentenary Medal are not explicitly stated on the website."
+        ],
+        "reasoning": "First pass: The page provides a brief description of the Bicentenary Medal, but does not mention any explicit eligibility criteria. The information available is very limited, and I cannot confidently extract any of the requested details.\n\nSecond pass: While the website does not provide explicit eligibility criteria for the Bicentenary Medal, the context suggests that it is likely awarded to individuals who have made significant contributions to the work of the RSA (Royal Society for the Encouragement of Arts, Manufactures and Commerce). This is inferred from the description of the medal as being instituted to commemorate the founding of the RSA over two hundred years earlier. Typical award programs of this nature often recognize distinguished service or contributions to the organization. However, the specific details of the eligibility criteria are not clearly stated, so I have marked this as an uncertainty.",
+        "extractionMethod": "inferred"
+      },
+      "alignmentScore": {
+        "overall": 0.3,
+        "dimensions": {
+          "researchStrandMatch": 0.2,
+          "methodologicalFit": 0.2,
+          "thematicAlignment": 0.3,
+          "impactPotential": 0.4,
+          "practicalFeasibility": 0.7
+        },
+        "matchedStrands": [
+          {
+            "strand": "Odyssean Process",
+            "relevance": 0.2,
+            "reasoning": "The Bicentenary Medal recognizes individual contributions to the RSA's work, which may include some elements of democratic innovation or participatory governance, but this is not a core focus of the award."
+          }
+        ],
+        "strengths": [
+          "The Bicentenary Medal has a flexible eligibility criteria, allowing for a range of potential applicants from research organizations, think tanks, NGOs, and academic institutions.",
+          "The funding amount of £50k-500k for 1-3 years is within the range that the Odyssean Institute typically considers."
+        ],
+        "concerns": [
+          "The Bicentenary Medal does not explicitly align with the Odyssean Institute's three core research strands, as it is focused on recognizing individual contributions rather than supporting ambitious, systemic research projects.",
+          "The methodologies used in the Bicentenary Medal process are not clearly specified, and may not match the Odyssean Institute's focus on futures methods, DMDU, citizen assemblies, and other participatory approaches.",
+          "The Bicentenary Medal is primarily focused on the work of the RSA itself, rather than addressing broader global challenges or systemic issues that are central to the Odyssean Institute's agenda.",
+          "The impact potential of the Bicentenary Medal may be limited, as it is an individual award rather than a grant to support substantive research or institutional change."
+        ],
+        "recommendation": "somewhat_relevant",
+        "confidence": 0.7,
+        "reasoning": "While the Bicentenary Medal has some practical feasibility for the Odyssean Institute, it does not strongly align with the institute's core research strands, methodological approaches, or thematic priorities. The award is more focused on recognizing individual contributions than supporting ambitious, systemic research projects aimed at real-world impact and institutional change.",
+        "tokensUsed": 1845
+      }
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "funder": {
+    "funderName": "Garfield Weston Foundation",
+    "website": "https://garfieldweston.org/",
+    "type": "Independent family foundation",
+    "focus": "Community, arts, education, welfare",
+    "geography": "UK",
+    "notes": "Open data: Partial"
+  },
+  "opportunities": [
+    {
+      "externalId": "garfield-weston-foundation-general",
+      "programName": "Garfield Weston Foundation - General Funding",
+      "sourceUrl": "https://garfieldweston.org/",
+      "declaredFocus": [
+        "Community",
+        "arts",
+        "education",
+        "welfare"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "eligibleApplicantTypes": [
+        "CHARITY",
+        "UNIVERSITY",
+        "RESEARCH_INSTITUTE"
+      ],
+      "minAward": 5000,
+      "maxAward": 1000000,
+      "currency": "GBP",
+      "rawDescription": "Garfield Weston Foundation is a Independent family foundation. Focus: Community, arts, education, welfare. Geography: UK.",
+      "status": "OPEN"
+    }
+  ]
+}

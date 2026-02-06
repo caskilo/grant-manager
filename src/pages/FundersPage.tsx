@@ -2,10 +2,9 @@ import { Container, Title, Button, Group, Stack, Badge, Text, Tooltip, Modal, Al
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { IconAlertCircle, IconCheck, IconSparkles, IconSearch, IconExternalLink } from '@tabler/icons-react';
+import { IconAlertCircle, IconCheck, IconSearch, IconExternalLink } from '@tabler/icons-react';
 import api from '../lib/api';
 import { discoveryApi } from '../lib/discovery';
-import HarvestManagementModal from '../components/harvest/HarvestManagementModal';
 
 interface Funder {
   id: string;
@@ -51,8 +50,6 @@ export default function FundersPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [integrationModalOpen, setIntegrationModalOpen] = useState(false);
-  const [selectedFunder, setSelectedFunder] = useState<Funder | null>(null);
-  const [harvestModalOpen, setHarvestModalOpen] = useState(false);
   const [searchFilter, setSearchFilter] = useState('');
 
   const { data, isLoading } = useQuery<FundersResponse>({
@@ -217,20 +214,6 @@ export default function FundersPage() {
                     </Group>
                   </Stack>
 
-                  {/* Actions */}
-                  <Button
-                    size="sm"
-                    variant="light"
-                    color="violet"
-                    leftSection={<IconSparkles size={16} />}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedFunder(funder);
-                      setHarvestModalOpen(true);
-                    }}
-                  >
-                    Inspect
-                  </Button>
                 </Group>
               </Paper>
             ))}
@@ -269,18 +252,6 @@ export default function FundersPage() {
         </Modal>
       )}
 
-      <HarvestManagementModal
-        opened={harvestModalOpen}
-        funder={selectedFunder ? {
-          id: selectedFunder.id,
-          name: selectedFunder.name,
-          websiteUrl: selectedFunder.websiteUrl
-        } : null}
-        onClose={() => {
-          setHarvestModalOpen(false);
-          setSelectedFunder(null);
-        }}
-      />
     </Container>
   );
 }

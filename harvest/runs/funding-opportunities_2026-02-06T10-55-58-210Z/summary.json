@@ -1,0 +1,19 @@
+{
+  "runId": "funding-opportunities_2026-02-06T10-55-58-210Z",
+  "source": {
+    "id": "80740d2c-f647-4128-a096-ddc363bdc7e6",
+    "name": "Funding opportunities",
+    "baseUrl": "https://www.nihr.ac.uk/funding-opportunities"
+  },
+  "funder": {
+    "id": "daade919-60e8-409a-ba23-94f723d3e530",
+    "name": "NIHR (National Institute for Health Research)"
+  },
+  "executedAt": "2026-02-06T10:56:36.538Z",
+  "status": "completed",
+  "stats": {
+    "opportunitiesFound": 10,
+    "newOpportunities": 10,
+    "updatedOpportunities": 0
+  }
+}

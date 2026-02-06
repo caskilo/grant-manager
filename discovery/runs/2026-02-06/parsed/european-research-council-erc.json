@@ -1,0 +1,33 @@
+{
+  "funder": {
+    "funderName": "European Research Council (ERC)",
+    "website": "https://erc.europa.eu/",
+    "type": "EU research funder",
+    "focus": "Frontier research",
+    "geography": "EU & associated",
+    "notes": "Open data: Yes"
+  },
+  "opportunities": [
+    {
+      "externalId": "european-research-council-erc-general",
+      "programName": "European Research Council (ERC) - General Funding",
+      "sourceUrl": "https://erc.europa.eu/",
+      "declaredFocus": [
+        "Frontier research"
+      ],
+      "geographies": [
+        "EU & associated"
+      ],
+      "eligibleApplicantTypes": [
+        "CHARITY",
+        "UNIVERSITY",
+        "RESEARCH_INSTITUTE"
+      ],
+      "minAward": 150000,
+      "maxAward": 3000000,
+      "currency": "EUR",
+      "rawDescription": "European Research Council (ERC) is a EU research funder. Focus: Frontier research. Geography: EU & associated.",
+      "status": "OPEN"
+    }
+  ]
+}

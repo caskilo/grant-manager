@@ -1,0 +1,19 @@
+{
+  "runId": "awards_2026-02-06T12-52-43-863Z",
+  "source": {
+    "id": "9730d0fc-7de7-4802-9e7b-79b189e3de24",
+    "name": "Awards",
+    "baseUrl": "https://www.thersa.org/awards/"
+  },
+  "funder": {
+    "id": "42c324cb-2419-4c88-823d-fd97baca8a39",
+    "name": "Royal Society for the Encouragement of Arts (RSA)"
+  },
+  "executedAt": "2026-02-06T12:53:03.596Z",
+  "status": "completed",
+  "stats": {
+    "opportunitiesFound": 5,
+    "newOpportunities": 5,
+    "updatedOpportunities": 0
+  }
+}

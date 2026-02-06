@@ -1,0 +1,655 @@
+{
+  "runId": "apply-for-a-grant_2026-02-06T12-08-28-778Z",
+  "sourceType": "llm_extraction",
+  "sourceName": "Apply for a grant",
+  "sourceUrl": "https://erc.europa.eu/apply-grant",
+  "funderId": "8fc84783-9d17-4f60-b404-64bda4f11171",
+  "funderName": "European Research Council (ERC)",
+  "config": {
+    "extractionMethod": "llm",
+    "tokensUsed": 31039,
+    "extractionConfidence": 0.8
+  },
+  "timestamp": "2026-02-06T12:09:03.587Z",
+  "stats": {
+    "totalOpportunities": 8,
+    "newOpportunities": 8,
+    "updatedOpportunities": 0,
+    "unchangedOpportunities": 0
+  },
+  "opportunities": [
+    {
+      "programName": "Starting Grant",
+      "description": "For promising early-career researchers with 2 to 7 years experience after PhD",
+      "eligibility": "**Eligible organizations:** university, research_institute\n\n**Career stage:** early_career, established, any\n\n**Collaboration:** collaborative,solo\n\n\n**Note:** Some information could not be determined: Geographic restrictions not mentioned, Discipline restrictions not mentioned, Funding history requirements not mentioned\n\n\n*Confidence: 80% | Completeness: 70% | Method: explicit*",
+      "geographies": [
+        "EU",
+        "Associated Countries"
+      ],
+      "applicantTypes": [
+        "University",
+        "Research Institute"
+      ],
+      "confidence": 0.8,
+      "reasoning": "The page lists several ERC grant schemes, including the Starting Grant, with a brief description of each.",
+      "eligibilityDetailed": {
+        "organizationTypes": [
+          "university",
+          "research_institute"
+        ],
+        "geographicRestrictions": null,
+        "careerStage": [
+          "early_career",
+          "established",
+          "any"
+        ],
+        "disciplineRestrictions": null,
+        "fundingHistory": null,
+        "collaborationRequirements": [
+          "collaborative",
+          "solo"
+        ],
+        "otherCriteria": null,
+        "confidence": 0.8,
+        "completeness": 0.7,
+        "uncertainties": [
+          "Geographic restrictions not mentioned",
+          "Discipline restrictions not mentioned",
+          "Funding history requirements not mentioned"
+        ],
+        "reasoning": "The page provides information on different ERC grant schemes, including the Starting Grant, which is for promising early-career researchers with 2 to 7 years of experience after their PhD. It also mentions grants for established research leaders and collaborative projects. However, the page does not explicitly state the geographic restrictions, discipline restrictions, or funding history requirements for the Starting Grant.",
+        "extractionMethod": "explicit"
+      },
+      "alignmentScore": {
+        "overall": 0.6649999999999999,
+        "dimensions": {
+          "researchStrandMatch": 0.6,
+          "methodologicalFit": 0.7,
+          "thematicAlignment": 0.7,
+          "impactPotential": 0.7,
+          "practicalFeasibility": 0.7
+        },
+        "matchedStrands": [
+          {
+            "strand": "Odyssean Process",
+            "relevance": 0.7,
+            "reasoning": "The ERC Starting Grant supports early-career researchers, which aligns with the Odyssean Institute's focus on democratic innovation, participatory governance, and public trust. The grant's emphasis on interdisciplinary, futures-oriented research also matches the Odyssean Process strand."
+          }
+        ],
+        "strengths": [
+          "The ERC Starting Grant supports ambitious, systemic interventions, which aligns with the Odyssean Institute's focus on paradigmatic change rather than incremental fixes.",
+          "The grant's interdisciplinary and participatory approach matches the Odyssean Institute's methodological priorities.",
+          "The potential for policy influence and institutional change through this grant aligns with the Odyssean Institute's goals of real-world impact."
+        ],
+        "concerns": [
+          "The grant does not explicitly mention a focus on collapse/extinction risk mitigation, which is a key cross-cutting priority for the Odyssean Institute.",
+          "The geographic scope of the ERC grant is limited to the EU and Associated Countries, which may not fully align with the Odyssean Institute's global ambitions."
+        ],
+        "recommendation": "relevant",
+        "confidence": 0.8,
+        "reasoning": "The ERC Starting Grant is a good fit for the Odyssean Institute's research agenda, particularly the Odyssean Process strand. The grant's emphasis on interdisciplinary, futures-oriented research with a focus on policy influence and institutional change aligns well with the institute's priorities. While there are some minor concerns, the overall alignment is strong enough to consider this grant a relevant opportunity for the Odyssean Institute.",
+        "tokensUsed": 1798
+      }
+    },
+    {
+      "programName": "Consolidator Grant",
+      "description": "For excellent researchers with 7 to 12 years experience after PhD",
+      "eligibility": "**Eligible organizations:** university, research_institute\n\n**Geographic restrictions:** EU or associated countries\n\n**Career stage:** 2 to 7 years experience after PhD, 7 to 12 years experience after PhD, established research leaders\n\n**Collaboration:** collaborative\n\n**Other criteria:** non-European researchers moving to the EU or associated countries\n\n\n**Note:** Some information could not be determined: Discipline restrictions not mentioned, Funding history requirements not mentioned\n\n\n*Confidence: 90% | Completeness: 90% | Method: inferred*",
+      "geographies": [
+        "EU",
+        "Associated Countries"
+      ],
+      "applicantTypes": [
+        "University",
+        "Research Institute"
+      ],
+      "confidence": 0.8,
+      "reasoning": "The page lists several ERC grant schemes, including the Consolidator Grant, with a brief description of each.",
+      "eligibilityDetailed": {
+        "organizationTypes": [
+          "university",
+          "research_institute"
+        ],
+        "geographicRestrictions": [
+          "EU or associated countries"
+        ],
+        "careerStage": [
+          "2 to 7 years experience after PhD",
+          "7 to 12 years experience after PhD",
+          "established research leaders"
+        ],
+        "disciplineRestrictions": null,
+        "fundingHistory": null,
+        "collaborationRequirements": [
+          "collaborative"
+        ],
+        "otherCriteria": [
+          "non-European researchers moving to the EU or associated countries"
+        ],
+        "confidence": 0.9,
+        "completeness": 0.9,
+        "uncertainties": [
+          "Discipline restrictions not mentioned",
+          "Funding history requirements not mentioned"
+        ],
+        "reasoning": "First pass: The page provides information about different ERC grant schemes, including the Consolidator Grant. It explicitly states the eligible career stages for this grant, as well as that it is for collaborative projects. However, it does not mention any geographic restrictions, discipline restrictions, or funding history requirements.\n\nSecond pass: While the page does not explicitly state geographic restrictions, it mentions 'extra funding for non-European researchers moving to the EU or associated countries', which suggests the program is intended for researchers in the EU or associated countries. Additionally, the page states the program is 'collaborative', implying collaboration requirements. I was unable to find any information on discipline restrictions or funding history requirements, so those remain uncertain.",
+        "extractionMethod": "inferred"
+      },
+      "alignmentScore": {
+        "overall": 0.735,
+        "dimensions": {
+          "researchStrandMatch": 0.7,
+          "methodologicalFit": 0.8,
+          "thematicAlignment": 0.7,
+          "impactPotential": 0.8,
+          "practicalFeasibility": 0.7
+        },
+        "matchedStrands": [
+          {
+            "strand": "Odyssean Process",
+            "relevance": 0.8,
+            "reasoning": "The Odyssean Process strand focuses on decision-making under uncertainty, which aligns well with the ERC Consolidator Grant's emphasis on supporting excellent researchers with 7-12 years of experience after their PhD. The grant's interdisciplinary and futures-oriented approach also matches the Odyssean Process methods like expert elicitation, DMDU modeling, and citizen assemblies."
+          },
+          {
+            "strand": "GRAIN",
+            "relevance": 0.6,
+            "reasoning": "While the GRAIN strand's focus on building resilience against global collapse/extinction is not explicitly mentioned in the grant description, the grant's potential to support research on critical infrastructure, supply chains, and sustainable development could be relevant to this strand."
+          },
+          {
+            "strand": "Aeonic Flourishing",
+            "relevance": 0.5,
+            "reasoning": "The Aeonic Flourishing strand's focus on long-term human flourishing and integrating wellbeing, justice, and ecological sustainability has some overlap with the grant's potential to support research on topics like capabilities approach and socio-ecological systems. However, the connection is not as direct as the Odyssean Process and GRAIN strands."
+          }
+        ],
+        "strengths": [
+          "The grant's emphasis on supporting excellent researchers with 7-12 years of experience aligns well with the Odyssean Institute's focus on ambitious, robust methods to address Grand Challenges.",
+          "The interdisciplinary, futures-oriented, and policy-influencing approach of the grant matches the Odyssean Institute's cross-cutting priorities.",
+          "The grant's funding range of £50k-500k for 1-3 years is a good fit for the Odyssean Institute's research agenda.",
+          "The grant's geographic scope of the EU and associated countries is relevant to the Odyssean Institute's work, which has a global focus but with a strategic emphasis on Europe."
+        ],
+        "concerns": [
+          "The grant's eligibility criteria of 7-12 years of experience after PhD may be a bit narrow for the Odyssean Institute, which may want to consider researchers with a wider range of experience.",
+          "The grant's lack of explicit mention of some of the Odyssean Institute's key focus areas, such as collapse/extinction risk mitigation and institutional innovation, could be a potential mismatch.",
+          "The grant's collaborative nature may not fully align with the Odyssean Institute's emphasis on interdisciplinary teams, as the grant does not specify the level of collaboration required."
+        ],
+        "recommendation": "highly_relevant",
+        "confidence": 0.9,
+        "reasoning": "The ERC Consolidator Grant appears to be a highly relevant funding opportunity for the Odyssean Institute, with strong alignment across multiple dimensions, including research strand match, methodological fit, thematic alignment, and impact potential. While there are some minor concerns, the overall assessment suggests that this grant could be an excellent fit for the institute's ambitious, interdisciplinary, and futures-oriented research agenda.",
+        "tokensUsed": 2164
+      }
+    },
+    {
+      "programName": "Advanced Grant",
+      "description": "For established research leaders with a recognised track record of research achievements",
+      "eligibility": "**Eligible organizations:** university, research_institute\n\n**Career stage:** early_career, established, any\n\n**Collaboration:** collaborative,solo\n\n**Other criteria:** non-European researchers moving to EU/associated countries\n\n\n**Note:** Some information could not be determined: Geographic restrictions not mentioned, Discipline restrictions not mentioned, Funding history requirements not mentioned\n\n\n*Confidence: 80% | Completeness: 70% | Method: explicit*",
+      "geographies": [
+        "EU",
+        "Associated Countries"
+      ],
+      "applicantTypes": [
+        "University",
+        "Research Institute"
+      ],
+      "confidence": 0.8,
+      "reasoning": "The page lists several ERC grant schemes, including the Advanced Grant, with a brief description of each.",
+      "eligibilityDetailed": {
+        "organizationTypes": [
+          "university",
+          "research_institute"
+        ],
+        "geographicRestrictions": null,
+        "careerStage": [
+          "early_career",
+          "established",
+          "any"
+        ],
+        "disciplineRestrictions": null,
+        "fundingHistory": null,
+        "collaborationRequirements": [
+          "collaborative",
+          "solo"
+        ],
+        "otherCriteria": [
+          "non-European researchers moving to EU/associated countries"
+        ],
+        "confidence": 0.8,
+        "completeness": 0.7,
+        "uncertainties": [
+          "Geographic restrictions not mentioned",
+          "Discipline restrictions not mentioned",
+          "Funding history requirements not mentioned"
+        ],
+        "reasoning": "The page provides information on various ERC grant schemes, including the Advanced Grant. It explicitly states that the Advanced Grant is for 'promising early-career researchers', 'excellent researchers', and 'established research leaders'. It also mentions that the grant can be for collaborative or solo projects, and that there is additional funding for non-European researchers moving to the EU or associated countries. However, the page does not explicitly state the geographic restrictions, discipline restrictions, or funding history requirements for the Advanced Grant.",
+        "extractionMethod": "explicit"
+      },
+      "alignmentScore": {
+        "overall": 0.655,
+        "dimensions": {
+          "researchStrandMatch": 0.6,
+          "methodologicalFit": 0.7,
+          "thematicAlignment": 0.7,
+          "impactPotential": 0.7,
+          "practicalFeasibility": 0.6
+        },
+        "matchedStrands": [
+          {
+            "strand": "Odyssean Process",
+            "relevance": 0.7,
+            "reasoning": "The grant's focus on decision-making under uncertainty, policy influence, and institutional capacity aligns well with the Odyssean Process strand."
+          },
+          {
+            "strand": "GRAIN",
+            "relevance": 0.5,
+            "reasoning": "While the grant does not explicitly address supply chain resilience or critical infrastructure, the futures-oriented and systems-level approach could be relevant to the GRAIN strand."
+          },
+          {
+            "strand": "Aeonic Flourishing",
+            "relevance": 0.4,
+            "reasoning": "The grant does not directly address long-term human flourishing, ecological sustainability, or intergenerational justice, which are core to the Aeonic Flourishing strand."
+          }
+        ],
+        "strengths": [
+          "The grant supports interdisciplinary, futures-oriented research, which aligns with the OI's methodological approach.",
+          "The potential for policy influence and institutional change matches the OI's focus on real-world impact.",
+          "The eligibility for established researchers with a track record is a good fit for the OI's experienced team."
+        ],
+        "concerns": [
+          "The grant does not explicitly mention collapse/extinction risk mitigation, which is a key cross-cutting priority for the OI.",
+          "The lack of geographic or disciplinary restrictions could make the competition more intense, reducing the OI's chances of success.",
+          "The funding amount and timeline may not be sufficient for the OI's ambitious, systemic interventions."
+        ],
+        "recommendation": "relevant",
+        "confidence": 0.8,
+        "reasoning": "The ERC Advanced Grant aligns reasonably well with the OI's research agenda, particularly the Odyssean Process strand. The grant's focus on interdisciplinary, futures-oriented research with policy impact potential is a good match. However, the lack of explicit alignment with some of the OI's core themes and concerns about the practical feasibility suggest that this grant may not be the optimal fit for the institute's work.",
+        "tokensUsed": 1914
+      }
+    },
+    {
+      "programName": "Proof of Concept Grant",
+      "description": "For ERC grant holders to explore the innovation potential of their ERC frontier research project",
+      "eligibility": "**Eligible organizations:** university, research_institute\n\n**Career stage:** early_career, established\n\n\n**Note:** Some information could not be determined: Failed to parse LLM response\n\n\n*Confidence: 70% | Completeness: 40% | Method: explicit*",
+      "geographies": [
+        "EU",
+        "Associated Countries"
+      ],
+      "applicantTypes": [
+        "University",
+        "Research Institute"
+      ],
+      "confidence": 0.8,
+      "reasoning": "The page lists several ERC grant schemes, including the Proof of Concept Grant, with a brief description of each.",
+      "eligibilityDetailed": {
+        "organizationTypes": [
+          "university",
+          "research_institute"
+        ],
+        "geographicRestrictions": null,
+        "careerStage": [
+          "early_career",
+          "established"
+        ],
+        "disciplineRestrictions": null,
+        "fundingHistory": null,
+        "collaborationRequirements": null,
+        "otherCriteria": null,
+        "confidence": 0.7,
+        "completeness": 0.4,
+        "uncertainties": [
+          "Failed to parse LLM response"
+        ],
+        "reasoning": "First pass: The page provides some information about the ERC grant schemes, including the Proof of Concept Grant, but does not explicitly state the eligibility criteria. It mentions that the grant is for 'promising early-career researchers' and 'established research leaders', but does not provide specifics on the career stage requirements. The organization types that can apply are mentioned as 'universities' and 'research institutes', but other types are not explicitly excluded. The other eligibility criteria are not clearly stated.\n\nSecond pass: Parsing error",
+        "extractionMethod": "explicit"
+      },
+      "alignmentScore": {
+        "overall": 0.5549999999999999,
+        "dimensions": {
+          "researchStrandMatch": 0.4,
+          "methodologicalFit": 0.6,
+          "thematicAlignment": 0.6,
+          "impactPotential": 0.7,
+          "practicalFeasibility": 0.7
+        },
+        "matchedStrands": [
+          {
+            "strand": "Odyssean Process",
+            "relevance": 0.6,
+            "reasoning": "The Proof of Concept grant supports exploring the innovation potential of frontier research, which could align with the Odyssean Process strand's focus on decision-making under uncertainty and democratic innovation."
+          }
+        ],
+        "strengths": [
+          "The grant supports interdisciplinary, futures-oriented research, which aligns with the OI's methodological approach.",
+          "It could lead to real-world impact and policy influence, which matches the OI's goals.",
+          "The funding amount and timeline seem reasonable for the OI to pursue."
+        ],
+        "concerns": [
+          "The grant is focused on ERC grant holders, which may limit the OI's eligibility.",
+          "The grant does not explicitly mention systemic change or collapse/extinction risk mitigation, which are key OI priorities.",
+          "The geographic scope is limited to the EU and Associated Countries, whereas the OI has a global focus."
+        ],
+        "recommendation": "somewhat_relevant",
+        "confidence": 0.7,
+        "reasoning": "The Proof of Concept grant has some alignment with the OI's research agenda, particularly the Odyssean Process strand, and could support the OI's methodological approach and impact goals. However, there are some concerns around eligibility, thematic fit, and geographic scope that limit the overall relevance of this opportunity for the OI.",
+        "tokensUsed": 1731
+      }
+    },
+    {
+      "programName": "Synergy Grant",
+      "description": "For 2-4 researchers combining skills and resources to tackle ambitious research challenges",
+      "eligibility": "**Eligible organizations:** university, research_institute\n\n**Geographic restrictions:** eu, associated_countries\n\n**Career stage:** early_career, established, any\n\n**Collaboration:** collaborative\n\n\n**Note:** Some information could not be determined: Discipline restrictions not mentioned\n\n\n*Confidence: 90% | Completeness: 90% | Method: inferred*",
+      "geographies": [
+        "EU",
+        "Associated Countries"
+      ],
+      "applicantTypes": [
+        "University",
+        "Research Institute"
+      ],
+      "confidence": 0.8,
+      "reasoning": "The page lists several ERC grant schemes, including the Synergy Grant, with a brief description of each.",
+      "eligibilityDetailed": {
+        "organizationTypes": [
+          "university",
+          "research_institute"
+        ],
+        "geographicRestrictions": [
+          "eu",
+          "associated_countries"
+        ],
+        "careerStage": [
+          "early_career",
+          "established",
+          "any"
+        ],
+        "disciplineRestrictions": null,
+        "fundingHistory": null,
+        "collaborationRequirements": [
+          "collaborative"
+        ],
+        "otherCriteria": null,
+        "confidence": 0.9,
+        "completeness": 0.9,
+        "uncertainties": [
+          "Discipline restrictions not mentioned"
+        ],
+        "reasoning": "First pass: The page provides information about various ERC grant schemes, including the Synergy Grant. It explicitly states that the Synergy Grant is for 2-4 researchers combining skills and resources to tackle ambitious research challenges. It also mentions eligibility for early-career researchers, established researchers, and researchers at any career stage. However, the page does not mention any geographic restrictions, discipline restrictions, or funding history requirements.\n\nSecond pass: While the page does not explicitly state geographic restrictions, it mentions 'extra funding for non-European researchers moving to the EU or associated countries', which suggests the Synergy Grant is likely limited to researchers based in the EU or associated countries. Additionally, the page states the grant is for '2-4 researchers combining skills and resources', implying a collaborative requirement. I was unable to find any information on discipline restrictions, so that remains an uncertainty.",
+        "extractionMethod": "inferred"
+      },
+      "alignmentScore": {
+        "overall": 0.7250000000000001,
+        "dimensions": {
+          "researchStrandMatch": 0.7,
+          "methodologicalFit": 0.8,
+          "thematicAlignment": 0.7,
+          "impactPotential": 0.8,
+          "practicalFeasibility": 0.6
+        },
+        "matchedStrands": [
+          {
+            "strand": "Odyssean Process",
+            "relevance": 0.8,
+            "reasoning": "The Synergy Grant's focus on ambitious, interdisciplinary research to tackle complex challenges aligns well with the Odyssean Process strand, which emphasizes decision-making under uncertainty, democratic innovation, and systemic reform."
+          },
+          {
+            "strand": "GRAIN",
+            "relevance": 0.6,
+            "reasoning": "While the grant does not explicitly mention building resilience against global collapse/extinction, the emphasis on interdisciplinary collaboration to address complex challenges could be leveraged to support GRAIN's focus on critical infrastructure, supply chains, and institutional capacity."
+          },
+          {
+            "strand": "Aeonic Flourishing",
+            "relevance": 0.5,
+            "reasoning": "The grant's broad scope and interdisciplinary approach could potentially support research on long-term human flourishing and sustainability, but the alignment is less direct compared to the Odyssean Process and GRAIN strands."
+          }
+        ],
+        "strengths": [
+          "The Synergy Grant's emphasis on ambitious, interdisciplinary research to tackle complex challenges aligns well with the Odyssean Institute's focus on systemic, paradigmatic change.",
+          "The grant's support for collaborative research teams combining diverse skills and resources matches the OI's emphasis on interdisciplinary collaboration.",
+          "The potential for policy influence and institutional change through the grant's research outputs is well-aligned with the OI's goal of real-world impact.",
+          "The grant's flexible funding range (£50k-500k) and duration (1-3 years) are a good fit for the OI's research agenda."
+        ],
+        "concerns": [
+          "The grant's geographic restrictions to the EU and Associated Countries may limit its applicability to the OI's global research agenda.",
+          "The grant does not explicitly mention support for the OI's specific methodological approaches, such as citizen assemblies, futures methodologies, and participatory action research.",
+          "The eligibility criteria for the grant (university, research institute) may exclude some of the OI's potential partners, such as NGOs and interdisciplinary teams."
+        ],
+        "recommendation": "highly_relevant",
+        "confidence": 0.9,
+        "reasoning": "The Synergy Grant from the European Research Council is highly relevant to the Odyssean Institute's research agenda, particularly in the Odyssean Process strand. The grant's emphasis on ambitious, interdisciplinary research to tackle complex challenges, as well as its potential for policy influence and institutional change, make it a strong fit for the OI's goals. While there are some minor concerns around geographic restrictions and methodological fit, the overall alignment is strong, and the grant presents a valuable funding opportunity for the OI.",
+        "tokensUsed": 2046
+      }
+    },
+    {
+      "programName": "Frontier Research Grant",
+      "description": "For outstanding researchers with a vision for transformative research beyond existing ERC programmes",
+      "eligibility": "**Eligible organizations:** university, research_institute\n\n**Career stage:** early_career, established, any\n\n**Collaboration:** collaborative,solo\n\n**Other criteria:** non-European researchers moving to EU/associated countries\n\n\n**Note:** Some information could not be determined: Geographic restrictions not mentioned, Discipline restrictions not mentioned, Funding history requirements not mentioned\n\n\n*Confidence: 80% | Completeness: 70% | Method: explicit*",
+      "geographies": [
+        "EU",
+        "Associated Countries"
+      ],
+      "applicantTypes": [
+        "University",
+        "Research Institute"
+      ],
+      "confidence": 0.8,
+      "reasoning": "The page lists several ERC grant schemes, including the Frontier Research Grant, with a brief description of each.",
+      "eligibilityDetailed": {
+        "organizationTypes": [
+          "university",
+          "research_institute"
+        ],
+        "geographicRestrictions": null,
+        "careerStage": [
+          "early_career",
+          "established",
+          "any"
+        ],
+        "disciplineRestrictions": null,
+        "fundingHistory": null,
+        "collaborationRequirements": [
+          "collaborative",
+          "solo"
+        ],
+        "otherCriteria": [
+          "non-European researchers moving to EU/associated countries"
+        ],
+        "confidence": 0.8,
+        "completeness": 0.7,
+        "uncertainties": [
+          "Geographic restrictions not mentioned",
+          "Discipline restrictions not mentioned",
+          "Funding history requirements not mentioned"
+        ],
+        "reasoning": "The page provides information on various ERC grant schemes, including eligibility criteria for organization types, career stage, and collaboration requirements. However, it does not explicitly state geographic restrictions, discipline restrictions, or funding history requirements. The information provided is clear but incomplete.",
+        "extractionMethod": "explicit"
+      },
+      "alignmentScore": {
+        "overall": 0.7250000000000001,
+        "dimensions": {
+          "researchStrandMatch": 0.7,
+          "methodologicalFit": 0.8,
+          "thematicAlignment": 0.7,
+          "impactPotential": 0.8,
+          "practicalFeasibility": 0.6
+        },
+        "matchedStrands": [
+          {
+            "strand": "Odyssean Process",
+            "relevance": 0.8,
+            "reasoning": "The Frontier Research Grant aligns well with the Odyssean Process strand, as it supports ambitious, transformative research that could advance decision-making under uncertainty, democratic innovation, and AI governance - key focus areas of this strand."
+          },
+          {
+            "strand": "GRAIN",
+            "relevance": 0.6,
+            "reasoning": "While the grant does not explicitly target resilience and foresight for global challenges, the open-ended nature of the funding could allow for research proposals that address critical infrastructure, supply chains, and sustainable development - areas of interest for the GRAIN strand."
+          },
+          {
+            "strand": "Aeonic Flourishing",
+            "relevance": 0.5,
+            "reasoning": "The grant's focus on transformative research could potentially support work on long-term human flourishing and socio-ecological systems, but the connection is less direct compared to the Odyssean Process and GRAIN strands."
+          }
+        ],
+        "strengths": [
+          "Strong alignment with the Odyssean Process strand, supporting ambitious, interdisciplinary research on decision-making under uncertainty and democratic innovation.",
+          "Methodological fit with the OI's emphasis on futures methods, participatory approaches, and systemic change.",
+          "Potential for high-impact outcomes that could influence policy and institutions.",
+          "Flexible funding and eligibility criteria that could accommodate a range of OI research projects."
+        ],
+        "concerns": [
+          "Less direct connection to the GRAIN and Aeonic Flourishing strands, which may require more creative proposal framing to fit within the grant scope.",
+          "Potential challenges with the practical feasibility, as the funding amount and timeline may not fully align with the OI's typical project needs.",
+          "Uncertainty around the specific geographic and disciplinary focus of the grant, which could limit its relevance for certain OI research areas."
+        ],
+        "recommendation": "highly_relevant",
+        "confidence": 0.8,
+        "reasoning": "The Frontier Research Grant from the European Research Council is highly relevant for the Odyssean Institute, as it strongly aligns with the Odyssean Process strand and provides good methodological fit and impact potential. While the connections to the other two strands are less direct, the flexible nature of the grant could still accommodate a range of OI research projects. With careful proposal development, this grant opportunity could be a valuable funding source for the institute's ambitious, systemic work.",
+        "tokensUsed": 2011
+      }
+    },
+    {
+      "programName": "Visiting Fellowships",
+      "description": "Funding scheme to facilitate 3-5-month stays of journalists at research institutions",
+      "eligibility": "**Eligible organizations:** university, research_institute\n\n**Career stage:** early_career, established, any\n\n**Collaboration:** collaborative,solo\n\n**Other criteria:** visiting_fellowships\n\n\n**Note:** Some information could not be determined: Geographic restrictions not mentioned, Discipline restrictions not mentioned, Funding history requirements not mentioned\n\n\n*Confidence: 80% | Completeness: 70% | Method: explicit*",
+      "geographies": [
+        "EU",
+        "Associated Countries"
+      ],
+      "applicantTypes": [
+        "Journalist"
+      ],
+      "confidence": 0.8,
+      "reasoning": "The page lists several ERC grant schemes, including the Visiting Fellowships, with a brief description of each.",
+      "eligibilityDetailed": {
+        "organizationTypes": [
+          "university",
+          "research_institute"
+        ],
+        "geographicRestrictions": null,
+        "careerStage": [
+          "early_career",
+          "established",
+          "any"
+        ],
+        "disciplineRestrictions": null,
+        "fundingHistory": null,
+        "collaborationRequirements": [
+          "collaborative",
+          "solo"
+        ],
+        "otherCriteria": [
+          "visiting_fellowships"
+        ],
+        "confidence": 0.8,
+        "completeness": 0.7,
+        "uncertainties": [
+          "Geographic restrictions not mentioned",
+          "Discipline restrictions not mentioned",
+          "Funding history requirements not mentioned"
+        ],
+        "reasoning": "The page provides information about various ERC grant schemes, including Visiting Fellowships. It explicitly states that the eligible organization types are universities and research institutes. The career stage requirements are also clearly mentioned, covering early-career, established, and any level researchers. The page indicates that the fellowships can be either collaborative or solo projects. However, the geographic restrictions, discipline restrictions, and funding history requirements are not explicitly stated.",
+        "extractionMethod": "explicit"
+      },
+      "alignmentScore": {
+        "overall": 0.3,
+        "dimensions": {
+          "researchStrandMatch": 0.2,
+          "methodologicalFit": 0.2,
+          "thematicAlignment": 0.3,
+          "impactPotential": 0.4,
+          "practicalFeasibility": 0.7
+        },
+        "matchedStrands": [
+          {
+            "strand": "Odyssean Process",
+            "relevance": 0.2,
+            "reasoning": "The grant supports visiting fellowships for journalists, which could potentially contribute to the Odyssean Process strand's focus on public engagement and democratic innovation, but the connection is quite indirect."
+          }
+        ],
+        "strengths": [
+          "The grant provides funding for 3-5 month stays of journalists at research institutions, which could facilitate knowledge exchange and public engagement.",
+          "The funding amount and timeline seem reasonable for the Odyssean Institute's needs."
+        ],
+        "concerns": [
+          "The grant does not directly support the Odyssean Institute's core research methodologies like expert elicitation, DMDU modeling, or citizen assemblies.",
+          "The grant's focus on supporting individual journalists rather than systemic interventions is not well-aligned with the Odyssean Institute's focus on ambitious, paradigm-shifting change.",
+          "The grant does not explicitly address the Odyssean Institute's cross-cutting priorities like collapse/extinction risk mitigation or institutional innovation."
+        ],
+        "recommendation": "somewhat_relevant",
+        "confidence": 0.8,
+        "reasoning": "While the Visiting Fellowships grant could provide some indirect benefits to the Odyssean Institute's public engagement and knowledge translation efforts, it is not a strong fit for the institute's core research agenda and methodological approach. The grant's focus on individual journalists rather than systemic change is a significant mismatch with the Odyssean Institute's priorities.",
+        "tokensUsed": 1768
+      }
+    },
+    {
+      "programName": "Jobs for researchers fleeing the war",
+      "description": "Jobs for researchers fleeing the war",
+      "eligibility": "**Eligible organizations:** university, research_institute, individual\n\n**Career stage:** early-career, experienced, established\n\n**Other criteria:** researchers fleeing the war\n\n\n**Note:** Some information could not be determined: The page does not explicitly state any geographic restrictions for the 'Jobs for researchers fleeing the war' program., The page does not explicitly state any funding history requirements for the 'Jobs for researchers fleeing the war' program., The page does not explicitly state any collaboration requirements for the 'Jobs for researchers fleeing the war' program.\n\n\n*Confidence: 70% | Completeness: 80% | Method: inferred*",
+      "geographies": [
+        "EU",
+        "Associated Countries"
+      ],
+      "applicantTypes": [
+        "Researcher"
+      ],
+      "confidence": 0.8,
+      "reasoning": "The page lists several ERC grant schemes, including the Jobs for researchers fleeing the war, with a brief description of each.",
+      "eligibilityDetailed": {
+        "organizationTypes": [
+          "university",
+          "research_institute",
+          "individual"
+        ],
+        "geographicRestrictions": null,
+        "careerStage": [
+          "early-career",
+          "experienced",
+          "established"
+        ],
+        "disciplineRestrictions": null,
+        "fundingHistory": null,
+        "collaborationRequirements": null,
+        "otherCriteria": [
+          "researchers fleeing the war"
+        ],
+        "confidence": 0.7,
+        "completeness": 0.8,
+        "uncertainties": [
+          "The page does not explicitly state any geographic restrictions for the 'Jobs for researchers fleeing the war' program.",
+          "The page does not explicitly state any funding history requirements for the 'Jobs for researchers fleeing the war' program.",
+          "The page does not explicitly state any collaboration requirements for the 'Jobs for researchers fleeing the war' program."
+        ],
+        "reasoning": "First pass: The page provides a general overview of the ERC grant schemes, but does not contain any explicit information about the eligibility criteria for the 'Jobs for researchers fleeing the war' program. The only relevant information is that the program is for 'researchers fleeing the war', which suggests that individual researchers may be eligible, but this is not stated explicitly.\n\nSecond pass: Based on the information provided on the page, the 'Jobs for researchers fleeing the war' program appears to be open to individual researchers, as well as those affiliated with universities and research institutes. The page mentions different ERC grant schemes for researchers at various career stages, so it can be inferred that the 'Jobs for researchers fleeing the war' program likely has similar career stage requirements, though this is not stated explicitly. The page does not provide any information about geographic, discipline, funding history, or collaboration requirements, so these remain uncertain.",
+        "extractionMethod": "inferred"
+      },
+      "alignmentScore": {
+        "overall": 0.35000000000000003,
+        "dimensions": {
+          "researchStrandMatch": 0.2,
+          "methodologicalFit": 0.2,
+          "thematicAlignment": 0.4,
+          "impactPotential": 0.6,
+          "practicalFeasibility": 0.7
+        },
+        "matchedStrands": [
+          {
+            "strand": "Odyssean Process",
+            "relevance": 0.2,
+            "reasoning": "The 'Jobs for researchers fleeing the war' program does not directly address decision-making under extreme risk and uncertainty, nor does it focus on democratic innovation, participatory governance, or other Odyssean Process themes."
+          }
+        ],
+        "strengths": [
+          "The program supports researchers who have been displaced by the war, which aligns with the Odyssean Institute's mission to address global challenges.",
+          "The program is open to a wide range of eligible applicants, including early-career, experienced, and established researchers, which could enable diverse perspectives and approaches.",
+          "The program is funded by the European Research Council, a reputable and well-established funding body, which suggests the potential for significant impact."
+        ],
+        "concerns": [
+          "The program does not appear to explicitly align with the Odyssean Institute's three research strands, as it is focused on providing employment opportunities rather than addressing systemic challenges.",
+          "The program does not seem to prioritize the Odyssean Institute's cross-cutting themes, such as systemic/paradigmatic change, interdisciplinary collaboration, or collapse/extinction risk mitigation.",
+          "The program's focus on individual researchers rather than interdisciplinary teams or institutional change may limit its ability to drive the kind of transformative impact the Odyssean Institute seeks."
+        ],
+        "recommendation": "somewhat_relevant",
+        "confidence": 0.7,
+        "reasoning": "While the 'Jobs for researchers fleeing the war' program could provide valuable support to displaced researchers, it does not appear to be a strong fit for the Odyssean Institute's research agenda. The program's focus on individual employment opportunities rather than systemic change or interdisciplinary collaboration limits its alignment with the institute's priorities.",
+        "tokensUsed": 1877
+      }
+    }
+  ]
+}

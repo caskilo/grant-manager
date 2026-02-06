@@ -1,0 +1,36 @@
+{
+  "funder": {
+    "funderName": "Paul Hamlyn Foundation",
+    "website": "https://www.phf.org.uk/",
+    "type": "Independent foundation",
+    "focus": "Arts, education, social justice",
+    "geography": "UK, India",
+    "notes": "Open data: Yes (grants database)"
+  },
+  "opportunities": [
+    {
+      "externalId": "paul-hamlyn-foundation-general",
+      "programName": "Paul Hamlyn Foundation - General Funding",
+      "sourceUrl": "https://www.phf.org.uk/",
+      "declaredFocus": [
+        "Arts",
+        "education",
+        "social justice"
+      ],
+      "geographies": [
+        "UK",
+        "India"
+      ],
+      "eligibleApplicantTypes": [
+        "CHARITY",
+        "UNIVERSITY",
+        "RESEARCH_INSTITUTE"
+      ],
+      "minAward": 10000,
+      "maxAward": 1000000,
+      "currency": "GBP",
+      "rawDescription": "Paul Hamlyn Foundation is a Independent foundation. Focus: Arts, education, social justice. Geography: UK, India.",
+      "status": "OPEN"
+    }
+  ]
+}

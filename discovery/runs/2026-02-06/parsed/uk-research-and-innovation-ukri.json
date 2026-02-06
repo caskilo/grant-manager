@@ -1,0 +1,37 @@
+{
+  "funder": {
+    "funderName": "UK Research and Innovation (UKRI)",
+    "website": "https://www.ukri.org/",
+    "type": "Public research funder",
+    "focus": "All research disciplines via councils (ESRC, AHRC, EPSRC, NERC, MRC, BBSRC)",
+    "geography": "UK",
+    "notes": "Open data: Yes (funding finder)"
+  },
+  "opportunities": [
+    {
+      "externalId": "uk-research-and-innovation-ukri-general",
+      "programName": "UK Research and Innovation (UKRI) - General Funding",
+      "sourceUrl": "https://www.ukri.org/",
+      "declaredFocus": [
+        "All research disciplines via councils (ESRC",
+        "AHRC",
+        "EPSRC",
+        "NERC",
+        "MRC",
+        "BBSRC)"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "eligibleApplicantTypes": [
+        "CHARITY",
+        "UNIVERSITY",
+        "RESEARCH_INSTITUTE"
+      ],
+      "minAward": 10000,
+      "currency": "GBP",
+      "rawDescription": "UK Research and Innovation (UKRI) is a Public research funder. Focus: All research disciplines via councils (ESRC, AHRC, EPSRC, NERC, MRC, BBSRC). Geography: UK.",
+      "status": "OPEN"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "runId": "build_2026-01-23T13-40-28-596Z",
+  "source": {
+    "id": "a83b3911-27ca-49e4-ac1c-3a30adbbe506",
+    "name": "BUILD",
+    "baseUrl": "https://www.fordfoundation.org/work/our-grants/"
+  },
+  "funder": {
+    "id": "a974fca7-e3c8-401e-9c3f-aea215c8b527",
+    "name": "Ford Foundation"
+  },
+  "executedAt": "2026-01-23T13:40:34.278Z",
+  "status": "completed",
+  "stats": {
+    "opportunitiesFound": 1,
+    "newOpportunities": 1,
+    "updatedOpportunities": 0
+  }
+}

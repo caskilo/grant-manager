@@ -1,0 +1,34 @@
+{
+  "funderId": "42c324cb-2419-4c88-823d-fd97baca8a39",
+  "funderName": "Royal Society for the Encouragement of Arts (RSA)",
+  "seedUrl": "https://www.thersa.org/",
+  "discoveredAt": "2026-02-06T12:51:54.846Z",
+  "sources": [
+    {
+      "url": "https://www.thersa.org/awards/",
+      "anchorText": "Awards",
+      "title": "detail",
+      "score": 0.9500000000000001,
+      "discoveredAt": "2026-02-06T12:51:54.846Z",
+      "pageTitle": "Awards",
+      "keywords": [
+        "Found in \"View all awards\" menu",
+        "Extraction: heuristic",
+        "Program: Awards",
+        "No deadline found",
+        "No award info"
+      ],
+      "lastDiscoveredAt": "2026-02-06T12:51:54.846Z"
+    }
+  ],
+  "stats": {
+    "totalLinksFound": 1,
+    "linksScored": 1,
+    "topSourcesReturned": 1,
+    "manualLinksProvided": 0,
+    "manualLinksProcessed": 0,
+    "seedUrlProcessed": true,
+    "totalUniqueSources": 1,
+    "newSourcesThisRun": 1
+  }
+}

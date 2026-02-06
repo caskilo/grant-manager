@@ -1,0 +1,35 @@
+{
+  "funder": {
+    "funderName": "Joseph Rowntree Foundation",
+    "website": "https://www.jrf.org.uk/",
+    "type": "Foundation",
+    "focus": "Poverty, social policy, housing",
+    "geography": "UK",
+    "notes": "Open data: Partial"
+  },
+  "opportunities": [
+    {
+      "externalId": "joseph-rowntree-foundation-general",
+      "programName": "Joseph Rowntree Foundation - General Funding",
+      "sourceUrl": "https://www.jrf.org.uk/",
+      "declaredFocus": [
+        "Poverty",
+        "social policy",
+        "housing"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "eligibleApplicantTypes": [
+        "CHARITY",
+        "UNIVERSITY",
+        "RESEARCH_INSTITUTE"
+      ],
+      "minAward": 10000,
+      "maxAward": 1000000,
+      "currency": "GBP",
+      "rawDescription": "Joseph Rowntree Foundation is a Foundation. Focus: Poverty, social policy, housing. Geography: UK.",
+      "status": "OPEN"
+    }
+  ]
+}
