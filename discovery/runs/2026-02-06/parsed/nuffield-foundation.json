@@ -1,0 +1,35 @@
+{
+  "funder": {
+    "funderName": "Nuffield Foundation",
+    "website": "https://www.nuffieldfoundation.org/",
+    "type": "Trust",
+    "focus": "Social policy, education, welfare research",
+    "geography": "UK",
+    "notes": "Open data: Partial"
+  },
+  "opportunities": [
+    {
+      "externalId": "nuffield-foundation-general",
+      "programName": "Nuffield Foundation - General Funding",
+      "sourceUrl": "https://www.nuffieldfoundation.org/",
+      "declaredFocus": [
+        "Social policy",
+        "education",
+        "welfare research"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "eligibleApplicantTypes": [
+        "CHARITY",
+        "UNIVERSITY",
+        "RESEARCH_INSTITUTE"
+      ],
+      "minAward": 50000,
+      "maxAward": 1000000,
+      "currency": "GBP",
+      "rawDescription": "Nuffield Foundation is a Trust. Focus: Social policy, education, welfare research. Geography: UK.",
+      "status": "OPEN"
+    }
+  ]
+}

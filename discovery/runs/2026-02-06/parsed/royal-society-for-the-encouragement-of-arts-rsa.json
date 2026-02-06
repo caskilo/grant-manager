@@ -1,0 +1,32 @@
+{
+  "funder": {
+    "funderName": "Royal Society for the Encouragement of Arts (RSA)",
+    "website": "https://www.thersa.org/",
+    "type": "Charitable org",
+    "focus": "Social progress, civic innovation",
+    "geography": "UK",
+    "notes": "Open data: Partial"
+  },
+  "opportunities": [
+    {
+      "externalId": "royal-society-for-the-encouragement-of-arts-rsa-general",
+      "programName": "Royal Society for the Encouragement of Arts (RSA) - General Funding",
+      "sourceUrl": "https://www.thersa.org/",
+      "declaredFocus": [
+        "Social progress",
+        "civic innovation"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "eligibleApplicantTypes": [
+        "CHARITY",
+        "UNIVERSITY",
+        "RESEARCH_INSTITUTE"
+      ],
+      "currency": "GBP",
+      "rawDescription": "Royal Society for the Encouragement of Arts (RSA) is a Charitable org. Focus: Social progress, civic innovation. Geography: UK.",
+      "status": "OPEN"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "funder": {
+    "funderName": "Wellcome Trust",
+    "website": "https://wellcome.org/",
+    "type": "Foundation",
+    "focus": "Biomedical research, open research, health",
+    "geography": "Global",
+    "notes": "Open data: Yes (grants database)"
+  },
+  "opportunities": [
+    {
+      "externalId": "wellcome-trust-general",
+      "programName": "Wellcome Trust - General Funding",
+      "sourceUrl": "https://wellcome.org/",
+      "declaredFocus": [
+        "Biomedical research",
+        "open research",
+        "health"
+      ],
+      "geographies": [
+        "Global"
+      ],
+      "eligibleApplicantTypes": [
+        "CHARITY",
+        "UNIVERSITY",
+        "RESEARCH_INSTITUTE"
+      ],
+      "minAward": 10000,
+      "maxAward": 100000000,
+      "currency": "GBP",
+      "rawDescription": "Wellcome Trust is a Foundation. Focus: Biomedical research, open research, health. Geography: Global.",
+      "status": "OPEN"
+    }
+  ]
+}

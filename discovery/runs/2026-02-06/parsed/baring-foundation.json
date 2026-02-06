@@ -1,0 +1,35 @@
+{
+  "funder": {
+    "funderName": "Baring Foundation",
+    "website": "https://www.baringfoundation.org.uk/",
+    "type": "Foundation",
+    "focus": "Arts, social justice, legal advice",
+    "geography": "UK",
+    "notes": "Open data: Partial"
+  },
+  "opportunities": [
+    {
+      "externalId": "baring-foundation-general",
+      "programName": "Baring Foundation - General Funding",
+      "sourceUrl": "https://www.baringfoundation.org.uk/",
+      "declaredFocus": [
+        "Arts",
+        "social justice",
+        "legal advice"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "eligibleApplicantTypes": [
+        "CHARITY",
+        "UNIVERSITY",
+        "RESEARCH_INSTITUTE"
+      ],
+      "minAward": 5000,
+      "maxAward": 500000,
+      "currency": "GBP",
+      "rawDescription": "Baring Foundation is a Foundation. Focus: Arts, social justice, legal advice. Geography: UK.",
+      "status": "OPEN"
+    }
+  ]
+}

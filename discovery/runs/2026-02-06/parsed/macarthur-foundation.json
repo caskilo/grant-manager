@@ -1,0 +1,34 @@
+{
+  "funder": {
+    "funderName": "MacArthur Foundation",
+    "website": "https://www.macfound.org/",
+    "type": "US foundation",
+    "focus": "Global challenges, resilience, social justice",
+    "geography": "Global",
+    "notes": "Open data: Partial"
+  },
+  "opportunities": [
+    {
+      "externalId": "macarthur-foundation-general",
+      "programName": "MacArthur Foundation - General Funding",
+      "sourceUrl": "https://www.macfound.org/",
+      "declaredFocus": [
+        "Global challenges",
+        "resilience",
+        "social justice"
+      ],
+      "geographies": [
+        "Global"
+      ],
+      "eligibleApplicantTypes": [
+        "CHARITY",
+        "UNIVERSITY",
+        "RESEARCH_INSTITUTE"
+      ],
+      "minAward": 50000,
+      "currency": "USD",
+      "rawDescription": "MacArthur Foundation is a US foundation. Focus: Global challenges, resilience, social justice. Geography: Global.",
+      "status": "OPEN"
+    }
+  ]
+}

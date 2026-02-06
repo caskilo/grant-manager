@@ -1,8 +1,9 @@
 import { Modal, Stack, Paper, Text, Group, Button, TextInput, ActionIcon, Anchor, Divider, Alert, Progress, Badge, Checkbox, Select } from '@mantine/core';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { IconAlertCircle, IconCheck, IconExternalLink, IconSearch, IconPlus, IconTrash, IconX } from '@tabler/icons-react';
+import { IconAlertCircle, IconExternalLink, IconSearch, IconPlus, IconTrash, IconX } from '@tabler/icons-react';
 import { modals } from '@mantine/modals';
+import { notifications } from '@mantine/notifications';
 import { harvestApi } from '../../lib/harvest';
 
 interface HarvestManagementModalProps {
@@ -70,9 +71,11 @@ export default function HarvestManagementModal({ opened, funder, onClose }: Harv
         setDiscoveryStatus('completed');
         setJobProgress(null);
         queryClient.invalidateQueries({ queryKey: ['suggestedSources', funderId] });
+        notifications.show({ title: 'Discovery Complete', message: 'Pages discovered successfully.', color: 'green', autoClose: 4000 });
       } else if (status.state === 'failed') {
         setDiscoveryStatus('failed');
         setJobProgress(null);
+        notifications.show({ title: 'Discovery Failed', message: 'Please try again or check the manual links.', color: 'red', autoClose: 5000 });
       }
       
       return status;
@@ -97,9 +100,11 @@ export default function HarvestManagementModal({ opened, funder, onClose }: Harv
         setHarvestStatus('completed');
         setHarvestProgress(null);
         queryClient.invalidateQueries({ queryKey: ['harvestSources', funderId] });
+        notifications.show({ title: 'Inspection Complete', message: 'Source inspected successfully.', color: 'green', autoClose: 4000 });
       } else if (status.state === 'failed') {
         setHarvestStatus('failed');
         setHarvestProgress(null);
+        notifications.show({ title: 'Inspection Failed', message: 'Please check the logs and try again.', color: 'red', autoClose: 5000 });
       }
       
       return status;
@@ -141,6 +146,7 @@ export default function HarvestManagementModal({ opened, funder, onClose }: Harv
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['harvestSources', funderId] });
       setSelectedSuggestions(new Set());
+      notifications.show({ title: 'Source Created', message: 'Source added successfully.', color: 'green', autoClose: 3000 });
     },
   });
 
@@ -333,10 +339,10 @@ export default function HarvestManagementModal({ opened, funder, onClose }: Harv
 
             {/* Discovery Results */}
             {isLoadingSuggested ? (
-              <Text size="sm" c="dimmed">Loading discovered sources...</Text>
+              <Text size="sm" c="dimmed">Loading discovered pages...</Text>
             ) : suggestedSources?.sources && suggestedSources.sources.length > 0 ? (
               <Stack gap="md">
-                <Divider label={`Discovered Sources (${suggestedSources.sources.length})`} labelPosition="center" />
+                <Divider label={`Discovered Pages (${suggestedSources.sources.length})`} labelPosition="center" />
                 
                 {/* Discovery metadata */}
                 {suggestedSources.lastDiscoveryAt && (
@@ -465,19 +471,6 @@ export default function HarvestManagementModal({ opened, funder, onClose }: Harv
               </Alert>
             ) : null}
 
-            {/* Discovery Status Messages */}
-            {discoveryStatus === 'completed' && (
-              <Alert icon={<IconCheck size={16} />} color="green">
-                Discovery completed! {suggestedSources?.sources?.length || 0} sources found.
-              </Alert>
-            )}
-            
-            {discoveryStatus === 'failed' && (
-              <Alert icon={<IconAlertCircle size={16} />} color="red">
-                Discovery failed. Please try again or check the manual links.
-              </Alert>
-            )}
-
             {discoverMutation.isError && (
               <Alert icon={<IconAlertCircle size={16} />} color="red">
                 {(discoverMutation.error as Error)?.message || 'Failed to start discovery'}
@@ -516,17 +509,6 @@ export default function HarvestManagementModal({ opened, funder, onClose }: Harv
               </Paper>
             )}
 
-            {harvestStatus === 'completed' && (
-              <Alert icon={<IconCheck size={16} />} color="green">
-                Inspection completed successfully!
-              </Alert>
-            )}
-
-            {harvestStatus === 'failed' && (
-              <Alert icon={<IconAlertCircle size={16} />} color="red">
-                Inspection failed. Please check the logs and try again.
-              </Alert>
-            )}
 
             {isLoading ? (
               <Text size="sm" c="dimmed">Loading sources...</Text>
@@ -584,21 +566,9 @@ export default function HarvestManagementModal({ opened, funder, onClose }: Harv
               </Alert>
             )}
 
-            {triggerMutation.isSuccess && (
-              <Alert icon={<IconCheck size={16} />} color="green">
-                Job started successfully! ID: {triggerMutation.data.jobId}
-              </Alert>
-            )}
-
             {triggerMutation.isError && (
               <Alert icon={<IconAlertCircle size={16} />} color="red">
                 {(triggerMutation.error as Error)?.message || 'Failed to start inspection'}
-              </Alert>
-            )}
-
-            {createSourceMutation.isSuccess && (
-              <Alert icon={<IconCheck size={16} />} color="green">
-                Source(s) created successfully!
               </Alert>
             )}
           </Stack>

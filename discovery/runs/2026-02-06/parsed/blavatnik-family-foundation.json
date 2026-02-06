@@ -1,0 +1,36 @@
+{
+  "funder": {
+    "funderName": "Blavatnik Family Foundation",
+    "website": "https://blavatnikfoundation.org/",
+    "type": "Family foundation",
+    "focus": "Science, arts, education",
+    "geography": "UK, US, Global",
+    "notes": "Open data: Partial"
+  },
+  "opportunities": [
+    {
+      "externalId": "blavatnik-family-foundation-general",
+      "programName": "Blavatnik Family Foundation - General Funding",
+      "sourceUrl": "https://blavatnikfoundation.org/",
+      "declaredFocus": [
+        "Science",
+        "arts",
+        "education"
+      ],
+      "geographies": [
+        "UK",
+        "US",
+        "Global"
+      ],
+      "eligibleApplicantTypes": [
+        "CHARITY",
+        "UNIVERSITY",
+        "RESEARCH_INSTITUTE"
+      ],
+      "minAward": 10000,
+      "currency": "GBP",
+      "rawDescription": "Blavatnik Family Foundation is a Family foundation. Focus: Science, arts, education. Geography: UK, US, Global.",
+      "status": "OPEN"
+    }
+  ]
+}

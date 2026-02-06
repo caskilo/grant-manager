@@ -1,0 +1,34 @@
+{
+  "funder": {
+    "funderName": "Rockefeller Brothers Fund",
+    "website": "https://www.rbf.org/",
+    "type": "Family foundation",
+    "focus": "Sustainability, climate, systems change",
+    "geography": "Global",
+    "notes": "Open data: Partial"
+  },
+  "opportunities": [
+    {
+      "externalId": "rockefeller-brothers-fund-general",
+      "programName": "Rockefeller Brothers Fund - General Funding",
+      "sourceUrl": "https://www.rbf.org/",
+      "declaredFocus": [
+        "Sustainability",
+        "climate",
+        "systems change"
+      ],
+      "geographies": [
+        "Global"
+      ],
+      "eligibleApplicantTypes": [
+        "CHARITY",
+        "UNIVERSITY",
+        "RESEARCH_INSTITUTE"
+      ],
+      "minAward": 50000,
+      "currency": "USD",
+      "rawDescription": "Rockefeller Brothers Fund is a Family foundation. Focus: Sustainability, climate, systems change. Geography: Global.",
+      "status": "OPEN"
+    }
+  ]
+}

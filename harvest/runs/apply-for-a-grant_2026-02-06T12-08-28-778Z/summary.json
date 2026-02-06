@@ -1,0 +1,19 @@
+{
+  "runId": "apply-for-a-grant_2026-02-06T12-08-28-778Z",
+  "source": {
+    "id": "5e235c11-953e-4da0-b21e-6b10afcf8c4a",
+    "name": "Apply for a grant",
+    "baseUrl": "https://erc.europa.eu/apply-grant"
+  },
+  "funder": {
+    "id": "8fc84783-9d17-4f60-b404-64bda4f11171",
+    "name": "European Research Council (ERC)"
+  },
+  "executedAt": "2026-02-06T12:09:03.593Z",
+  "status": "completed",
+  "stats": {
+    "opportunitiesFound": 8,
+    "newOpportunities": 8,
+    "updatedOpportunities": 0
+  }
+}

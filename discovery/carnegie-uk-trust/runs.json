@@ -1,0 +1,48 @@
+[
+  {
+    "runId": "carnegie-uk-trust_2026-02-06T12-51-06-812Z",
+    "funderId": "1efe3e91-a9f9-4fbf-9883-ac2fcb2efe2c",
+    "seedUrl": "https://www.carnegieuktrust.org.uk/",
+    "timestamp": "2026-02-06T12:51:06.812Z",
+    "status": "completed",
+    "result": {
+      "funderId": "1efe3e91-a9f9-4fbf-9883-ac2fcb2efe2c",
+      "funderName": "Carnegie UK Trust",
+      "seedUrl": "https://www.carnegieuktrust.org.uk/",
+      "discoveredAt": "2026-02-06T12:51:06.812Z",
+      "sources": [],
+      "stats": {
+        "totalLinksFound": 0,
+        "linksScored": 0,
+        "topSourcesReturned": 0,
+        "manualLinksProvided": 0,
+        "manualLinksProcessed": 0,
+        "seedUrlProcessed": true,
+        "newSourcesDiscovered": 0
+      }
+    }
+  },
+  {
+    "runId": "carnegie-uk-trust_2026-02-06T12-51-15-217Z",
+    "funderId": "1efe3e91-a9f9-4fbf-9883-ac2fcb2efe2c",
+    "seedUrl": "https://www.carnegieuktrust.org.uk/",
+    "timestamp": "2026-02-06T12:51:15.217Z",
+    "status": "completed",
+    "result": {
+      "funderId": "1efe3e91-a9f9-4fbf-9883-ac2fcb2efe2c",
+      "funderName": "Carnegie UK Trust",
+      "seedUrl": "https://www.carnegieuktrust.org.uk/",
+      "discoveredAt": "2026-02-06T12:51:15.217Z",
+      "sources": [],
+      "stats": {
+        "totalLinksFound": 0,
+        "linksScored": 0,
+        "topSourcesReturned": 0,
+        "manualLinksProvided": 0,
+        "manualLinksProcessed": 0,
+        "seedUrlProcessed": true,
+        "newSourcesDiscovered": 0
+      }
+    }
+  }
+]

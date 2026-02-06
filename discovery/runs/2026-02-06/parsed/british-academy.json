@@ -1,0 +1,33 @@
+{
+  "funder": {
+    "funderName": "British Academy",
+    "website": "https://www.thebritishacademy.ac.uk/",
+    "type": "Learned society",
+    "focus": "Humanities & social sciences research",
+    "geography": "UK",
+    "notes": "Open data: Partial"
+  },
+  "opportunities": [
+    {
+      "externalId": "british-academy-general",
+      "programName": "British Academy - General Funding",
+      "sourceUrl": "https://www.thebritishacademy.ac.uk/",
+      "declaredFocus": [
+        "Humanities & social sciences research"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "eligibleApplicantTypes": [
+        "CHARITY",
+        "UNIVERSITY",
+        "RESEARCH_INSTITUTE"
+      ],
+      "minAward": 10000,
+      "maxAward": 500000,
+      "currency": "GBP",
+      "rawDescription": "British Academy is a Learned society. Focus: Humanities & social sciences research. Geography: UK.",
+      "status": "OPEN"
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "runId": "build_2026-01-23T13-40-28-596Z",
+  "sourceType": "llm_extraction",
+  "sourceName": "BUILD",
+  "sourceUrl": "https://www.fordfoundation.org/work/our-grants/",
+  "funderId": "a974fca7-e3c8-401e-9c3f-aea215c8b527",
+  "funderName": "Ford Foundation",
+  "config": {
+    "extractionMethod": "llm",
+    "tokensUsed": 5886,
+    "extractionConfidence": 0.8
+  },
+  "timestamp": "2026-01-23T13:40:34.274Z",
+  "stats": {
+    "totalOpportunities": 1,
+    "newOpportunities": 1,
+    "updatedOpportunities": 0,
+    "unchangedOpportunities": 0
+  },
+  "opportunities": [
+    {
+      "programName": "Unknown Program",
+      "description": "",
+      "eligibility": "**Eligible organizations:** nonprofit, nongovernmental organization, civil society organization\n\n**Funding history:** The Ford Foundation has been making grants since 1950, as evidenced by the availability of annual reports from that time period.\n\n**Collaboration:** The website mentions the Ford Foundation's 'BUILD' initiative, which is dedicated to 'strengthening social justice institutions', suggesting a focus on supporting collaborative efforts and networks.\n\n**Other criteria:** Alignment with the Ford Foundation's programs and priorities\n\n\n**Note:** Some information could not be determined: Specific eligibility criteria for individual grant programs are not clearly stated on the website\n\n\n*Confidence: 70% | Completeness: 80% | Method: inferred*",
+      "fundingAmount": null,
+      "deadline": null,
+      "duration": null,
+      "geographies": null,
+      "focusAreas": null,
+      "applicantTypes": null,
+      "applicationProcess": null,
+      "contactInfo": null,
+      "confidence": 0.6,
+      "reasoning": "The page does not contain any specific details about individual grant programs. It provides general information about the Ford Foundation's grantmaking approach and activities.",
+      "eligibilityDetailed": {
+        "organizationTypes": [
+          "nonprofit",
+          "nongovernmental organization",
+          "civil society organization"
+        ],
+        "geographicRestrictions": null,
+        "careerStage": null,
+        "disciplineRestrictions": null,
+        "fundingHistory": "The Ford Foundation has been making grants since 1950, as evidenced by the availability of annual reports from that time period.",
+        "collaborationRequirements": "The website mentions the Ford Foundation's 'BUILD' initiative, which is dedicated to 'strengthening social justice institutions', suggesting a focus on supporting collaborative efforts and networks.",
+        "otherCriteria": [
+          "Alignment with the Ford Foundation's programs and priorities"
+        ],
+        "confidence": 0.7,
+        "completeness": 0.8,
+        "uncertainties": [
+          "Specific eligibility criteria for individual grant programs are not clearly stated on the website"
+        ],
+        "reasoning": "First pass: The Ford Foundation website provides general information about their grantmaking approach, but does not contain details about the eligibility criteria for specific grant programs.\n\nSecond pass: While the website does not explicitly list eligibility criteria, there are several contextual clues that suggest the types of organizations and initiatives the Ford Foundation is likely to support. The references to 'social justice institutions', 'tackling inequality', and 'supporting the individuals and institutions working tirelessly to address the underlying drivers of inequality' imply a focus on nonprofit, nongovernmental, and civil society organizations working in these areas. The 'BUILD' initiative also suggests a preference for collaborative efforts and network-building. However, the specific eligibility criteria for individual grant programs are still unclear.",
+        "extractionMethod": "inferred"
+      },
+      "alignmentScore": {
+        "overall": 0.73,
+        "dimensions": {
+          "researchStrandMatch": 0.7,
+          "methodologicalFit": 0.8,
+          "thematicAlignment": 0.8,
+          "impactPotential": 0.7,
+          "practicalFeasibility": 0.6
+        },
+        "matchedStrands": [
+          {
+            "strand": "Odyssean Process",
+            "relevance": 0.8,
+            "reasoning": "The grant focuses on supporting collaborative, interdisciplinary efforts to address complex societal challenges, which aligns well with the Odyssean Process strand's emphasis on participatory governance, democratic innovation, and policy influence."
+          },
+          {
+            "strand": "GRAIN",
+            "relevance": 0.6,
+            "reasoning": "While the grant does not explicitly mention building resilience against global collapse/extinction, its focus on strengthening social justice institutions and supporting collaborative networks could contribute to building institutional capacity and resilience, which is relevant to the GRAIN strand."
+          },
+          {
+            "strand": "Aeonic Flourishing",
+            "relevance": 0.7,
+            "reasoning": "The grant's emphasis on supporting civil society organizations and addressing complex societal challenges suggests alignment with the Aeonic Flourishing strand's focus on long-term human flourishing, justice, and ecological sustainability."
+          }
+        ],
+        "strengths": [
+          "The grant's focus on supporting collaborative, interdisciplinary efforts to address complex societal challenges aligns well with the Odyssean Institute's research agenda.",
+          "The grant's emphasis on strengthening social justice institutions and supporting networks could contribute to building institutional capacity and resilience, which is relevant to the GRAIN strand.",
+          "The grant's potential to support initiatives that address long-term human flourishing, justice, and ecological sustainability is relevant to the Aeonic Flourishing strand.",
+          "The grant's flexible funding amount and timeline could be a good fit for the Odyssean Institute's research projects.",
+          "The grant's focus on policy influence and public engagement is well-aligned with the Odyssean Institute's cross-cutting priorities."
+        ],
+        "concerns": [
+          "The grant's eligibility criteria are not clearly defined, which could create uncertainty around the Odyssean Institute's ability to apply.",
+          "The grant's focus on supporting civil society organizations may not directly address the Odyssean Institute's specific research methodologies, such as DMDU modeling and citizen assemblies.",
+          "The grant's funding amount and timeline may not be sufficient to support the Odyssean Institute's more ambitious, systemic interventions."
+        ],
+        "recommendation": "relevant",
+        "confidence": 0.8,
+        "reasoning": "The Ford Foundation grant opportunity aligns well with the Odyssean Institute's research agenda, particularly in the areas of Odyssean Process and Aeonic Flourishing. The grant's focus on supporting collaborative, interdisciplinary efforts to address complex societal challenges and its potential to contribute to building institutional capacity and resilience make it a relevant funding source for the Odyssean Institute. However, some concerns around the grant's eligibility criteria and the potential mismatch between the grant's funding and the Odyssean Institute's more ambitious, systemic interventions may limit the overall fit.",
+        "tokensUsed": 2111
+      }
+    }
+  ]
+}

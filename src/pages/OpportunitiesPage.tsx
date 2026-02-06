@@ -5,40 +5,87 @@ import { IconExternalLink, IconCalendar, IconCoins, IconBuildingBank, IconSparkl
 import { useMemo, useState } from 'react';
 import api from '../lib/api';
 
+interface DeadlineEntry {
+  date?: string;
+  description?: string;
+  isRolling?: boolean;
+  type?: string;
+}
+
 interface Opportunity {
   id: string;
   programName: string;
   description: string | null;
+  rawDescription: string | null;
   sourceUrl: string;
   status: string;
-  deadline: string | null;
+  deadlines: DeadlineEntry[] | string[];
   geographies: string[];
+  eligibleApplicantTypes: string[];
+  processSteps: string[];
   minAward: number | null;
   maxAward: number | null;
   currency: string | null;
   aiFitScore: number | null;
   aiFitReasons: string[];
+  aiRecommendedAction: string | null;
   tags: string[];
   funder: {
     id: string;
     name: string;
-    websiteUrl: string | null;
+    type: string;
   } | null;
+}
+
+/** Extract the earliest deadline date from the deadlines JSON array */
+function getDeadlineDate(deadlines: DeadlineEntry[] | string[] | null): Date | null {
+  if (!deadlines || !Array.isArray(deadlines) || deadlines.length === 0) return null;
+  const first = deadlines[0];
+  if (typeof first === 'string') {
+    const d = new Date(first);
+    return isNaN(d.getTime()) ? null : d;
+  }
+  if (first?.date) {
+    const d = new Date(first.date);
+    return isNaN(d.getTime()) ? null : d;
+  }
+  return null;
 }
 
 interface GroupedOpportunities {
   [funderName: string]: {
     funderId: string | null;
-    funderUrl: string | null;
     opportunities: Opportunity[];
   };
 }
+
+const STORAGE_KEY = 'opportunities-accordion-state';
 
 export default function OpportunitiesPage() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [alignmentFilter, setAlignmentFilter] = useState<string | null>(null);
   const [amountFilter, setAmountFilter] = useState<string | null>(null);
+  
+  // Load accordion state from localStorage
+  const [expandedGroups, setExpandedGroups] = useState<string[]>(() => {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  // Save accordion state to localStorage whenever it changes
+  const handleAccordionChange = (value: string[]) => {
+    setExpandedGroups(value);
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(value));
+    } catch {
+      // Ignore localStorage errors
+    }
+  };
 
   const { data, isLoading } = useQuery<{ data: Opportunity[] }>({
     queryKey: ['opportunities'],
@@ -67,13 +114,8 @@ export default function OpportunitiesPage() {
       return null;
     };
 
-    // Filter out 'general' placeholder opportunities and apply search/filters
+    // Apply search/filters
     const filtered = data.data.filter(opp => {
-      // Remove 'general' placeholder opportunities
-      if (opp.programName.toLowerCase().includes('general funding')) {
-        return false;
-      }
-
       // Apply search query
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
@@ -110,7 +152,6 @@ export default function OpportunitiesPage() {
       if (!acc[funderName]) {
         acc[funderName] = {
           funderId: opp.funder?.id || null,
-          funderUrl: opp.funder?.websiteUrl || null,
           opportunities: [],
         };
       }
@@ -175,15 +216,12 @@ export default function OpportunitiesPage() {
   return (
     <Container size="xl">
       <Stack gap="lg">
-        <Group justify="space-between" align="flex-start">
-          <div>
-            <Title order={1}>Grant Opportunities</Title>
-            <Text size="sm" c="dimmed" mt={4}>
-              {filteredTotal} of {totalOpportunities} opportunities from {Object.keys(groupedOpportunities).length} funders
-            </Text>
-          </div>
-          <Button onClick={() => navigate('/opportunities/new')}>Add Opportunity</Button>
-        </Group>
+        <div>
+          <Title order={1}>Grant Opportunities</Title>
+          <Text size="sm" c="dimmed" mt={4}>
+            {filteredTotal} of {totalOpportunities} opportunities from {Object.keys(groupedOpportunities).length} funders
+          </Text>
+        </div>
 
         {/* Search and Filter Bar */}
         <Paper p="md" withBorder>
@@ -245,7 +283,7 @@ export default function OpportunitiesPage() {
             </Stack>
           </Paper>
         ) : (
-          <Accordion multiple variant="separated" defaultValue={sortedFunders.slice(0, 3).map(([name]) => name)}>
+          <Accordion multiple variant="separated" value={expandedGroups} onChange={handleAccordionChange}>
             {sortedFunders.map(([funderName, group]) => (
               <Accordion.Item key={funderName} value={funderName}>
                 <Accordion.Control>
@@ -304,7 +342,7 @@ export default function OpportunitiesPage() {
                         ? `${opp.currency || ''}${opp.minAward.toLocaleString()}+`
                         : null;
 
-                      const deadlineDate = opp.deadline ? new Date(opp.deadline) : null;
+                      const deadlineDate = getDeadlineDate(opp.deadlines);
                       const isDeadlineSoon = deadlineDate && deadlineDate.getTime() - Date.now() < 30 * 24 * 60 * 60 * 1000;
 
                       return (

@@ -1,0 +1,32 @@
+{
+  "funder": {
+    "funderName": "NIHR (National Institute for Health Research)",
+    "website": "https://www.nihr.ac.uk/",
+    "type": "Public funder",
+    "focus": "Health & applied research",
+    "geography": "UK",
+    "notes": "Open data: Partial"
+  },
+  "opportunities": [
+    {
+      "externalId": "nihr-national-institute-for-health-research-general",
+      "programName": "NIHR (National Institute for Health Research) - General Funding",
+      "sourceUrl": "https://www.nihr.ac.uk/",
+      "declaredFocus": [
+        "Health & applied research"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "eligibleApplicantTypes": [
+        "CHARITY",
+        "UNIVERSITY",
+        "RESEARCH_INSTITUTE"
+      ],
+      "minAward": 50000,
+      "currency": "GBP",
+      "rawDescription": "NIHR (National Institute for Health Research) is a Public funder. Focus: Health & applied research. Geography: UK.",
+      "status": "OPEN"
+    }
+  ]
+}

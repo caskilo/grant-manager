@@ -1,0 +1,666 @@
+{
+  "runId": "funding-opportunities_2026-02-06T10-55-58-210Z",
+  "sourceType": "llm_extraction",
+  "sourceName": "Funding opportunities",
+  "sourceUrl": "https://www.nihr.ac.uk/funding-opportunities",
+  "funderId": "daade919-60e8-409a-ba23-94f723d3e530",
+  "funderName": "NIHR (National Institute for Health Research)",
+  "config": {
+    "extractionMethod": "llm",
+    "tokensUsed": 57527,
+    "extractionConfidence": 0.8
+  },
+  "timestamp": "2026-02-06T10:56:36.533Z",
+  "stats": {
+    "totalOpportunities": 10,
+    "newOpportunities": 10,
+    "updatedOpportunities": 0,
+    "unchangedOpportunities": 0
+  },
+  "opportunities": [
+    {
+      "programName": "Programme Grants for Applied Research",
+      "description": "Programme Grants for Applied Research (PGfAR) is inviting applications on researcher-led topics, as well as those related to NICE and James Lind Alliance (JLA).",
+      "eligibility": "**Eligible organizations:** university, research_institute, charity\n\n**Career stage:** any\n\n\n**Note:** Some information could not be determined: Failed to parse LLM response\n\n\n*Confidence: 80% | Completeness: 60% | Method: explicit*",
+      "deadline": {
+        "date": "2026-04-01",
+        "description": "1 April 2026",
+        "isRolling": false
+      },
+      "confidence": 0.8,
+      "reasoning": "Found clear program name, description, and deadline date.",
+      "eligibilityDetailed": {
+        "organizationTypes": [
+          "university",
+          "research_institute",
+          "charity"
+        ],
+        "geographicRestrictions": null,
+        "careerStage": [
+          "any"
+        ],
+        "disciplineRestrictions": null,
+        "fundingHistory": null,
+        "collaborationRequirements": null,
+        "otherCriteria": null,
+        "confidence": 0.8,
+        "completeness": 0.6,
+        "uncertainties": [
+          "Failed to parse LLM response"
+        ],
+        "reasoning": "First pass: The page provides some explicit information about the eligibility criteria for the Programme Grants for Applied Research funding opportunity, including that it is open to universities, research institutes, and charities. It also states that the career stage is open to any level. However, the page does not mention any geographic restrictions, discipline restrictions, funding history requirements, collaboration requirements, or other specific eligibility criteria. Therefore, I can only confidently extract the organization types and career stage, while the other criteria remain uncertain.\n\nSecond pass: Parsing error",
+        "extractionMethod": "explicit"
+      },
+      "alignmentScore": {
+        "overall": 0.425,
+        "dimensions": {
+          "researchStrandMatch": 0.3,
+          "methodologicalFit": 0.4,
+          "thematicAlignment": 0.4,
+          "impactPotential": 0.6,
+          "practicalFeasibility": 0.7
+        },
+        "matchedStrands": [
+          {
+            "strand": "Odyssean Process",
+            "relevance": 0.4,
+            "reasoning": "The grant's focus on decision-making under uncertainty and participatory governance approaches aligns somewhat with the Odyssean Process strand, but the scope is narrower and less systemic than the institute's focus."
+          }
+        ],
+        "strengths": [
+          "The grant supports interdisciplinary, participatory research approaches which align with the OI's methods",
+          "The funding amount and timeline are realistic for the OI to pursue",
+          "The grant's focus on policy influence and institutional change matches the OI's goals for real-world impact"
+        ],
+        "concerns": [
+          "The grant's scope is more narrowly focused on health research rather than the OI's broader systemic challenges",
+          "The grant does not explicitly address the OI's cross-cutting priorities like collapse/extinction risk mitigation or long-term human flourishing",
+          "The grant's eligibility is limited to UK/European organizations, which may not align with the OI's global reach"
+        ],
+        "recommendation": "somewhat_relevant",
+        "confidence": 0.8,
+        "reasoning": "While the grant supports some methodological and impact-oriented approaches that are relevant to the OI, the thematic and scope mismatches limit its overall alignment with the institute's ambitious, systemic research agenda. Additional modifications or complementary funding sources may be needed to fully realize the OI's vision through this opportunity.",
+        "tokensUsed": 1773
+      }
+    },
+    {
+      "programName": "Academy Member Event Fund 2026",
+      "description": "This fund is available to postdoctoral NIHR Academy Members to hold events that promote the NIHR's career development programmes.",
+      "eligibility": "**Eligible organizations:** postdoctoral NIHR Academy Members\n\n**Career stage:** postdoctoral\n\n\n**Note:** Some information could not be determined: Failed to parse LLM response\n\n\n*Confidence: 80% | Completeness: 60% | Method: explicit*",
+      "deadline": {
+        "date": "2026-12-31",
+        "description": "31 December 2026",
+        "isRolling": false
+      },
+      "confidence": 0.8,
+      "reasoning": "Found clear program name, description, and deadline date.",
+      "eligibilityDetailed": {
+        "organizationTypes": [
+          "postdoctoral NIHR Academy Members"
+        ],
+        "geographicRestrictions": null,
+        "careerStage": [
+          "postdoctoral"
+        ],
+        "disciplineRestrictions": null,
+        "fundingHistory": null,
+        "collaborationRequirements": null,
+        "otherCriteria": null,
+        "confidence": 0.8,
+        "completeness": 0.6,
+        "uncertainties": [
+          "Failed to parse LLM response"
+        ],
+        "reasoning": "First pass: The eligibility criteria explicitly state that the fund is available to postdoctoral NIHR Academy Members. However, the information provided does not mention any geographic restrictions, discipline restrictions, funding history requirements, collaboration requirements, or other eligibility criteria.\n\nSecond pass: Parsing error",
+        "extractionMethod": "explicit"
+      },
+      "alignmentScore": {
+        "overall": 0.195,
+        "dimensions": {
+          "researchStrandMatch": 0,
+          "methodologicalFit": 0.2,
+          "thematicAlignment": 0.2,
+          "impactPotential": 0.3,
+          "practicalFeasibility": 0.7
+        },
+        "matchedStrands": [
+          {
+            "strand": "Odyssean Process",
+            "relevance": 0.2,
+            "reasoning": "This grant focuses on promoting NIHR's career development programs, which is only tangentially related to the Odyssean Process strand's focus on decision-making under uncertainty, democratic innovation, and systemic reform."
+          }
+        ],
+        "strengths": [
+          "The grant is open to postdoctoral NIHR Academy Members, which could potentially include researchers aligned with the Odyssean Institute's mission.",
+          "The funding amount of up to £500k and 1-3 year timeline is within the range the Odyssean Institute typically seeks."
+        ],
+        "concerns": [
+          "The grant's primary purpose is to hold events that promote NIHR's career development programs, which is a narrow focus and does not directly align with the Odyssean Institute's ambitious, systemic research agenda.",
+          "The methodologies and thematic areas supported by this grant do not appear to closely match the Odyssean Institute's focus on futures methods, participatory governance, collapse risk mitigation, and institutional innovation.",
+          "The grant is limited to postdoctoral NIHR Academy Members, which may exclude many of the interdisciplinary teams and non-academic partners the Odyssean Institute typically works with."
+        ],
+        "recommendation": "somewhat_relevant",
+        "confidence": 0.8,
+        "reasoning": "While this grant has some practical feasibility for the Odyssean Institute in terms of funding amount and timeline, it is a poor thematic and methodological fit for the institute's ambitious, systemic research agenda. The grant's primary purpose of promoting NIHR's career development programs is too narrow and does not directly align with the Odyssean Institute's focus on addressing grand challenges through innovative, interdisciplinary, and participatory approaches.",
+        "tokensUsed": 1822
+      }
+    },
+    {
+      "programName": "Evidence Synthesis Programme (ESP): Researcher-Led – Evidence Synthesis",
+      "description": "We are seeking applications for research that identifies, appraises, and combines data from existing research studies to address questions of importance to policymakers, practitioners and the public.",
+      "eligibility": "**Eligible organizations:** university, research_institute, charity\n\n**Collaboration:** Must be collaborative\n\n\n**Note:** Some information could not be determined: Failed to parse LLM response\n\n\n*Confidence: 70% | Completeness: 50% | Method: explicit*",
+      "deadline": {
+        "date": "2026-05-18",
+        "description": "18 May 2026",
+        "isRolling": false
+      },
+      "confidence": 0.8,
+      "reasoning": "Found clear program name, description, and deadline date.",
+      "eligibilityDetailed": {
+        "organizationTypes": [
+          "university",
+          "research_institute",
+          "charity"
+        ],
+        "geographicRestrictions": null,
+        "careerStage": null,
+        "disciplineRestrictions": null,
+        "fundingHistory": null,
+        "collaborationRequirements": "Must be collaborative",
+        "otherCriteria": null,
+        "confidence": 0.7,
+        "completeness": 0.5,
+        "uncertainties": [
+          "Failed to parse LLM response"
+        ],
+        "reasoning": "First pass: The eligibility criteria explicitly state that the funding opportunity is for 'researcher-led' evidence synthesis projects, which implies that universities, research institutes, and charities can apply. It also states that the projects must be collaborative. However, the geographic restrictions, career stage requirements, discipline restrictions, and funding history requirements are not clearly specified.\n\nSecond pass: Parsing error",
+        "extractionMethod": "explicit"
+      },
+      "alignmentScore": {
+        "overall": 0.6649999999999999,
+        "dimensions": {
+          "researchStrandMatch": 0.6,
+          "methodologicalFit": 0.7,
+          "thematicAlignment": 0.7,
+          "impactPotential": 0.7,
+          "practicalFeasibility": 0.7
+        },
+        "matchedStrands": [
+          {
+            "strand": "Odyssean Process",
+            "relevance": 0.7,
+            "reasoning": "The grant focuses on evidence synthesis, which aligns with the Odyssean Process strand's emphasis on integrating expert elicitation, DMDU modeling, and citizen assemblies for comprehensive, legitimate governance."
+          }
+        ],
+        "strengths": [
+          "The grant supports interdisciplinary, participatory research approaches that are well-aligned with the Odyssean Institute's methodologies.",
+          "The focus on informing policymakers and practitioners matches the OI's goal of real-world impact and policy influence.",
+          "The flexible funding amount and timeline could accommodate OI's research needs."
+        ],
+        "concerns": [
+          "The grant is focused on the health and social care domain, which may not fully align with the OI's broader systemic and global focus.",
+          "The lack of explicit mention of futures methods, foresight, or long-term perspectives is a potential mismatch with the OI's forward-looking agenda."
+        ],
+        "recommendation": "relevant",
+        "confidence": 0.8,
+        "reasoning": "This grant opportunity has a good overall alignment with the Odyssean Institute's research agenda, particularly in the Odyssean Process strand. The methodological fit, thematic alignment, and potential for impact are all strong. While the health/social care focus is a minor concern, the flexible nature of the grant could allow the OI to adapt it to their broader systemic and global priorities.",
+        "tokensUsed": 1767
+      }
+    },
+    {
+      "programName": "Rising Research Leaders Prize",
+      "description": "A prize to celebrate 20 outstanding rising research leaders at early to mid-career level, who go above and beyond to advance the mission of the NIHR.",
+      "eligibility": "**Eligible organizations:** university, research_institute\n\n**Career stage:** early_career, mid_career\n\n\n**Note:** Some information could not be determined: Discipline restrictions not mentioned, Funding history requirements not mentioned, Collaboration requirements not mentioned, Other eligibility criteria not mentioned\n\n\n*Confidence: 90% | Completeness: 80% | Method: inferred*",
+      "deadline": {
+        "date": "2026-03-18",
+        "description": "18 March 2026",
+        "isRolling": false
+      },
+      "confidence": 0.8,
+      "reasoning": "Found clear program name, description, and deadline date.",
+      "eligibilityDetailed": {
+        "organizationTypes": [
+          "university",
+          "research_institute"
+        ],
+        "geographicRestrictions": null,
+        "careerStage": [
+          "early_career",
+          "mid_career"
+        ],
+        "disciplineRestrictions": null,
+        "fundingHistory": null,
+        "collaborationRequirements": null,
+        "otherCriteria": null,
+        "confidence": 0.9,
+        "completeness": 0.8,
+        "uncertainties": [
+          "Discipline restrictions not mentioned",
+          "Funding history requirements not mentioned",
+          "Collaboration requirements not mentioned",
+          "Other eligibility criteria not mentioned"
+        ],
+        "reasoning": "First pass: The eligibility criteria explicitly state that the Rising Research Leaders Prize is open to 'early to mid-career' researchers. It also mentions that the prize is to 'celebrate 20 outstanding rising research leaders', indicating the target audience is early to mid-career researchers. However, the other eligibility criteria such as geographic restrictions, discipline restrictions, funding history requirements, and collaboration requirements are not explicitly stated.\n\nSecond pass: Based on the program description, the Rising Research Leaders Prize is open to 'early to mid-career' researchers, indicating the target audience is researchers at those career stages. However, the other eligibility criteria such as geographic restrictions, discipline restrictions, funding history requirements, and collaboration requirements are still not explicitly stated. I have inferred that there are likely no geographic restrictions since the NIHR is a national funder, and no discipline restrictions since the prize is open to 'rising research leaders' in general. But the funding history and collaboration requirements remain unclear.",
+        "extractionMethod": "inferred"
+      },
+      "alignmentScore": {
+        "overall": 0.35500000000000004,
+        "dimensions": {
+          "researchStrandMatch": 0.2,
+          "methodologicalFit": 0.3,
+          "thematicAlignment": 0.4,
+          "impactPotential": 0.5,
+          "practicalFeasibility": 0.7
+        },
+        "matchedStrands": [
+          {
+            "strand": "Odyssean Process",
+            "relevance": 0.3,
+            "reasoning": "The grant focuses on celebrating outstanding early to mid-career researchers, which aligns somewhat with the Odyssean Process strand's focus on democratic innovation and participatory governance. However, it does not directly address decision-making under extreme risk and uncertainty or the integration of expert elicitation, DMDU modeling, and citizen assemblies."
+          }
+        ],
+        "strengths": [
+          "The grant supports early to mid-career researchers, which aligns with the Odyssean Institute's focus on building institutional capacity and developing future leaders.",
+          "The funding amount and timeline seem reasonable for the Odyssean Institute's needs.",
+          "The grant is open to a wide range of eligible organizations, including research institutes and universities, which the Odyssean Institute could potentially collaborate with."
+        ],
+        "concerns": [
+          "The grant does not explicitly focus on the Odyssean Institute's key research strands or cross-cutting priorities, such as systemic change, collapse/extinction risk mitigation, or public engagement.",
+          "The methodologies supported by the grant do not seem to closely match the Odyssean Institute's preferred methods, such as futures methodologies, DMDU, and citizen assemblies.",
+          "The grant's focus on celebrating outstanding researchers may not directly lead to real-world impact, policy influence, or institutional change, which are important goals for the Odyssean Institute."
+        ],
+        "recommendation": "somewhat_relevant",
+        "confidence": 0.8,
+        "reasoning": "While the Rising Research Leaders Prize grant has some positive aspects, such as supporting early to mid-career researchers and providing reasonable funding, it does not strongly align with the Odyssean Institute's core research strands, methodological preferences, or focus on systemic change and real-world impact. The grant may be somewhat relevant, but the Odyssean Institute would likely need to significantly adapt its approach to fit the grant's requirements.",
+        "tokensUsed": 1875
+      }
+    },
+    {
+      "programName": "Research Delivery Leaders Prize",
+      "description": "A prize to celebrate 20 research delivery leaders who have delivered excellence in the NIHR portfolio research through principal investigator work or through roles that directly support research delivery.",
+      "eligibility": "**Eligible organizations:** university, research_institute, charity\n\n**Career stage:** early_career, mid_career\n\n\n**Note:** Some information could not be determined: Failed to parse LLM response\n\n\n*Confidence: 70% | Completeness: 50% | Method: explicit*",
+      "deadline": {
+        "date": "2026-03-18",
+        "description": "18 March 2026",
+        "isRolling": false
+      },
+      "confidence": 0.8,
+      "reasoning": "Found clear program name, description, and deadline date.",
+      "eligibilityDetailed": {
+        "organizationTypes": [
+          "university",
+          "research_institute",
+          "charity"
+        ],
+        "geographicRestrictions": null,
+        "careerStage": [
+          "early_career",
+          "mid_career"
+        ],
+        "disciplineRestrictions": null,
+        "fundingHistory": null,
+        "collaborationRequirements": null,
+        "otherCriteria": null,
+        "confidence": 0.7,
+        "completeness": 0.5,
+        "uncertainties": [
+          "Failed to parse LLM response"
+        ],
+        "reasoning": "First pass: The page provides information about the 'Research Delivery Leaders Prize', but does not explicitly state the eligibility criteria. It mentions that the prize is to 'celebrate 20 research delivery leaders' which suggests the target audience is early to mid-career researchers, but the exact career stage requirements are not specified. The organization types that can apply are also not clearly stated, though universities, research institutes, and charities can be inferred. All other eligibility criteria are uncertain based on the information provided.\n\nSecond pass: Parsing error",
+        "extractionMethod": "explicit"
+      },
+      "alignmentScore": {
+        "overall": 0.34500000000000003,
+        "dimensions": {
+          "researchStrandMatch": 0.2,
+          "methodologicalFit": 0.3,
+          "thematicAlignment": 0.4,
+          "impactPotential": 0.5,
+          "practicalFeasibility": 0.6
+        },
+        "matchedStrands": [
+          {
+            "strand": "Odyssean Process",
+            "relevance": 0.3,
+            "reasoning": "The grant focuses on research delivery leadership, which could be relevant to the Odyssean Process strand's focus on decision-making and governance, but it does not directly address the key themes of that strand."
+          }
+        ],
+        "strengths": [
+          "The grant supports research delivery leadership, which could contribute to institutional capacity and public trust - themes relevant to the Odyssean Institute's work.",
+          "The funding amount and timeline seem reasonable for the Odyssean Institute's needs."
+        ],
+        "concerns": [
+          "The grant does not appear to directly address the Odyssean Institute's core research strands or cross-cutting priorities.",
+          "The methodological focus is unclear, and it may not align well with the Odyssean Institute's emphasis on futures methods, DMDU, and participatory approaches.",
+          "The geographic scope is limited to the UK, which may not be the Odyssean Institute's primary area of focus."
+        ],
+        "recommendation": "somewhat_relevant",
+        "confidence": 0.7,
+        "reasoning": "While the grant could provide some relevant institutional capacity and leadership development support, it does not strongly align with the Odyssean Institute's core research agenda and methodological approach. The Odyssean Institute may be able to find more suitable funding opportunities that better fit its ambitious, systemic, and interdisciplinary priorities.",
+        "tokensUsed": 1744
+      }
+    },
+    {
+      "programName": "Pre-Application Support Fund (Cohort 8)",
+      "description": "Up to 12 months of flexible funding to help you prepare a competitive application to an NIHR career development award.",
+      "eligibility": "**Eligible organizations:** university, research_institute, charity\n\n**Geographic restrictions:** UK only\n\n**Career stage:** early_career\n\n**Funding history:** No previous EPSRC funding required\n\n**Collaboration:** Must be collaborative\n\n\n**Note:** Some information could not be determined: Specific discipline restrictions not mentioned\n\n\n*Confidence: 80% | Completeness: 70% | Method: explicit*",
+      "deadline": {
+        "date": "2026-03-19",
+        "description": "19 March 2026",
+        "isRolling": false
+      },
+      "confidence": 0.8,
+      "reasoning": "Found clear program name, description, and deadline date.",
+      "eligibilityDetailed": {
+        "organizationTypes": [
+          "university",
+          "research_institute",
+          "charity"
+        ],
+        "geographicRestrictions": [
+          "UK only"
+        ],
+        "careerStage": [
+          "early_career"
+        ],
+        "disciplineRestrictions": null,
+        "fundingHistory": "No previous EPSRC funding required",
+        "collaborationRequirements": "Must be collaborative",
+        "otherCriteria": null,
+        "confidence": 0.8,
+        "completeness": 0.7,
+        "uncertainties": [
+          "Specific discipline restrictions not mentioned"
+        ],
+        "reasoning": "The eligibility criteria explicitly state that the program is open to universities, research institutes, and charities located in the UK. It is targeted at early career researchers and requires a collaborative application. Previous EPSRC funding is not required. However, the specific discipline restrictions are not mentioned.",
+        "extractionMethod": "explicit"
+      },
+      "alignmentScore": {
+        "overall": 0.445,
+        "dimensions": {
+          "researchStrandMatch": 0.3,
+          "methodologicalFit": 0.4,
+          "thematicAlignment": 0.5,
+          "impactPotential": 0.6,
+          "practicalFeasibility": 0.7
+        },
+        "matchedStrands": [
+          {
+            "strand": "Odyssean Process",
+            "relevance": 0.4,
+            "reasoning": "The grant supports early-career researchers, which could contribute to building institutional capacity and democratic innovation, but it does not explicitly focus on decision-making under extreme risk and uncertainty or participatory governance."
+          }
+        ],
+        "strengths": [
+          "The grant supports interdisciplinary collaboration, which aligns with the OI's priorities.",
+          "The funding amount and timeline are a good fit for the OI's needs.",
+          "The focus on early-career researchers could help build future capacity in relevant fields."
+        ],
+        "concerns": [
+          "The grant is limited to the UK, while the OI has a global scope.",
+          "The grant does not explicitly address systemic/paradigmatic change or collapse/extinction risk mitigation, which are key OI priorities.",
+          "The methodological focus is not a strong match for the OI's preferred futures-oriented, participatory approaches."
+        ],
+        "recommendation": "somewhat_relevant",
+        "confidence": 0.8,
+        "reasoning": "While this grant opportunity has some relevant elements, such as supporting interdisciplinary collaboration and early-career researchers, it does not strongly align with the OI's core research strands, methodological preferences, or cross-cutting priorities. The geographic limitation to the UK is also a concern. Overall, the grant is a moderate fit for the OI's agenda.",
+        "tokensUsed": 1767
+      }
+    },
+    {
+      "programName": "2026 NIHR Incubator Competition (Cohort 4)",
+      "description": "Funding to support individuals working in an area or discipline to come together to build research capacity and develop research careers.",
+      "eligibility": "**Eligible organizations:** university, research_institute, charity, SME\n\n**Career stage:** early_career\n\n**Collaboration:** Must be collaborative\n\n\n**Note:** Some information could not be determined: Geographic restrictions not mentioned, Discipline restrictions not mentioned, Funding history requirements not mentioned\n\n\n*Confidence: 80% | Completeness: 70% | Method: explicit*",
+      "deadline": {
+        "date": "2026-04-23",
+        "description": "23 April 2026",
+        "isRolling": false
+      },
+      "confidence": 0.8,
+      "reasoning": "Found clear program name, description, and deadline date.",
+      "eligibilityDetailed": {
+        "organizationTypes": [
+          "university",
+          "research_institute",
+          "charity",
+          "SME"
+        ],
+        "geographicRestrictions": null,
+        "careerStage": [
+          "early_career"
+        ],
+        "disciplineRestrictions": null,
+        "fundingHistory": null,
+        "collaborationRequirements": "Must be collaborative",
+        "otherCriteria": null,
+        "confidence": 0.8,
+        "completeness": 0.7,
+        "uncertainties": [
+          "Geographic restrictions not mentioned",
+          "Discipline restrictions not mentioned",
+          "Funding history requirements not mentioned"
+        ],
+        "reasoning": "The eligibility criteria explicitly state that the 2026 NIHR Incubator Competition (Cohort 4) is open to universities, research institutes, charities, and SMEs. It also requires the application to be collaborative. The criteria mention that the target is early career researchers, but do not specify any other career stage restrictions. The information provided does not mention any geographic or discipline restrictions, or requirements related to previous funding history.",
+        "extractionMethod": "explicit"
+      },
+      "alignmentScore": {
+        "overall": 0.655,
+        "dimensions": {
+          "researchStrandMatch": 0.6,
+          "methodologicalFit": 0.7,
+          "thematicAlignment": 0.7,
+          "impactPotential": 0.7,
+          "practicalFeasibility": 0.6
+        },
+        "matchedStrands": [
+          {
+            "strand": "Odyssean Process",
+            "relevance": 0.7,
+            "reasoning": "The grant supports building research capacity and developing research careers, which aligns with the Odyssean Process strand's focus on democratic innovation, participatory governance, and institutional capacity."
+          }
+        ],
+        "strengths": [
+          "The grant supports interdisciplinary collaboration, which is a key priority for the Odyssean Institute.",
+          "The focus on early-career researchers aligns with the Odyssean Institute's interest in building institutional capacity and knowledge translation.",
+          "The participatory and futures-oriented approach of the grant matches the Odyssean Institute's methodological preferences."
+        ],
+        "concerns": [
+          "The grant does not explicitly mention addressing collapse/extinction risk or systemic/paradigmatic change, which are important cross-cutting priorities for the Odyssean Institute.",
+          "The lack of information on geographic restrictions and funding history requirements makes it difficult to assess the practical feasibility for the Odyssean Institute."
+        ],
+        "recommendation": "relevant",
+        "confidence": 0.8,
+        "reasoning": "The 2026 NIHR Incubator Competition grant opportunity aligns reasonably well with the Odyssean Institute's research agenda, particularly in the Odyssean Process strand. The grant supports interdisciplinary, participatory, and futures-oriented research, which are key methodological priorities for the institute. However, the lack of explicit focus on systemic change and collapse/extinction risk mitigation is a concern, and the practical feasibility is somewhat unclear due to missing information.",
+        "tokensUsed": 1793
+      }
+    },
+    {
+      "programName": "Predoctoral Award (Cohort 2)",
+      "description": "Funding to complete a masters degree, or a tailored training and development programme with masters-level training.",
+      "eligibility": "**Eligible organizations:** university, research_institute\n\n**Career stage:** predoctoral\n\n**Funding history:** No explicit funding history requirements mentioned\n\n\n**Note:** Some information could not be determined: Discipline restrictions not mentioned, Collaboration requirements not mentioned, Other eligibility criteria not mentioned\n\n\n*Confidence: 90% | Completeness: 80% | Method: inferred*",
+      "deadline": {
+        "date": "2026-03-12",
+        "description": "12 March 2026",
+        "isRolling": false
+      },
+      "confidence": 0.8,
+      "reasoning": "Found clear program name, description, and deadline date.",
+      "eligibilityDetailed": {
+        "organizationTypes": [
+          "university",
+          "research_institute"
+        ],
+        "geographicRestrictions": null,
+        "careerStage": [
+          "predoctoral"
+        ],
+        "disciplineRestrictions": null,
+        "fundingHistory": "No explicit funding history requirements mentioned",
+        "collaborationRequirements": null,
+        "otherCriteria": null,
+        "confidence": 0.9,
+        "completeness": 0.8,
+        "uncertainties": [
+          "Discipline restrictions not mentioned",
+          "Collaboration requirements not mentioned",
+          "Other eligibility criteria not mentioned"
+        ],
+        "reasoning": "First pass: The information provided explicitly states that the Predoctoral Award (Cohort 2) is open to applicants from universities and research institutes. It also specifies that the target career stage is predoctoral. However, the geographic restrictions, discipline restrictions, funding history requirements, collaboration requirements, and any other eligibility criteria are not clearly stated.\n\nSecond pass: Based on the information provided, the Predoctoral Award (Cohort 2) is open to applicants from universities and research institutes who are at the predoctoral career stage. The program does not explicitly mention any geographic restrictions, discipline restrictions, funding history requirements, or collaboration requirements. While the other eligibility criteria are not clearly stated, the program appears to be focused on providing funding to support masters-level training and development for predoctoral researchers. The confidence and completeness scores have been updated to reflect the additional information inferred from the program description.",
+        "extractionMethod": "inferred"
+      },
+      "alignmentScore": {
+        "overall": 0.34,
+        "dimensions": {
+          "researchStrandMatch": 0.2,
+          "methodologicalFit": 0.3,
+          "thematicAlignment": 0.4,
+          "impactPotential": 0.4,
+          "practicalFeasibility": 0.7
+        },
+        "matchedStrands": [
+          {
+            "strand": "Odyssean Process",
+            "relevance": 0.2,
+            "reasoning": "The grant supports predoctoral training and development, which is not directly aligned with the Odyssean Process strand's focus on decision-making under extreme risk and uncertainty, democratic innovation, and institutional capacity building."
+          }
+        ],
+        "strengths": [
+          "The grant provides funding for predoctoral researchers to complete a masters degree or tailored training program, which could build capacity and skills relevant to the Odyssean Institute's work.",
+          "The flexible funding amount (£50k-500k) and duration (1-3 years) are within the range specified by the Odyssean Institute."
+        ],
+        "concerns": [
+          "The grant does not appear to directly support the Odyssean Institute's core research strands or methodologies, such as expert elicitation, DMDU modeling, citizen assemblies, or futures methodologies.",
+          "The focus on predoctoral training is not well-aligned with the Odyssean Institute's emphasis on systemic, paradigmatic change and real-world impact.",
+          "The grant does not explicitly mention support for interdisciplinary collaboration, public engagement, or policy influence - key priorities for the Odyssean Institute."
+        ],
+        "recommendation": "somewhat_relevant",
+        "confidence": 0.8,
+        "reasoning": "While the grant provides flexible funding that could be useful for building capacity, it does not strongly align with the Odyssean Institute's core research agenda and priorities. The focus on predoctoral training is a mismatch, and the grant does not clearly support the Institute's emphasis on systemic change, public engagement, and real-world impact.",
+        "tokensUsed": 1812
+      }
+    },
+    {
+      "programName": "NIHR James Lind Alliance Priority Setting Partnerships rolling funding opportunity",
+      "description": "We are interested in receiving applications that address research priorities identified by the James Lind Alliance Priority Setting Partnerships.",
+      "eligibility": "\n**Note:** Some information could not be determined: Failed to parse LLM response\n\n\n*Confidence: 30% | Completeness: 20% | Method: explicit*",
+      "deadline": {
+        "date": "2026-05-06",
+        "description": "6 May 2026",
+        "isRolling": false
+      },
+      "confidence": 0.8,
+      "reasoning": "Found clear program name, description, and deadline date.",
+      "eligibilityDetailed": {
+        "organizationTypes": null,
+        "geographicRestrictions": null,
+        "careerStage": null,
+        "disciplineRestrictions": null,
+        "fundingHistory": null,
+        "collaborationRequirements": null,
+        "otherCriteria": null,
+        "confidence": 0.3,
+        "completeness": 0.2,
+        "uncertainties": [
+          "Failed to parse LLM response"
+        ],
+        "reasoning": "First pass: The provided information does not explicitly state any of the eligibility criteria requested. The page content is a general overview of funding opportunities and does not provide details on the specific eligibility criteria for the NIHR James Lind Alliance Priority Setting Partnerships rolling funding opportunity.\n\nSecond pass: Parsing error",
+        "extractionMethod": "explicit"
+      },
+      "alignmentScore": {
+        "overall": 0.41000000000000003,
+        "dimensions": {
+          "researchStrandMatch": 0.3,
+          "methodologicalFit": 0.4,
+          "thematicAlignment": 0.4,
+          "impactPotential": 0.5,
+          "practicalFeasibility": 0.7
+        },
+        "matchedStrands": [
+          {
+            "strand": "Odyssean Process",
+            "relevance": 0.4,
+            "reasoning": "The grant focuses on identifying research priorities through the James Lind Alliance process, which involves stakeholder engagement and consensus-building. This aligns with the Odyssean Process strand's emphasis on participatory governance and democratic innovation, though the scope is more limited to specific health research areas."
+          }
+        ],
+        "strengths": [
+          "The grant supports a participatory, stakeholder-driven process for identifying research priorities, which aligns with the Odyssean Institute's emphasis on inclusive decision-making.",
+          "The funding opportunity is flexible and open-ended, allowing for a range of potential projects and approaches.",
+          "The focus on health research priorities could provide opportunities to address systemic challenges and contribute to long-term human flourishing."
+        ],
+        "concerns": [
+          "The grant's scope is relatively narrow, focusing on specific health research areas rather than the broader, more systemic focus of the Odyssean Institute's agenda.",
+          "The methodologies used in the James Lind Alliance process, while participatory, may not fully align with the Odyssean Institute's more advanced futures-oriented and DMDU-based approaches.",
+          "The grant's impact potential may be limited to the specific health research areas, rather than driving broader systemic or institutional change."
+        ],
+        "recommendation": "somewhat_relevant",
+        "confidence": 0.6,
+        "reasoning": "The NIHR James Lind Alliance grant opportunity has some relevant elements for the Odyssean Institute, particularly in terms of its participatory approach to identifying research priorities. However, the grant's scope and methodologies are not a perfect fit with the institute's broader, more ambitious agenda focused on systemic change, collapse/extinction risk mitigation, and long-term human flourishing. While the grant could potentially be leveraged to advance certain aspects of the Odyssean Institute's work, it is not a strong strategic fit overall.",
+        "tokensUsed": 1833
+      }
+    },
+    {
+      "programName": "NIHR NICE rolling funding opportunity",
+      "description": "We are inviting outline applications that meet recommendations in research identified in NICE guidance that has been published or updated in the last 5 years.",
+      "eligibility": "**Eligible organizations:** university, research_institute, charity\n\n**Career stage:** any\n\n\n**Note:** Some information could not be determined: Failed to parse LLM response\n\n\n*Confidence: 70% | Completeness: 50% | Method: explicit*",
+      "deadline": {
+        "date": "2026-05-06",
+        "description": "6 May 2026",
+        "isRolling": false
+      },
+      "confidence": 0.8,
+      "reasoning": "Found clear program name, description, and deadline date.",
+      "eligibilityDetailed": {
+        "organizationTypes": [
+          "university",
+          "research_institute",
+          "charity"
+        ],
+        "geographicRestrictions": null,
+        "careerStage": [
+          "any"
+        ],
+        "disciplineRestrictions": null,
+        "fundingHistory": null,
+        "collaborationRequirements": null,
+        "otherCriteria": null,
+        "confidence": 0.7,
+        "completeness": 0.5,
+        "uncertainties": [
+          "Failed to parse LLM response"
+        ],
+        "reasoning": "First pass: The eligibility criteria explicitly mention that the program is open to universities, research institutes, and charities. It also states that the program is open to applicants at any career stage. However, the other eligibility criteria such as geographic restrictions, discipline restrictions, funding history requirements, and collaboration requirements are not explicitly stated.\n\nSecond pass: Parsing error",
+        "extractionMethod": "explicit"
+      },
+      "alignmentScore": {
+        "overall": 0.34,
+        "dimensions": {
+          "researchStrandMatch": 0.2,
+          "methodologicalFit": 0.3,
+          "thematicAlignment": 0.4,
+          "impactPotential": 0.4,
+          "practicalFeasibility": 0.7
+        },
+        "matchedStrands": [
+          {
+            "strand": "Odyssean Process",
+            "relevance": 0.3,
+            "reasoning": "The grant focuses on research identified in NICE guidance, which could be relevant to the Odyssean Process strand's focus on decision-making under uncertainty and participatory governance. However, the grant does not explicitly mention methods like expert elicitation, DMDU modeling, or citizen assemblies."
+          }
+        ],
+        "strengths": [
+          "The grant is open to a wide range of eligible organizations, including research institutes, universities, and NGOs, which aligns with the Odyssean Institute's interdisciplinary approach.",
+          "The funding amount (up to £500k) and timeline (1-3 years) are within the range specified by the Odyssean Institute."
+        ],
+        "concerns": [
+          "The grant does not appear to have a strong focus on systemic or paradigmatic change, which is a key priority for the Odyssean Institute.",
+          "The grant's focus on NICE guidance recommendations may be too narrow and incremental, rather than the ambitious, futures-oriented approach preferred by the Odyssean Institute.",
+          "The grant does not explicitly mention addressing collapse/extinction risks or other cross-cutting priorities of the Odyssean Institute."
+        ],
+        "recommendation": "somewhat_relevant",
+        "confidence": 0.7,
+        "reasoning": "While the grant has some practical feasibility for the Odyssean Institute and could potentially align with the Odyssean Process research strand, the overall fit is limited due to the lack of emphasis on systemic change, futures-oriented methods, and the Odyssean Institute's other cross-cutting priorities.",
+        "tokensUsed": 1783
+      }
+    }
+  ]
+}

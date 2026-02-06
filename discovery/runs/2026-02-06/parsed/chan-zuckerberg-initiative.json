@@ -1,0 +1,34 @@
+{
+  "funder": {
+    "funderName": "Chan Zuckerberg Initiative",
+    "website": "https://www.chanzuckerberg.com/",
+    "type": "Philanthropic org",
+    "focus": "Science, education, community",
+    "geography": "Global",
+    "notes": "Open data: Partial"
+  },
+  "opportunities": [
+    {
+      "externalId": "chan-zuckerberg-initiative-general",
+      "programName": "Chan Zuckerberg Initiative - General Funding",
+      "sourceUrl": "https://www.chanzuckerberg.com/",
+      "declaredFocus": [
+        "Science",
+        "education",
+        "community"
+      ],
+      "geographies": [
+        "Global"
+      ],
+      "eligibleApplicantTypes": [
+        "CHARITY",
+        "UNIVERSITY",
+        "RESEARCH_INSTITUTE"
+      ],
+      "minAward": 50000,
+      "currency": "USD",
+      "rawDescription": "Chan Zuckerberg Initiative is a Philanthropic org. Focus: Science, education, community. Geography: Global.",
+      "status": "OPEN"
+    }
+  ]
+}

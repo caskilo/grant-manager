@@ -1,0 +1,32 @@
+{
+  "funder": {
+    "funderName": "EPSRC (Engineering & Physical Sciences Research Council)",
+    "website": "https://epsrc.ukri.org/",
+    "type": "Research council (UKRI)",
+    "focus": "Engineering & physical sciences",
+    "geography": "UK",
+    "notes": "Open data: Yes"
+  },
+  "opportunities": [
+    {
+      "externalId": "epsrc-engineering-physical-sciences-research-council-general",
+      "programName": "EPSRC (Engineering & Physical Sciences Research Council) - General Funding",
+      "sourceUrl": "https://epsrc.ukri.org/",
+      "declaredFocus": [
+        "Engineering & physical sciences"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "eligibleApplicantTypes": [
+        "CHARITY",
+        "UNIVERSITY",
+        "RESEARCH_INSTITUTE"
+      ],
+      "minAward": 10000,
+      "currency": "GBP",
+      "rawDescription": "EPSRC (Engineering & Physical Sciences Research Council) is a Research council (UKRI). Focus: Engineering & physical sciences. Geography: UK.",
+      "status": "OPEN"
+    }
+  ]
+}

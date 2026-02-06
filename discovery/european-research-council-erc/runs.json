@@ -1,0 +1,41 @@
+[
+  {
+    "runId": "european-research-council-erc_2026-02-06T12-07-43-918Z",
+    "funderId": "8fc84783-9d17-4f60-b404-64bda4f11171",
+    "seedUrl": "https://erc.europa.eu/",
+    "timestamp": "2026-02-06T12:07:43.918Z",
+    "status": "completed",
+    "result": {
+      "funderId": "8fc84783-9d17-4f60-b404-64bda4f11171",
+      "funderName": "European Research Council (ERC)",
+      "seedUrl": "https://erc.europa.eu/",
+      "discoveredAt": "2026-02-06T12:07:43.918Z",
+      "sources": [
+        {
+          "url": "https://erc.europa.eu/apply-grant",
+          "anchorText": "Apply for a grant",
+          "title": "detail",
+          "score": 0.9000000000000001,
+          "discoveredAt": "2026-02-06T12:07:43.918Z",
+          "pageTitle": "Apply for a grant",
+          "keywords": [
+            "Found in \"Apply for a grant\" menu",
+            "Extraction: heuristic",
+            "Program: Apply for a grant",
+            "No deadline found",
+            "No award info"
+          ]
+        }
+      ],
+      "stats": {
+        "totalLinksFound": 1,
+        "linksScored": 1,
+        "topSourcesReturned": 1,
+        "manualLinksProvided": 0,
+        "manualLinksProcessed": 0,
+        "seedUrlProcessed": true,
+        "newSourcesDiscovered": 1
+      }
+    }
+  }
+]

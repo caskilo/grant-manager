@@ -1,0 +1,35 @@
+{
+  "funder": {
+    "funderName": "Esmee Fairbairn Foundation",
+    "website": "https://esmeefairbairn.org.uk/",
+    "type": "Foundation",
+    "focus": "Environment, social justice, communities",
+    "geography": "UK",
+    "notes": "Open data: Partial"
+  },
+  "opportunities": [
+    {
+      "externalId": "esmee-fairbairn-foundation-general",
+      "programName": "Esmee Fairbairn Foundation - General Funding",
+      "sourceUrl": "https://esmeefairbairn.org.uk/",
+      "declaredFocus": [
+        "Environment",
+        "social justice",
+        "communities"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "eligibleApplicantTypes": [
+        "CHARITY",
+        "UNIVERSITY",
+        "RESEARCH_INSTITUTE"
+      ],
+      "minAward": 10000,
+      "maxAward": 1000000,
+      "currency": "GBP",
+      "rawDescription": "Esmee Fairbairn Foundation is a Foundation. Focus: Environment, social justice, communities. Geography: UK.",
+      "status": "OPEN"
+    }
+  ]
+}

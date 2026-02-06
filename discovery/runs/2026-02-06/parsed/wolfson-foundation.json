@@ -1,0 +1,34 @@
+{
+  "funder": {
+    "funderName": "Wolfson Foundation",
+    "website": "https://www.wolfson.org.uk/",
+    "type": "Independent foundation",
+    "focus": "Research infrastructure, education, science",
+    "geography": "UK",
+    "notes": "Open data: Partial"
+  },
+  "opportunities": [
+    {
+      "externalId": "wolfson-foundation-general",
+      "programName": "Wolfson Foundation - General Funding",
+      "sourceUrl": "https://www.wolfson.org.uk/",
+      "declaredFocus": [
+        "Research infrastructure",
+        "education",
+        "science"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "eligibleApplicantTypes": [
+        "CHARITY",
+        "UNIVERSITY",
+        "RESEARCH_INSTITUTE"
+      ],
+      "minAward": 25000,
+      "currency": "GBP",
+      "rawDescription": "Wolfson Foundation is a Independent foundation. Focus: Research infrastructure, education, science. Geography: UK.",
+      "status": "OPEN"
+    }
+  ]
+}
