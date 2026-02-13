@@ -34,8 +34,6 @@ function App() {
   const user = useAuthStore((state) => state.user);
   const basename = import.meta.env.BASE_URL;
 
-  console.log('App rendered:', { user, basename, hasUser: !!user });
-
   if (!user) {
     console.log('No user, showing login page with basename:', basename);
     return (
