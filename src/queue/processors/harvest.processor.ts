@@ -5,6 +5,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { LLMGrantExtractorService } from '../../harvest/llm-grant-extractor.service';
 import { OdysseanAlignmentService } from '../../harvest/odyssean-alignment.service';
 import { HarvestIntegrationService } from '../../harvest/harvest-integration.service';
+import { SourceDiscoveryProcessor } from './source-discovery.processor';
 import { HarvestRunPlan, HarvestRunSummary } from '../../harvest/types';
 import * as fs from 'fs/promises';
 import * as path from 'path';
@@ -29,6 +30,7 @@ export class HarvestProcessor extends WorkerHost {
     private llmExtractor: LLMGrantExtractorService,
     private odysseanAlignment: OdysseanAlignmentService,
     private integrationService: HarvestIntegrationService,
+    private sourceDiscoveryProcessor: SourceDiscoveryProcessor,
   ) {
     super();
   }
@@ -36,9 +38,9 @@ export class HarvestProcessor extends WorkerHost {
   async process(job: Job<any>): Promise<any> {
     const jobType = job.name;
     
-    // Only process harvest jobs (not discovery jobs)
+    // Delegate discovery jobs to SourceDiscoveryProcessor
     if (jobType === 'discover-sources') {
-      return; // Let SourceDiscoveryProcessor handle this
+      return this.sourceDiscoveryProcessor.processDiscovery(job);
     }
 
     const { sourceId, userId } = job.data;

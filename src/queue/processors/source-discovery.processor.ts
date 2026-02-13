@@ -1,5 +1,4 @@
-import { Processor, WorkerHost } from '@nestjs/bullmq';
-import { Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Job } from 'bullmq';
 import { PrismaService } from '../../prisma/prisma.service';
 import { IntelligentDiscoveryService } from '../../harvest/intelligent-discovery.service';
@@ -15,26 +14,21 @@ import { SuggestedSource, SourceDiscoveryResult, SourceDiscoveryRun } from '../.
  * 2. Section ranking by relevance
  * 3. Multi-level exploration
  * 4. Pattern recognition
+ * 
+ * NOTE: This is NOT a BullMQ processor. It is called by HarvestProcessor
+ * to avoid two competing workers on the same 'harvest' queue.
  */
-@Processor('harvest')
-export class SourceDiscoveryProcessor extends WorkerHost {
+@Injectable()
+export class SourceDiscoveryProcessor {
   private readonly logger = new Logger(SourceDiscoveryProcessor.name);
 
   constructor(
     private prisma: PrismaService,
     private intelligentDiscovery: IntelligentDiscoveryService,
-  ) {
-    super();
-  }
+  ) {}
 
-  async process(job: Job<any>): Promise<any> {
+  async processDiscovery(job: Job<any>): Promise<any> {
     const { funderId, seedUrl, userId, manualLinks = [], searchDepth = 2 } = job.data;
-    const jobType = job.name;
-
-    // Only process discover-sources jobs
-    if (jobType !== 'discover-sources') {
-      return;
-    }
 
     const startTime = Date.now();
     this.logger.log(`\n${'='.repeat(80)}`);
