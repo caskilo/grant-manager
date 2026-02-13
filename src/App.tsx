@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AppShell } from '@mantine/core';
+import { useState } from 'react';
 import { useAuthStore } from './stores/authStore';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
@@ -19,6 +20,8 @@ import AdminUsersPage from './pages/AdminUsersPage';
 import CatalogueEditorPage from './pages/CatalogueEditorPage';
 import AppHeader from './components/layout/AppHeader';
 import AppNavbar from './components/layout/AppNavbar';
+import GuideLauncher from './components/guide/GuideLauncher';
+import GuideOverlay from './components/guide/GuideOverlay';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const user = useAuthStore((state) => state.user);
@@ -33,6 +36,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 function App() {
   const user = useAuthStore((state) => state.user);
   const basename = import.meta.env.BASE_URL;
+  const [guideOpen, setGuideOpen] = useState(false);
 
   if (!user) {
     console.log('No user, showing login page with basename:', basename);
@@ -187,6 +191,8 @@ function App() {
           </Routes>
         </AppShell.Main>
       </AppShell>
+      <GuideLauncher onClick={() => setGuideOpen(true)} />
+      <GuideOverlay opened={guideOpen} onClose={() => setGuideOpen(false)} />
     </BrowserRouter>
   );
 }
