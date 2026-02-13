@@ -13,9 +13,9 @@ export class AuthService {
     private configService: ConfigService,
   ) {}
 
-  async validateUser(email: string, password: string) {
+  async validateUser(username: string, password: string) {
     const user = await this.prisma.user.findUnique({
-      where: { email },
+      where: { username },
     });
 
     if (!user || !user.isActive) {
@@ -41,7 +41,7 @@ export class AuthService {
         action: AuditActionType.LOGIN,
         entityType: 'USER',
         entityId: user.id,
-        metadata: { email },
+        metadata: { username },
       },
     });
 
@@ -53,6 +53,7 @@ export class AuthService {
     const payload = {
       sub: user.id,
       email: user.email,
+      username: user.username,
       role: user.role,
     };
 
@@ -74,6 +75,7 @@ export class AuthService {
       select: {
         id: true,
         email: true,
+        username: true,
         name: true,
         role: true,
         isActive: true,
@@ -88,5 +90,66 @@ export class AuthService {
     }
 
     return user;
+  }
+
+  async changePassword(userId: string, currentPassword: string, newPassword: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    const isPasswordValid = await bcrypt.compare(currentPassword, user.passwordHash);
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Current password is incorrect');
+    }
+
+    const newHash = await bcrypt.hash(newPassword, 10);
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { passwordHash: newHash },
+    });
+
+    await this.prisma.auditLog.create({
+      data: {
+        userId,
+        action: AuditActionType.UPDATE,
+        entityType: 'USER',
+        entityId: userId,
+        metadata: { action: 'password_changed' },
+      },
+    });
+
+    return { message: 'Password changed successfully' };
+  }
+
+  async adminResetPassword(targetUserId: string, newPassword: string, adminId: string) {
+    const target = await this.prisma.user.findUnique({
+      where: { id: targetUserId },
+    });
+
+    if (!target) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    const newHash = await bcrypt.hash(newPassword, 10);
+    await this.prisma.user.update({
+      where: { id: targetUserId },
+      data: { passwordHash: newHash },
+    });
+
+    await this.prisma.auditLog.create({
+      data: {
+        userId: adminId,
+        action: AuditActionType.UPDATE,
+        entityType: 'USER',
+        entityId: targetUserId,
+        metadata: { action: 'admin_password_reset' },
+      },
+    });
+
+    return { message: 'Password reset successfully' };
   }
 }

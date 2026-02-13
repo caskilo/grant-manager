@@ -14,50 +14,48 @@ const prisma = new PrismaClient({
 async function main() {
   console.log('🌱 Seeding database...');
 
-  // Create default admin user
-  const adminPassword = await bcrypt.hash('admin123', 10);
-  const admin = await prisma.user.upsert({
-    where: { email: 'admin@odyssean.org' },
-    update: {},
-    create: {
-      email: 'admin@odyssean.org',
-      passwordHash: adminPassword,
-      name: 'Admin User',
-      role: UserRole.ADMIN,
-      isActive: true,
-    },
-  });
-  console.log('✅ Created admin user:', admin.email);
+  // Seed users
+  const defaultPassword = await bcrypt.hash('OIadmin26', 10);
 
-  // Create grants officer
-  const officerPassword = await bcrypt.hash('officer123', 10);
-  const officer = await prisma.user.upsert({
-    where: { email: 'officer@odyssean.org' },
-    update: {},
-    create: {
-      email: 'officer@odyssean.org',
-      passwordHash: officerPassword,
-      name: 'Grants Officer',
-      role: UserRole.GRANTS_OFFICER,
-      isActive: true,
-    },
-  });
-  console.log('✅ Created grants officer:', officer.email);
+  const users = [
+    // Admins
+    { email: 'will.guest@odyssean.org', username: 'willguest', name: 'Will Guest', role: UserRole.ADMIN },
+    { email: 'jonathan.salter@odyssean.org', username: 'jonathansalter', name: 'Jonathan Salter', role: UserRole.ADMIN },
+    { email: 'giuseppe.dalpra@odyssean.org', username: 'giuseppedalpra', name: 'Giuseppe Dal Pra', role: UserRole.ADMIN },
+    // Grants Officers
+    { email: 'surya.prabhat@odyssean.org', username: 'suryaprabhat', name: 'Surya Prabhat', role: UserRole.GRANTS_OFFICER },
+    { email: 'candacia.greeman@odyssean.org', username: 'candaciagreeman', name: 'Candacia Greeman', role: UserRole.GRANTS_OFFICER },
+    { email: 'niamh.duncan@odyssean.org', username: 'niamhduncan', name: 'Niamh Duncan', role: UserRole.GRANTS_OFFICER },
+    { email: 'giulia.mouland@odyssean.org', username: 'giuliamouland', name: 'Giulia Mouland', role: UserRole.GRANTS_OFFICER },
+    { email: 'jacob.haimes@odyssean.org', username: 'jacobhaimes', name: 'Jacob Haimes', role: UserRole.GRANTS_OFFICER },
+  ];
 
-  // Create reviewer
-  const reviewerPassword = await bcrypt.hash('reviewer123', 10);
-  const reviewer = await prisma.user.upsert({
-    where: { email: 'reviewer@odyssean.org' },
-    update: {},
-    create: {
-      email: 'reviewer@odyssean.org',
-      passwordHash: reviewerPassword,
-      name: 'Reviewer User',
-      role: UserRole.REVIEWER,
-      isActive: true,
-    },
-  });
-  console.log('✅ Created reviewer:', reviewer.email);
+  let admin: any;
+  for (const u of users) {
+    const user = await prisma.user.upsert({
+      where: { username: u.username },
+      update: {},
+      create: {
+        email: u.email,
+        username: u.username,
+        passwordHash: defaultPassword,
+        name: u.name,
+        role: u.role,
+        isActive: true,
+      },
+    });
+    if (u.username === 'willguest') admin = user;
+    console.log(`✅ Created ${u.role.toLowerCase()}: ${u.username} (${u.name})`);
+  }
+
+  // Deactivate old placeholder users if they exist
+  for (const oldEmail of ['admin@odyssean.org', 'officer@odyssean.org', 'reviewer@odyssean.org']) {
+    const old = await prisma.user.findUnique({ where: { email: oldEmail } });
+    if (old) {
+      await prisma.user.update({ where: { id: old.id }, data: { isActive: false } });
+      console.log(`🗑️  Deactivated old placeholder user: ${oldEmail}`);
+    }
+  }
 
   // Initialize FitScoringConfig (single row)
   const fitConfig = await prisma.fitScoringConfig.upsert({
@@ -233,10 +231,10 @@ Odyssean Institute`,
   }
 
   console.log('🎉 Seeding completed successfully!');
-  console.log('\n📝 Default credentials:');
-  console.log('   Admin: admin@odyssean.org / admin123');
-  console.log('   Officer: officer@odyssean.org / officer123');
-  console.log('   Reviewer: reviewer@odyssean.org / reviewer123');
+  console.log('\n📝 Default credentials (all users):');
+  console.log('   Username: <firstname><lastname> / OIadmin26');
+  console.log('   Admins: willguest, jonathansalter, giuseppedalpra');
+  console.log('   Officers: suryaprabhat, candaciagreeman, niamhduncan, giuliamouland, jacobhaimes');
 }
 
 main()

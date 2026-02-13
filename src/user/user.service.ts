@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
-// import * as argon2 from 'argon2'; // Temporarily disabled
+import * as bcrypt from 'bcrypt';
 import { AuditActionType } from '@prisma/client';
 
 @Injectable()
@@ -13,6 +13,7 @@ export class UserService {
       select: {
         id: true,
         email: true,
+        username: true,
         name: true,
         role: true,
         isActive: true,
@@ -30,6 +31,7 @@ export class UserService {
       select: {
         id: true,
         email: true,
+        username: true,
         name: true,
         role: true,
         isActive: true,
@@ -47,20 +49,28 @@ export class UserService {
   }
 
   async create(createUserDto: CreateUserDto, creatorId: string) {
+    // Check if username already exists
+    const existingUsername = await this.prisma.user.findUnique({
+      where: { username: createUserDto.username },
+    });
+    if (existingUsername) {
+      throw new ConflictException('Username already exists');
+    }
+
     // Check if email already exists
-    const existing = await this.prisma.user.findUnique({
+    const existingEmail = await this.prisma.user.findUnique({
       where: { email: createUserDto.email },
     });
-
-    if (existing) {
+    if (existingEmail) {
       throw new ConflictException('Email already exists');
     }
 
-    const passwordHash = createUserDto.password + '-temp'; // Temporary plain text
+    const passwordHash = await bcrypt.hash(createUserDto.password, 10);
 
     const user = await this.prisma.user.create({
       data: {
         email: createUserDto.email,
+        username: createUserDto.username,
         passwordHash,
         name: createUserDto.name,
         role: createUserDto.role,
@@ -69,6 +79,7 @@ export class UserService {
       select: {
         id: true,
         email: true,
+        username: true,
         name: true,
         role: true,
         isActive: true,
@@ -99,7 +110,7 @@ export class UserService {
     if (updateUserDto.role) data.role = updateUserDto.role;
     if (updateUserDto.isActive !== undefined) data.isActive = updateUserDto.isActive;
     if (updateUserDto.password) {
-      data.passwordHash = updateUserDto.password + '-temp'; // Temporary plain text
+      data.passwordHash = await bcrypt.hash(updateUserDto.password, 10);
     }
 
     const user = await this.prisma.user.update({
@@ -108,6 +119,7 @@ export class UserService {
       select: {
         id: true,
         email: true,
+        username: true,
         name: true,
         role: true,
         isActive: true,

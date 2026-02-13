@@ -5,47 +5,20 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('🌱 Seeding database...');
 
-  // Create default admin user (plain text for now - will be fixed in production)
+  // Create admin user
   const admin = await prisma.user.upsert({
-    where: { email: 'admin@odyssean.org' },
+    where: { email: 'will.guest@odyssean.org' },
     update: {},
     create: {
-      email: 'admin@odyssean.org',
-      passwordHash: 'admin123-temp', // Temporary - will fix auth service
-      name: 'Admin User',
+      email: 'will.guest@odyssean.org',
+      username: 'willguest',
+      passwordHash: 'placeholder-use-main-seed',
+      name: 'Will Guest',
       role: UserRole.ADMIN,
       isActive: true,
     },
   });
   console.log('✅ Created admin user:', admin.email);
-
-  // Create grants officer
-  const officer = await prisma.user.upsert({
-    where: { email: 'officer@odyssean.org' },
-    update: {},
-    create: {
-      email: 'officer@odyssean.org',
-      passwordHash: 'officer123-temp', // Temporary
-      name: 'Grants Officer',
-      role: UserRole.GRANTS_OFFICER,
-      isActive: true,
-    },
-  });
-  console.log('✅ Created grants officer:', officer.email);
-
-  // Create reviewer
-  const reviewer = await prisma.user.upsert({
-    where: { email: 'reviewer@odyssean.org' },
-    update: {},
-    create: {
-      email: 'reviewer@odyssean.org',
-      passwordHash: 'reviewer123-temp', // Temporary
-      name: 'Reviewer User',
-      role: UserRole.REVIEWER,
-      isActive: true,
-    },
-  });
-  console.log('✅ Created reviewer:', reviewer.email);
 
   // Initialize FitScoringConfig (single row)
   const fitConfig = await prisma.fitScoringConfig.upsert({
