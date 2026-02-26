@@ -9,9 +9,9 @@
 - Links with funding keywords: 0
 - Top sources returned: 0
 
-## Suggested Harvest Sources
+## Suggested Sources
 
-*No potential harvest sources found.*
+*No sources found.*
 ## Next Steps
 
 1. Review the suggested sources above

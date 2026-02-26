@@ -9,7 +9,7 @@
 - Links with funding keywords: 1
 - Top sources returned: 1
 
-## Suggested Harvest Sources
+## Suggested Sources
 
 ### 1. https://www.nihr.ac.uk/funding-opportunities
 

@@ -126,5 +126,5 @@ Next UI-focused steps (see also `docs/PROGRESS.md`):
 
 1. Surface fit scores and eligibility on opportunity list/detail views.
 2. Flesh out detail pages for funders, opportunities, and applications using existing APIs.
-3. Add views for scoring/eligibility config, harvest sources, and exports (Sprint 4 work).
+3. Add views for scoring/eligibility config, sources, and exports (Sprint 4 work).
 4. Add better loading states, error boundaries, and tests.
