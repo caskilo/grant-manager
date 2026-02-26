@@ -106,7 +106,7 @@ export default function FunderDetailPage() {
     },
   });
 
-  // Harvest sources for this funder
+  // Sources for this funder
   const { data: sources, isLoading: isLoadingSources } = useQuery({
     queryKey: ['harvestSources', id],
     queryFn: () => harvestApi.getSources({ funderId: id! }),

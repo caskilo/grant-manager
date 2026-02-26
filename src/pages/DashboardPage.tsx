@@ -13,6 +13,7 @@ import { useMemo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Cell } from 'recharts';
 import api from '../lib/api';
 import { harvestApi } from '../lib/harvest';
+import { applicationsApi } from '../lib/applications';
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 
@@ -30,6 +31,21 @@ interface Opportunity {
   aiRecommendedAction: string | null;
   tags: string[];
   funder: { id: string; name: string; type: string } | null;
+}
+
+interface ApplicationSummary {
+  id: string;
+  title: string;
+  stage: 'TRIAGE' | 'PREP' | 'DRAFTING' | 'REVIEW' | 'SUBMIT' | 'AWARDED' | 'REJECTED';
+  expectedAwardAmount: number | null;
+  expectedCurrency: string | null;
+  awardAmount?: number | null;
+  awardCurrency?: string | null;
+  opportunity?: {
+    maxAward?: number | null;
+    minAward?: number | null;
+    currency?: string | null;
+  } | null;
 }
 
 interface Funder {
@@ -127,7 +143,12 @@ export default function DashboardPage() {
     queryFn: async () => harvestApi.getSources(),
   });
 
-  const isLoading = fundersLoading || oppsLoading || sourcesLoading;
+  const { data: applicationsData, isLoading: applicationsLoading } = useQuery<{ data: ApplicationSummary[] }>({
+    queryKey: ['applications', 'dashboard'],
+    queryFn: async () => (await applicationsApi.list({ limit: 500 })).data,
+  });
+
+  const isLoading = fundersLoading || oppsLoading || sourcesLoading || applicationsLoading;
 
   // ── Computed metrics ───────────────────────────────────────────────────────
 
@@ -135,6 +156,7 @@ export default function DashboardPage() {
     const funders = fundersData?.data || [];
     const opps = oppsData?.data || [];
     const sources = sourcesData?.data || [];
+    const applications = applicationsData?.data || [];
 
     const totalFunders = funders.length;
     const totalOpps = opps.length;
@@ -182,9 +204,15 @@ export default function DashboardPage() {
     const oppCoverage = totalFunders > 0 ? Math.round((fundersWithOpps / totalFunders) * 100) : 0;
 
     // Total potential funding
-    const totalMaxFunding = opps
-      .filter(o => o.maxAward && o.aiRecommendedAction === 'PURSUE')
-      .reduce((sum, o) => sum + (o.maxAward || 0), 0);
+    const activeApplications = applications.filter(app => !['AWARDED', 'REJECTED'].includes(app.stage));
+    const pipelineCurrency = activeApplications.find(app => app.expectedCurrency)?.expectedCurrency
+      || activeApplications.find(app => app.opportunity?.currency)?.opportunity?.currency
+      || 'GBP';
+    const pursuePipelineValue = activeApplications.reduce((sum, app) => {
+      const expected = app.expectedAwardAmount ?? undefined;
+      const fallback = app.opportunity?.maxAward ?? 0;
+      return sum + (expected ?? fallback ?? 0);
+    }, 0);
 
     return {
       totalFunders, totalOpps, totalSources,
@@ -193,9 +221,11 @@ export default function DashboardPage() {
       highAlignment, avgFitScore,
       topOpps, funderTypeData,
       sourceCoverage, oppCoverage,
-      totalMaxFunding,
+      pursuePipelineValue,
+      pursuePipelineCurrency: pipelineCurrency,
+      activeApplicationsCount: activeApplications.length,
     };
-  }, [fundersData, oppsData, sourcesData]);
+  }, [fundersData, oppsData, sourcesData, applicationsData]);
 
   if (isLoading) {
     return (
@@ -250,9 +280,12 @@ export default function DashboardPage() {
           <StatCard
             icon={IconCoins}
             label="Pursue Pipeline"
-            value={metrics.totalMaxFunding > 0 ? formatCurrency(metrics.totalMaxFunding) : '—'}
+            value={metrics.pursuePipelineValue > 0 ? formatCurrency(metrics.pursuePipelineValue, metrics.pursuePipelineCurrency) : '—'}
             color="green"
-            subtitle={`Max funding across ${metrics.pursue} PURSUE opps`}
+            subtitle={metrics.activeApplicationsCount > 0
+              ? `${metrics.activeApplicationsCount} active application${metrics.activeApplicationsCount === 1 ? '' : 's'} in flight`
+              : 'No active applications yet'}
+            onClick={() => navigate('/applications')}
           />
         </SimpleGrid>
 
@@ -280,7 +313,7 @@ export default function DashboardPage() {
                   value={metrics.fundersWithSources}
                   total={metrics.totalFunders}
                   color="teal"
-                  sublabel={`${metrics.sourceCoverage}% of funders have harvest sources`}
+                  sublabel={`${metrics.sourceCoverage}% of funders have sources`}
                 />
                 <PipelineStep
                   step={3}

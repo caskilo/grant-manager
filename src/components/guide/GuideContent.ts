@@ -38,7 +38,7 @@ const dashboard: GuideModule = {
       content:
         'The four cards at the top summarise the current state of the pipeline:\n\n' +
         '• **Funders Tracked** — total funders in the database. Click to jump to the Funders page.\n' +
-        '• **Harvest Sources** — number of configured web sources being monitored for grant opportunities.\n' +
+        '• **Sources** — number of configured web sources being monitored for grant opportunities.\n' +
         '• **Opportunities Found** — total opportunities extracted so far, with the count recommended to pursue.\n' +
         '• **Pursue Pipeline** — combined maximum funding value across all opportunities marked PURSUE.',
     },
@@ -134,7 +134,7 @@ const funders: GuideModule = {
       content:
         'Click a funder to open its detail page, which has four tabs:\n\n' +
         '• **Overview** — name, type, website, description, geographies, notes.\n' +
-        '• **Sources** — harvest sources configured for this funder, plus the Source Discovery tool.\n' +
+        '• **Sources** — sources configured for this funder, plus the Source Discovery tool.\n' +
         '• **Opportunities** — all opportunities linked to this funder, with scores and recommendations.\n' +
         '• **Statistics** — summary metrics for this funder\'s opportunities.',
     },
@@ -402,7 +402,7 @@ const wfSourceDiscovery: GuideModule = {
       heading: 'What Is Source Discovery?',
       content:
         'Source Discovery crawls a funder\'s website to find pages that are likely to contain grant or funding opportunity information. It analyses navigation structure, identifies scheme/programme links, and scores each page for relevance.\n\n' +
-        'The discovered pages become "suggested sources" that you can selectively add as harvest sources.',
+        'The discovered pages become "suggested sources" that you can selectively add as sources.',
     },
     {
       heading: 'Running Discovery',
@@ -426,7 +426,7 @@ const wfSourceDiscovery: GuideModule = {
       steps: [
         'Review the discovered pages. Each shows a URL, page title, and relevance score.',
         'Tick the checkbox next to pages you want to monitor.',
-        'Click "Create N Sources" to add them as harvest sources.',
+        'Click "Create N Sources" to add them as sources.',
         'The new sources appear in the "Configured Sources" section, ready for inspection.',
       ],
     },
@@ -535,7 +535,7 @@ const wfPipeline: GuideModule = {
         'The Odyssean Grant Manager follows a structured pipeline:\n\n' +
         '**Stage 1: Catalogue** → Research and collect funder information in the Catalogue Editor. Use Auto-Fill to quickly extract data from funder websites.\n\n' +
         '**Stage 2: Funders** → Integrate catalogue entries to create Funder records. Each funder becomes a trackable entity with its own sources, opportunities, and contacts.\n\n' +
-        '**Stage 3: Sources** → Run Source Discovery on each funder to find grant-related pages. Select the best pages and create harvest sources.\n\n' +
+        '**Stage 3: Sources** → Run Source Discovery on each funder to find grant-related pages. Select the best pages and create sources.\n\n' +
         '**Stage 4: Opportunities** → Run Source Inspection on configured sources. The LLM extracts grant data, scores it for alignment, and creates Opportunity records.\n\n' +
         '**Stage 5: Applications** (Coming Soon) → Select promising opportunities and create application drafts, manage deadlines, and track outcomes.',
     },
