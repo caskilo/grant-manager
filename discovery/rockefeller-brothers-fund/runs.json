@@ -1,0 +1,24 @@
+[
+  {
+    "runId": "error_2026-02-25T22-42-00-365Z",
+    "funderId": "ea6b1bd1-3347-4ad5-8915-52b4ebe5ac24",
+    "seedUrl": "https://www.rbf.org/",
+    "timestamp": "2026-02-25T22:42:00.365Z",
+    "status": "failed",
+    "error": {
+      "message": "Discovery failed - no sources found. Errors: Seed URL discovery failed: Access forbidden (403). The website \"www.rbf.org\" is blocking automated access. Try adding a different page URL manually.",
+      "stack": "Error: Discovery failed - no sources found. Errors: Seed URL discovery failed: Access forbidden (403). The website \"www.rbf.org\" is blocking automated access. Try adding a different page URL manually.\n    at SourceDiscoveryProcessor.processDiscovery (C:\\Users\\willg\\CascadeProjects\\grant-manager\\backend\\src\\queue\\processors\\source-discovery.processor.ts:150:17)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async <anonymous> (C:\\Users\\willg\\CascadeProjects\\grant-manager\\backend\\node_modules\\.pnpm\\bullmq@5.67.3\\node_modules\\bullmq\\src\\classes\\worker.ts:997:26)"
+    }
+  },
+  {
+    "runId": "error_2026-02-25T22-42-01-985Z",
+    "funderId": "ea6b1bd1-3347-4ad5-8915-52b4ebe5ac24",
+    "seedUrl": "https://www.rbf.org/",
+    "timestamp": "2026-02-25T22:42:01.985Z",
+    "status": "failed",
+    "error": {
+      "message": "Discovery failed - no sources found. Errors: Seed URL discovery failed: Access forbidden (403). The website \"www.rbf.org\" is blocking automated access. Try adding a different page URL manually.",
+      "stack": "Error: Discovery failed - no sources found. Errors: Seed URL discovery failed: Access forbidden (403). The website \"www.rbf.org\" is blocking automated access. Try adding a different page URL manually.\n    at SourceDiscoveryProcessor.processDiscovery (C:\\Users\\willg\\CascadeProjects\\grant-manager\\backend\\src\\queue\\processors\\source-discovery.processor.ts:150:17)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async <anonymous> (C:\\Users\\willg\\CascadeProjects\\grant-manager\\backend\\node_modules\\.pnpm\\bullmq@5.67.3\\node_modules\\bullmq\\src\\classes\\worker.ts:997:26)"
+    }
+  }
+]

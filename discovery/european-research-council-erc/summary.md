@@ -1,6 +1,6 @@
 # Source Discovery Summary – European Research Council (ERC)
 
-**Discovered at:** 06/02/2026, 12:07:43
+**Discovered at:** 25/02/2026, 22:50:31
 **Seed URL:** https://erc.europa.eu/
 
 ## Statistics

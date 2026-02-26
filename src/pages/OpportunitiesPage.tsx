@@ -300,16 +300,18 @@ export default function OpportunitiesPage() {
                       </div>
                     </Group>
                     {group.funderId && (
-                      <Button
+                      <Text
                         size="xs"
-                        variant="subtle"
-                        onClick={(e) => {
+                        c="blue"
+                        td="underline"
+                        style={{ cursor: 'pointer' }}
+                        onClick={(e: React.MouseEvent) => {
                           e.stopPropagation();
                           navigate(`/funders/${group.funderId}`);
                         }}
                       >
                         View Funder
-                      </Button>
+                      </Text>
                     )}
                   </Group>
                 </Accordion.Control>
@@ -350,6 +352,7 @@ export default function OpportunitiesPage() {
                           key={opp.id}
                           p="md"
                           withBorder
+                          data-testid="opportunity-card"
                           style={{ cursor: 'pointer', transition: 'all 0.2s' }}
                           onClick={() => navigate(`/opportunities/${opp.id}`)}
                           className="hover-lift"
