@@ -28,7 +28,7 @@ export default function AppHeader() {
   };
 
   return (
-    <Group h="100%" px="md" justify="space-between">
+    <Group h="100%" px="md" justify="space-between" data-testid="app-header">
       <Title order={3}>Odyssean Grant Manager</Title>
       <Group>
         <span>{user?.name}</span>

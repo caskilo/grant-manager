@@ -11,6 +11,7 @@ import OpportunityDetailPage from './pages/OpportunityDetailPage';
 import ApplicationsPage from './pages/ApplicationsPage';
 import ApplicationDetailPage from './pages/ApplicationDetailPage';
 import TemplatesPage from './pages/TemplatesPage';
+import TemplateDetailPage from './pages/TemplateDetailPage';
 import ContactsPage from './pages/ContactsPage';
 import ContactDetailPage from './pages/ContactDetailPage';
 import InteractionsPage from './pages/InteractionsPage';
@@ -129,6 +130,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <TemplatesPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/templates/:id"
+              element={
+                <ProtectedRoute>
+                  <TemplateDetailPage />
                 </ProtectedRoute>
               }
             />

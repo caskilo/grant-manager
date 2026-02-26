@@ -108,6 +108,7 @@ export default function FundersPage() {
           value={searchFilter}
           onChange={(e) => setSearchFilter(e.currentTarget.value)}
           size="md"
+          data-testid="funders-search"
         />
 
         {/* Funders Grid */}
@@ -115,7 +116,7 @@ export default function FundersPage() {
           <Text ta="center" c="dimmed" py="xl">Loading funders...</Text>
         ) : filteredFunders.length === 0 ? (
           <Paper p="xl" withBorder>
-            <Text ta="center" c="dimmed">No funders found</Text>
+            <Text ta="center" c="dimmed" data-testid="funders-empty">No funders found</Text>
           </Paper>
         ) : (
           <Stack gap="md">
@@ -127,6 +128,7 @@ export default function FundersPage() {
                 style={{ cursor: 'pointer', transition: 'all 0.2s' }}
                 onClick={() => navigate(`/funders/${funder.id}`)}
                 className="hover-lift"
+                data-testid="funder-card"
               >
                 <Group justify="space-between" align="flex-start" wrap="nowrap">
                   <Stack gap="xs" style={{ flex: 1 }}>

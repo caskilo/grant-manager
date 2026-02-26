@@ -1,0 +1,846 @@
+{
+  "version": "2.0",
+  "lastModified": "2026-01-22T13:11:57.573Z",
+  "funders": [
+    {
+      "id": "c01b06f9-5755-4fd4-b821-4e1d27b675a4",
+      "name": "Wellcome Trust",
+      "type": "Foundation",
+      "focus": [
+        "Biomedical research",
+        "open research",
+        "health"
+      ],
+      "geographies": [
+        "Global"
+      ],
+      "websiteUrl": "https://wellcome.org/",
+      "typicalAwardMin": 10000,
+      "typicalAwardMax": 100000000,
+      "currency": "GBP",
+      "openData": "Yes",
+      "notes": "Open data: Yes (grants database)",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "a089b66c-9354-443e-b4fa-0b336d55b1b9",
+      "name": "UK Research and Innovation (UKRI)",
+      "type": "Public research funder",
+      "focus": [
+        "All research disciplines via councils (ESRC",
+        "AHRC",
+        "EPSRC",
+        "NERC",
+        "MRC",
+        "BBSRC)"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "websiteUrl": "https://www.ukri.org/",
+      "typicalAwardMin": 10000,
+      "currency": "GBP",
+      "openData": "Yes",
+      "notes": "Open data: Yes (funding finder)",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "03a20c8a-f4b1-46f0-9106-0ed934243a49",
+      "name": "Paul Hamlyn Foundation",
+      "type": "Independent foundation",
+      "focus": [
+        "Arts",
+        "education",
+        "social justice"
+      ],
+      "geographies": [
+        "UK",
+        "India"
+      ],
+      "websiteUrl": "https://www.phf.org.uk/",
+      "typicalAwardMin": 10000,
+      "typicalAwardMax": 1000000,
+      "currency": "GBP",
+      "openData": "Yes",
+      "notes": "Open data: Yes (grants database)",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "8bf1813b-cd1d-42f4-899c-36360c230458",
+      "name": "Esmee Fairbairn Foundation",
+      "type": "Foundation",
+      "focus": [
+        "Environment",
+        "social justice",
+        "communities"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "websiteUrl": "https://esmeefairbairn.org.uk/",
+      "typicalAwardMin": 10000,
+      "typicalAwardMax": 1000000,
+      "currency": "GBP",
+      "openData": "Partial",
+      "notes": "Open data: Partial",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "a6b2f335-b56c-426e-9f99-b1d6bfe0dcff",
+      "name": "Leverhulme Trust",
+      "type": "Trust",
+      "focus": [
+        "Research",
+        "fellowships",
+        "interdisciplinary"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "websiteUrl": "https://www.leverhulme.ac.uk/",
+      "typicalAwardMin": 10000,
+      "typicalAwardMax": 500000,
+      "currency": "GBP",
+      "openData": "No",
+      "notes": "Open data: No (schemes listed)",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "917c5024-4741-44a3-8f89-de6cc13b944b",
+      "name": "Gatsby Charitable Foundation",
+      "type": "Foundation",
+      "focus": [
+        "Science",
+        "policy",
+        "research",
+        "education"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "websiteUrl": "https://www.gatsby.org.uk/",
+      "typicalAwardMin": 50000,
+      "currency": "GBP",
+      "openData": "Partial",
+      "notes": "Open data: Partial",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "883b5c29-aaa0-4482-b665-04d2811ce583",
+      "name": "Nesta",
+      "type": "Innovation foundation/charity",
+      "focus": [
+        "Innovation",
+        "civic tech",
+        "research on futures"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "websiteUrl": "https://www.nesta.org.uk/",
+      "typicalAwardMin": 5000,
+      "typicalAwardMax": 500000,
+      "currency": "GBP",
+      "openData": "Partial",
+      "notes": "Open data: Partial",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "b9f231f7-f8f7-4366-9e5e-cc7c78dbf78a",
+      "name": "Joseph Rowntree Foundation",
+      "type": "Foundation",
+      "focus": [
+        "Poverty",
+        "social policy",
+        "housing"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "websiteUrl": "https://www.jrf.org.uk/",
+      "typicalAwardMin": 10000,
+      "typicalAwardMax": 1000000,
+      "currency": "GBP",
+      "openData": "Partial",
+      "notes": "Open data: Partial",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "3fa47710-a541-43a0-8f9e-819a9263bffa",
+      "name": "Nuffield Foundation",
+      "type": "Trust",
+      "focus": [
+        "Social policy",
+        "education",
+        "welfare research"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "websiteUrl": "https://www.nuffieldfoundation.org/",
+      "typicalAwardMin": 50000,
+      "typicalAwardMax": 1000000,
+      "currency": "GBP",
+      "openData": "Partial",
+      "notes": "Open data: Partial",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "309d2684-8861-4cb8-b8d6-5ab67ccd1386",
+      "name": "Royal Society",
+      "type": "Learned society/funder",
+      "focus": [
+        "Natural sciences",
+        "fellowships",
+        "research"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "websiteUrl": "https://royalsociety.org/",
+      "typicalAwardMin": 10000,
+      "currency": "GBP",
+      "openData": "Partial",
+      "notes": "Open data: Partial",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "13acdc89-4ab2-4c26-b34a-03628097189a",
+      "name": "British Academy",
+      "type": "Learned society",
+      "focus": [
+        "Humanities & social sciences research"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "websiteUrl": "https://www.thebritishacademy.ac.uk/",
+      "typicalAwardMin": 10000,
+      "typicalAwardMax": 500000,
+      "currency": "GBP",
+      "openData": "Partial",
+      "notes": "Open data: Partial",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "6d7a858b-5ab4-4de1-b182-0c3abc158955",
+      "name": "National Lottery Community Fund",
+      "type": "Public lottery fund",
+      "focus": [
+        "Community projects",
+        "social initiatives"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "websiteUrl": "https://www.tnlcommunityfund.org.uk/",
+      "typicalAwardMin": 1000,
+      "currency": "GBP",
+      "openData": "Yes",
+      "notes": "Open data: Yes (some)",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "6fe70af1-57ae-4c28-98b0-8d945289645e",
+      "name": "National Lottery Heritage Fund",
+      "type": "Lottery fund",
+      "focus": [
+        "Heritage projects"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "websiteUrl": "https://www.heritagefund.org.uk/",
+      "typicalAwardMin": 5000,
+      "currency": "GBP",
+      "openData": "Partial",
+      "notes": "Open data: Partial",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "50328930-978b-4c81-93fa-20210b376798",
+      "name": "Innovate UK",
+      "type": "Public innovation funder",
+      "focus": [
+        "Innovation",
+        "applied research",
+        "tech"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "websiteUrl": "https://innovateuk.ukri.org/",
+      "typicalAwardMin": 25000,
+      "currency": "GBP",
+      "openData": "Yes",
+      "notes": "Open data: Yes",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "6b74a36b-88aa-4dc9-be2f-496581668958",
+      "name": "European Commission — Horizon Europe / European Research Council (ERC)",
+      "type": "Public international funder",
+      "focus": [
+        "Collaborative research",
+        "frontier research"
+      ],
+      "geographies": [
+        "EU + associated"
+      ],
+      "websiteUrl": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/home",
+      "typicalAwardMin": 100000,
+      "currency": "EUR",
+      "openData": "Yes",
+      "notes": "Open data: Yes",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "f9106503-c662-4c21-8f33-ade66b30de9e",
+      "name": "Sloan Foundation (Alfred P. Sloan)",
+      "type": "US foundation",
+      "focus": [
+        "Science",
+        "technology",
+        "economics",
+        "long-termism in science"
+      ],
+      "geographies": [
+        "Global"
+      ],
+      "websiteUrl": "https://sloan.org/",
+      "typicalAwardMin": 50000,
+      "currency": "USD",
+      "openData": "Partial",
+      "notes": "Open data: Partial",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "a7e0d83e-69db-4da7-a72c-0506df6bffab",
+      "name": "John Templeton Foundation",
+      "type": "US foundation",
+      "focus": [
+        "Science",
+        "big questions",
+        "long-term futures",
+        "integrative research"
+      ],
+      "geographies": [
+        "Global"
+      ],
+      "websiteUrl": "https://www.templeton.org/",
+      "typicalAwardMin": 50000,
+      "currency": "USD",
+      "openData": "Partial",
+      "notes": "Open data: Partial",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "a2963408-fc50-4597-be16-f7dcfeab94bb",
+      "name": "Open Philanthropy",
+      "type": "Philanthropic funder",
+      "focus": [
+        "Long-term future risks",
+        "AI governance",
+        "biosecurity"
+      ],
+      "geographies": [
+        "Global"
+      ],
+      "websiteUrl": "https://www.openphilanthropy.org/",
+      "typicalAwardMin": 50000,
+      "currency": "USD",
+      "openData": "Partial",
+      "notes": "Open data: Partial",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "265f08f6-d372-4241-a759-a44db36a728f",
+      "name": "GrantNav / 360Giving",
+      "type": "Open grants database",
+      "focus": [
+        "Aggregated grants data from many UK funders"
+      ],
+      "geographies": [
+        "UK-centric"
+      ],
+      "websiteUrl": "https://grantnav.threesixtygiving.org/",
+      "currency": "GBP",
+      "openData": "Yes",
+      "notes": "Open data: Yes (CSV/JSON/API)",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "157b31bc-1227-4aa6-b78f-e97c096114ef",
+      "name": "Garfield Weston Foundation",
+      "type": "Independent family foundation",
+      "focus": [
+        "Community",
+        "arts",
+        "education",
+        "welfare"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "websiteUrl": "https://garfieldweston.org/",
+      "typicalAwardMin": 5000,
+      "typicalAwardMax": 1000000,
+      "currency": "GBP",
+      "openData": "Partial",
+      "notes": "Open data: Partial",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "5ac45807-90f3-42d4-a1a0-a3ce6158c6fa",
+      "name": "Wolfson Foundation",
+      "type": "Independent foundation",
+      "focus": [
+        "Research infrastructure",
+        "education",
+        "science"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "websiteUrl": "https://www.wolfson.org.uk/",
+      "typicalAwardMin": 25000,
+      "currency": "GBP",
+      "openData": "Partial",
+      "notes": "Open data: Partial",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "1d75c509-28fa-44f7-8395-e86d3db7cc65",
+      "name": "Sainsbury Family Charitable Trusts (incl. Gatsby)",
+      "type": "Family trusts",
+      "focus": [
+        "Science",
+        "education",
+        "civil society"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "websiteUrl": "https://www.sfct.org.uk/",
+      "typicalAwardMin": 10000,
+      "currency": "GBP",
+      "openData": "Partial",
+      "notes": "Open data: Partial",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "b9a8da82-31ee-4593-86ae-ba8e6c0a8114",
+      "name": "Baring Foundation",
+      "type": "Foundation",
+      "focus": [
+        "Arts",
+        "social justice",
+        "legal advice"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "websiteUrl": "https://www.baringfoundation.org.uk/",
+      "typicalAwardMin": 5000,
+      "typicalAwardMax": 500000,
+      "currency": "GBP",
+      "openData": "Partial",
+      "notes": "Open data: Partial",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "31cce213-aecf-42d5-bf03-cd69432c6930",
+      "name": "City Bridge Trust",
+      "type": "Local/city funder (City of London)",
+      "focus": [
+        "London-based community projects",
+        "culture",
+        "resilience"
+      ],
+      "geographies": [
+        "London"
+      ],
+      "websiteUrl": "https://www.cityoflondon.gov.uk/services/grants-and-funding/city-bridge-trust",
+      "typicalAwardMin": 5000,
+      "typicalAwardMax": 500000,
+      "currency": "GBP",
+      "openData": "Yes",
+      "notes": "Open data: Yes (360Giving)",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "3a79d95a-a766-449b-803e-1907405b2e43",
+      "name": "Blavatnik Family Foundation",
+      "type": "Family foundation",
+      "focus": [
+        "Science",
+        "arts",
+        "education"
+      ],
+      "geographies": [
+        "UK",
+        "US",
+        "Global"
+      ],
+      "websiteUrl": "https://blavatnikfoundation.org/",
+      "typicalAwardMin": 10000,
+      "currency": "GBP",
+      "openData": "Partial",
+      "notes": "Open data: Partial",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "e88ffb36-48a6-4e05-b840-74356eb9a414",
+      "name": "The Rockefeller Foundation",
+      "type": "US foundation",
+      "focus": [
+        "Global development",
+        "resilience",
+        "systems change"
+      ],
+      "geographies": [
+        "Global"
+      ],
+      "websiteUrl": "https://www.rockefellerfoundation.org/",
+      "typicalAwardMin": 50000,
+      "currency": "USD",
+      "openData": "Partial",
+      "notes": "Open data: Partial",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "fdce8df9-b1e7-489d-8188-34b3def37940",
+      "name": "Ford Foundation",
+      "type": "US foundation",
+      "focus": [
+        "Social justice",
+        "democracy",
+        "inequality"
+      ],
+      "geographies": [
+        "Global"
+      ],
+      "websiteUrl": "https://www.fordfoundation.org/",
+      "typicalAwardMin": 50000,
+      "currency": "USD",
+      "openData": "Partial",
+      "notes": "Open data: Partial",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "37877f80-a354-4e75-9cbe-528a0a4e1587",
+      "name": "Open Society Foundations",
+      "type": "US philanthropic network",
+      "focus": [
+        "Human rights",
+        "democracy",
+        "governance (controversial)"
+      ],
+      "geographies": [
+        "Global"
+      ],
+      "websiteUrl": "https://www.opensocietyfoundations.org/",
+      "typicalAwardMin": 10000,
+      "currency": "USD",
+      "openData": "Partial",
+      "notes": "Open data: Partial",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "5e1436ee-33e4-496d-b247-95806504f982",
+      "name": "Chan Zuckerberg Initiative",
+      "type": "Philanthropic org",
+      "focus": [
+        "Science",
+        "education",
+        "community"
+      ],
+      "geographies": [
+        "Global"
+      ],
+      "websiteUrl": "https://www.chanzuckerberg.com/",
+      "typicalAwardMin": 50000,
+      "currency": "USD",
+      "openData": "Partial",
+      "notes": "Open data: Partial",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "21ad01d4-4b3b-4a4b-a8ab-c650f6121d1b",
+      "name": "MacArthur Foundation",
+      "type": "US foundation",
+      "focus": [
+        "Global challenges",
+        "resilience",
+        "social justice"
+      ],
+      "geographies": [
+        "Global"
+      ],
+      "websiteUrl": "https://www.macfound.org/",
+      "typicalAwardMin": 50000,
+      "currency": "USD",
+      "openData": "Partial",
+      "notes": "Open data: Partial",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "91f30bed-2efc-4d19-88a2-d67cc7d904a8",
+      "name": "Rockefeller Brothers Fund",
+      "type": "Family foundation",
+      "focus": [
+        "Sustainability",
+        "climate",
+        "systems change"
+      ],
+      "geographies": [
+        "Global"
+      ],
+      "websiteUrl": "https://www.rbf.org/",
+      "typicalAwardMin": 50000,
+      "currency": "USD",
+      "openData": "Partial",
+      "notes": "Open data: Partial",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "9e8d9f48-1d82-4efb-97d8-3457e4bcde99",
+      "name": "Dana Foundation",
+      "type": "Foundation",
+      "focus": [
+        "Brain research",
+        "neuroscience",
+        "ethics of AI"
+      ],
+      "geographies": [
+        "US",
+        "global"
+      ],
+      "websiteUrl": "https://dana.org/",
+      "typicalAwardMin": 10000,
+      "typicalAwardMax": 500000,
+      "currency": "USD",
+      "openData": "Partial",
+      "notes": "Open data: Partial",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "765dcad0-bf2a-4e14-bf9e-1b9ba0201272",
+      "name": "Carnegie UK Trust",
+      "type": "Foundation",
+      "focus": [
+        "Social change",
+        "public policy",
+        "civic participation"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "websiteUrl": "https://www.carnegieuktrust.org.uk/",
+      "typicalAwardMin": 10000,
+      "typicalAwardMax": 500000,
+      "currency": "GBP",
+      "openData": "Partial",
+      "notes": "Open data: Partial",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "57ad6316-ba4d-480a-b281-0101db1632a6",
+      "name": "Royal Society for the Encouragement of Arts (RSA)",
+      "type": "Charitable org",
+      "focus": [
+        "Social progress",
+        "civic innovation"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "websiteUrl": "https://www.thersa.org/",
+      "currency": "GBP",
+      "openData": "Partial",
+      "notes": "Open data: Partial",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "9b8dce0f-17b4-4809-a86c-4e0e140ec992",
+      "name": "AHRC (Arts & Humanities Research Council)",
+      "type": "Research council (UKRI)",
+      "focus": [
+        "Arts & humanities research"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "websiteUrl": "https://ahrc.ukri.org/",
+      "typicalAwardMin": 10000,
+      "typicalAwardMax": 1000000,
+      "currency": "GBP",
+      "openData": "Yes",
+      "notes": "Open data: Yes (via UKRI)",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "72060868-a7f7-465d-80bf-f6c729c33bb1",
+      "name": "ESRC (Economic & Social Research Council)",
+      "type": "Research council (UKRI)",
+      "focus": [
+        "Social science research"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "websiteUrl": "https://esrc.ukri.org/",
+      "typicalAwardMin": 10000,
+      "typicalAwardMax": 1000000,
+      "currency": "GBP",
+      "openData": "Yes",
+      "notes": "Open data: Yes",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "a58c4cb1-f1fe-4634-9f32-812fee26cb61",
+      "name": "MRC (Medical Research Council)",
+      "type": "Research council (UKRI)",
+      "focus": [
+        "Medical research"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "websiteUrl": "https://mrc.ukri.org/",
+      "typicalAwardMin": 50000,
+      "currency": "GBP",
+      "openData": "Yes",
+      "notes": "Open data: Yes",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "b76eef06-b290-4dfc-b42f-272bcd97da89",
+      "name": "EPSRC (Engineering & Physical Sciences Research Council)",
+      "type": "Research council (UKRI)",
+      "focus": [
+        "Engineering & physical sciences"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "websiteUrl": "https://epsrc.ukri.org/",
+      "typicalAwardMin": 10000,
+      "currency": "GBP",
+      "openData": "Yes",
+      "notes": "Open data: Yes",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "b19eda11-a5f1-4344-83a9-67a2727b378e",
+      "name": "NERC (Natural Environment Research Council)",
+      "type": "Research council (UKRI)",
+      "focus": [
+        "Environmental and earth sciences"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "websiteUrl": "https://nerc.ukri.org/",
+      "typicalAwardMin": 10000,
+      "currency": "GBP",
+      "openData": "Yes",
+      "notes": "Open data: Yes",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "a7c01ab9-1ca3-41d7-be37-e941590d44fb",
+      "name": "European Research Council (ERC)",
+      "type": "EU research funder",
+      "focus": [
+        "Frontier research"
+      ],
+      "geographies": [
+        "EU & associated"
+      ],
+      "websiteUrl": "https://erc.europa.eu/",
+      "typicalAwardMin": 150000,
+      "typicalAwardMax": 3000000,
+      "currency": "EUR",
+      "openData": "Yes",
+      "notes": "Open data: Yes",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "12950649-bcd5-42cb-9466-387bbc93c832",
+      "name": "Horizon Europe",
+      "type": "EU programme",
+      "focus": [
+        "Collaborative research & innovation"
+      ],
+      "geographies": [
+        "EU & associated"
+      ],
+      "websiteUrl": "https://research-and-innovation.ec.europa.eu/funding/funding-opportunities/horizon-europe_en",
+      "typicalAwardMin": 100000,
+      "currency": "EUR",
+      "openData": "Yes",
+      "notes": "Open data: Yes",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    },
+    {
+      "id": "d1f07bf6-f0d9-4918-bf13-6f4069d32566",
+      "name": "NIHR (National Institute for Health Research)",
+      "type": "Public funder",
+      "focus": [
+        "Health & applied research"
+      ],
+      "geographies": [
+        "UK"
+      ],
+      "websiteUrl": "https://www.nihr.ac.uk/",
+      "typicalAwardMin": 50000,
+      "currency": "GBP",
+      "openData": "Partial",
+      "notes": "Open data: Partial",
+      "createdAt": "2026-01-22T13:11:57.573Z",
+      "updatedAt": "2026-01-22T13:11:57.573Z"
+    }
+  ]
+}

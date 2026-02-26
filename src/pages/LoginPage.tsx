@@ -107,6 +107,7 @@ export default function LoginPage() {
         <form onSubmit={handleLogin}>
           <Stack gap="md">
             <TextInput
+              data-testid="login-username"
               label="Username"
               placeholder="Enter your username"
               required
@@ -118,6 +119,7 @@ export default function LoginPage() {
             />
 
             <PasswordInput
+              data-testid="login-password"
               label="Password"
               placeholder="Enter your password"
               required
@@ -129,6 +131,7 @@ export default function LoginPage() {
             />
 
             <Button
+              data-testid="login-submit"
               type="submit"
               fullWidth
               loading={loading}

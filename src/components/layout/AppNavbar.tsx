@@ -12,21 +12,25 @@ export default function AppNavbar() {
   return (
     <>
       <NavLink
+        data-testid="nav-dashboard"
         label="Dashboard"
         active={isActive('/dashboard')}
         onClick={() => navigate('/dashboard')}
       />
       <NavLink
+        data-testid="nav-funders"
         label="Funders"
         active={isActive('/funders')}
         onClick={() => navigate('/funders')}
       />
       <NavLink
+        data-testid="nav-opportunities"
         label="Opportunities"
         active={isActive('/opportunities')}
         onClick={() => navigate('/opportunities')}
       />
       <NavLink
+        data-testid="nav-applications"
         label="Applications"
         active={isActive('/applications')}
         onClick={() => navigate('/applications')}

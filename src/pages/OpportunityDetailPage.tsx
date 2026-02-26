@@ -18,9 +18,13 @@ import {
   Timeline,
   Progress,
   RingProgress,
+  Modal,
+  Textarea,
 } from '@mantine/core';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { useState } from 'react';
+import { notifications } from '@mantine/notifications';
 import {
   IconExternalLink,
   IconCalendar,
@@ -33,8 +37,11 @@ import {
   IconCheck,
   IconUsers,
   IconTarget,
+  IconFileText,
+  IconSparkles,
 } from '@tabler/icons-react';
 import api from '../lib/api';
+import { applicationsApi } from '../lib/applications';
 
 interface DeadlineEntry {
   date?: string;
@@ -72,6 +79,17 @@ interface Opportunity {
     websiteUrl?: string | null;
     description?: string | null;
   } | null;
+  applications?: Array<{
+    id: string;
+    title: string;
+    stage: string;
+    outcome: string;
+    createdAt: string;
+    updatedAt: string;
+    leadOwner?: { id: string; name: string };
+    _count?: { sections: number };
+    sections?: Array<{ id: string; status: string }>;
+  }>;
   createdAt: string;
   updatedAt: string;
 }
@@ -154,6 +172,47 @@ export default function OpportunityDetailPage() {
     },
   });
 
+  const [appModalOpen, setAppModalOpen] = useState(false);
+  const [manualContent, setManualContent] = useState('');
+  const [useDefaults, setUseDefaults] = useState(false);
+
+  const generateAppMutation = useMutation({
+    mutationFn: () =>
+      applicationsApi.generateFromOpportunity(id!, {
+        manualContent: manualContent || undefined,
+        useDefaults,
+      }),
+    onSuccess: (res) => {
+      setAppModalOpen(false);
+      setManualContent('');
+      notifications.show({
+        title: 'Application Created',
+        message: `"${res.data.title}" has been created with ${res.data.sections?.length || 0} sections`,
+        color: 'green',
+      });
+      navigate(`/applications/${res.data.id}`);
+    },
+    onError: (err: any) => {
+      const status = err?.response?.status;
+      const data = err?.response?.data;
+      if (status === 409 && data?.existingApplicationId) {
+        notifications.show({
+          title: 'Application Already Exists',
+          message: 'Navigating to the existing application...',
+          color: 'blue',
+        });
+        setAppModalOpen(false);
+        navigate(`/applications/${data.existingApplicationId}`);
+        return;
+      }
+      notifications.show({
+        title: 'Error',
+        message: data?.message || 'Failed to generate application',
+        color: 'red',
+      });
+    },
+  });
+
   if (isLoading) {
     return (
       <Container size="lg">
@@ -208,11 +267,18 @@ export default function OpportunityDetailPage() {
   const hasProcessSteps = opportunity.processSteps && opportunity.processSteps.length > 0;
   const hasApplicantTypes = opportunity.eligibleApplicantTypes && opportunity.eligibleApplicantTypes.length > 0;
 
+  const linkedApp = opportunity.applications && opportunity.applications.length > 0
+    ? opportunity.applications[0]
+    : null;
+  const completedSections = linkedApp?.sections?.filter(s => s.status === 'COMPLETE').length ?? 0;
+  const totalSections = linkedApp?._count?.sections ?? linkedApp?.sections?.length ?? 0;
+  const sectionProgress = totalSections > 0 ? Math.round((completedSections / totalSections) * 100) : 0;
+
   return (
     <Container size="lg">
       <Stack gap="lg">
         <Group justify="space-between" align="flex-start">
-          <Button variant="subtle" onClick={() => navigate('/opportunities')}>
+          <Button data-testid="back-to-opportunities" variant="subtle" onClick={() => navigate('/opportunities')}>
             ← Back to Opportunities
           </Button>
           <Group gap="xs">
@@ -231,7 +297,7 @@ export default function OpportunityDetailPage() {
           <Stack gap="md">
             <Group justify="space-between" align="flex-start">
               <div style={{ flex: 1 }}>
-                <Title order={2} mb="xs">{opportunity.programName}</Title>
+                <Title order={2} mb="xs" data-testid="opportunity-title">{opportunity.programName}</Title>
                 {opportunity.funder && (
                   <Group gap={6}>
                     <ThemeIcon size="sm" variant="light" color="blue">
@@ -347,12 +413,32 @@ export default function OpportunityDetailPage() {
             </Group>
 
             <Group gap="xs" mt="md">
+              {linkedApp ? (
+                <Button
+                  data-testid="view-application-btn"
+                  color="blue"
+                  leftSection={<IconFileText size={16} />}
+                  onClick={() => navigate(`/applications/${linkedApp.id}`)}
+                >
+                  View Application ({linkedApp.stage})
+                </Button>
+              ) : (
+                <Button
+                  data-testid="start-application-btn"
+                  color="green"
+                  leftSection={<IconFileText size={16} />}
+                  onClick={() => setAppModalOpen(true)}
+                >
+                  Start Application
+                </Button>
+              )}
               <Button
                 component="a"
                 href={opportunity.opportunityUrl || opportunity.sourceUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 leftSection={<IconExternalLink size={16} />}
+                variant="light"
               >
                 View Official Page
               </Button>
@@ -373,8 +459,13 @@ export default function OpportunityDetailPage() {
         </Paper>
 
         {/* Tabs */}
-        <Tabs defaultValue={hasDimensions ? 'alignment' : 'eligibility'}>
+        <Tabs defaultValue={linkedApp ? 'application' : hasDimensions ? 'alignment' : 'eligibility'}>
           <Tabs.List>
+            {linkedApp && (
+              <Tabs.Tab value="application" leftSection={<IconFileText size={16} />}>
+                Application
+              </Tabs.Tab>
+            )}
             {hasDimensions && (
               <Tabs.Tab value="alignment" leftSection={<IconTarget size={16} />}>
                 OI Alignment
@@ -387,6 +478,58 @@ export default function OpportunityDetailPage() {
               Details
             </Tabs.Tab>
           </Tabs.List>
+
+          {/* Application Tab */}
+          {linkedApp && (
+            <Tabs.Panel value="application" pt="md">
+              <Stack gap="md">
+                <Paper p="lg" withBorder>
+                  <Group justify="space-between" align="flex-start">
+                    <Stack gap="xs">
+                      <Text fw={600} size="lg">{linkedApp.title}</Text>
+                      <Group gap="xs">
+                        <Badge color={{
+                          TRIAGE: 'gray', PREP: 'blue', DRAFTING: 'indigo',
+                          REVIEW: 'orange', SUBMIT: 'teal', AWARDED: 'green', REJECTED: 'red',
+                        }[linkedApp.stage] || 'gray'}>
+                          {linkedApp.stage}
+                        </Badge>
+                        {linkedApp.outcome !== 'UNKNOWN' && (
+                          <Badge variant="outline">{linkedApp.outcome}</Badge>
+                        )}
+                      </Group>
+                      {linkedApp.leadOwner && (
+                        <Text size="sm" c="dimmed">Lead: {linkedApp.leadOwner.name}</Text>
+                      )}
+                      <Text size="xs" c="dimmed">
+                        Created {new Date(linkedApp.createdAt).toLocaleDateString()}
+                        {linkedApp.updatedAt !== linkedApp.createdAt && (
+                          <> · Updated {new Date(linkedApp.updatedAt).toLocaleDateString()}</>
+                        )}
+                      </Text>
+                    </Stack>
+                    <Button
+                      variant="light"
+                      onClick={() => navigate(`/applications/${linkedApp.id}`)}
+                      leftSection={<IconFileText size={16} />}
+                    >
+                      Open Application
+                    </Button>
+                  </Group>
+
+                  {totalSections > 0 && (
+                    <Stack gap="xs" mt="md">
+                      <Group justify="space-between">
+                        <Text size="sm" fw={500}>Section Progress</Text>
+                        <Text size="sm" c="dimmed">{completedSections}/{totalSections} complete</Text>
+                      </Group>
+                      <Progress value={sectionProgress} size="lg" color={sectionProgress === 100 ? 'green' : 'blue'} />
+                    </Stack>
+                  )}
+                </Paper>
+              </Stack>
+            </Tabs.Panel>
+          )}
 
           {/* Alignment Tab - driven by real data from tags */}
           {hasDimensions && (
@@ -639,6 +782,76 @@ export default function OpportunityDetailPage() {
           </Tabs.Panel>
         </Tabs>
       </Stack>
+
+      {/* Start Application Modal */}
+      <Modal
+        opened={appModalOpen}
+        onClose={() => setAppModalOpen(false)}
+        title="Start Application"
+        size="lg"
+        data-testid="start-application-modal"
+      >
+        <Stack gap="md">
+          <Alert icon={<IconSparkles size={16} />} color="blue" variant="light">
+            <Text size="sm">
+              Generate a tailored application template from this opportunity. The system will
+              analyse the opportunity details and create sections specific to this grant.
+            </Text>
+          </Alert>
+
+          <Paper p="md" withBorder>
+            <Stack gap="xs">
+              <Text size="sm" fw={500}>{opportunity.programName}</Text>
+              {opportunity.funder && (
+                <Text size="xs" c="dimmed">Funder: {opportunity.funder.name}</Text>
+              )}
+              {awardRange && (
+                <Text size="xs" c="dimmed">Award: {awardRange}</Text>
+              )}
+            </Stack>
+          </Paper>
+
+          <Textarea
+            data-testid="app-modal-context"
+            label="Additional Context (optional)"
+            description="Paste any extra application guidelines, funder requirements, or notes to improve the template"
+            placeholder="e.g. paste the application form questions, funder priorities, or word limits..."
+            value={manualContent}
+            onChange={(e) => setManualContent(e.currentTarget.value)}
+            minRows={5}
+            maxRows={12}
+            autosize
+          />
+
+          <Group justify="space-between">
+            <Button
+              data-testid="app-modal-defaults-toggle"
+              variant="subtle"
+              size="sm"
+              color="gray"
+              onClick={() => {
+                setUseDefaults(!useDefaults);
+              }}
+            >
+              {useDefaults ? '✓ Using standard template' : 'Use standard template instead'}
+            </Button>
+            <Group gap="xs">
+              <Button data-testid="app-modal-cancel" variant="subtle" onClick={() => setAppModalOpen(false)}>
+                Cancel
+              </Button>
+              <Button
+                data-testid="app-modal-generate"
+                color="green"
+                leftSection={<IconFileText size={16} />}
+                onClick={() => generateAppMutation.mutate()}
+                loading={generateAppMutation.isPending}
+              >
+                {useDefaults ? 'Create Application' : 'Generate Application'}
+              </Button>
+            </Group>
+          </Group>
+        </Stack>
+      </Modal>
     </Container>
   );
 }

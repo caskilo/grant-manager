@@ -2,7 +2,7 @@ import { Container, Title, Text, Paper, Stack, Group, Badge, Button, Textarea, A
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState, useEffect } from 'react';
-import { IconArrowLeft, IconExternalLink, IconDeviceFloppy, IconInfoCircle, IconSparkles, IconChartBar, IconTarget, IconSearch, IconPlus, IconTrash, IconX, IconAlertCircle, IconWorldWww } from '@tabler/icons-react';
+import { IconArrowLeft, IconExternalLink, IconDeviceFloppy, IconInfoCircle, IconSparkles, IconChartBar, IconTarget, IconSearch, IconPlus, IconTrash, IconX, IconAlertCircle, IconWorldWww, IconFileText } from '@tabler/icons-react';
 import { modals } from '@mantine/modals';
 import { notifications } from '@mantine/notifications';
 import api from '../lib/api';
@@ -46,6 +46,16 @@ interface FunderDetail {
     aiFitScore: number | null;
     tags: string[];
     createdAt: string;
+    applications?: Array<{
+      id: string;
+      title: string;
+      stage: string;
+      outcome: string;
+      createdAt: string;
+      updatedAt: string;
+      leadOwner?: { id: string; name: string };
+      _count?: { sections: number };
+    }>;
   }>;
   contacts: Array<{
     id: string;
@@ -264,11 +274,20 @@ export default function FunderDetailPage() {
 
   const sourceCount = sources?.data?.length ?? funder.harvestSources.length;
 
+  // Collect all applications across this funder's opportunities
+  const funderApplications = funder.opportunities
+    .filter(opp => opp.applications && opp.applications.length > 0)
+    .map(opp => ({
+      ...opp.applications![0],
+      opportunityName: opp.programName,
+      opportunityId: opp.id,
+    }));
+
   return (
     <Container size="xl">
       <Stack gap="lg">
         <Group justify="space-between">
-          <Button variant="subtle" leftSection={<IconArrowLeft size={16} />} onClick={() => navigate('/funders')}>
+          <Button variant="subtle" leftSection={<IconArrowLeft size={16} />} onClick={() => navigate('/funders')} data-testid="back-to-funders">
             Back to Funders
           </Button>
         </Group>
@@ -278,7 +297,7 @@ export default function FunderDetailPage() {
           <Stack gap="md">
             <Group justify="space-between" align="flex-start">
               <div>
-                <Title order={2}>{funder.name}</Title>
+                <Title order={2} data-testid="funder-name">{funder.name}</Title>
                 {funder.websiteUrl && (
                   <Anchor href={funder.websiteUrl} target="_blank" rel="noopener noreferrer" size="sm" mt="xs">
                     <Group gap={4}>
@@ -340,8 +359,11 @@ export default function FunderDetailPage() {
         <Tabs defaultValue="overview">
           <Tabs.List>
             <Tabs.Tab value="overview" leftSection={<IconInfoCircle size={16} />}>Overview</Tabs.Tab>
-            <Tabs.Tab value="sources" leftSection={<IconWorldWww size={16} />}>Sources ({sourceCount})</Tabs.Tab>
-            <Tabs.Tab value="opportunities" leftSection={<IconSparkles size={16} />}>Opportunities ({funder._count.opportunities})</Tabs.Tab>
+            <Tabs.Tab value="sources" leftSection={<IconWorldWww size={16} />} data-testid="tab-sources">Sources ({sourceCount})</Tabs.Tab>
+            <Tabs.Tab value="opportunities" leftSection={<IconSparkles size={16} />} data-testid="tab-opportunities">Opportunities ({funder._count.opportunities})</Tabs.Tab>
+            {funderApplications.length > 0 && (
+              <Tabs.Tab value="applications" leftSection={<IconFileText size={16} />} data-testid="tab-applications">Applications ({funderApplications.length})</Tabs.Tab>
+            )}
             <Tabs.Tab value="statistics" leftSection={<IconChartBar size={16} />}>Statistics</Tabs.Tab>
           </Tabs.List>
 
@@ -399,7 +421,7 @@ export default function FunderDetailPage() {
                   {manualLinks.length > 0 && (
                     <Stack gap="xs">
                       {manualLinks.map(link => (
-                        <Paper key={link} p="xs" withBorder>
+                        <Paper key={link} p="xs" withBorder data-testid="manual-link-item">
                           <Group justify="space-between">
                             <Anchor href={link} target="_blank" rel="noopener noreferrer" size="sm">
                               <Group gap={4}><Text size="sm">{link}</Text><IconExternalLink size={12} /></Group>
@@ -432,6 +454,7 @@ export default function FunderDetailPage() {
                       leftSection={<IconSearch size={16} />}
                       loading={discoverMutation.isPending || discoveryStatus === 'running'}
                       onClick={() => discoverMutation.mutate({ links: manualLinks, depth: parseInt(searchDepth) })}
+                      data-testid="discover-pages-btn"
                     >
                       Discover Pages{manualLinks.length > 0 && ` (+ ${manualLinks.length} manual)`}
                     </Button>
@@ -485,7 +508,7 @@ export default function FunderDetailPage() {
                         ))}
                       </Stack>
                       {selectedSuggestions.size > 0 && (
-                        <Button leftSection={<IconPlus size={16} />} onClick={createSourcesFromSelected} loading={createSourceMutation.isPending}>
+                        <Button leftSection={<IconPlus size={16} />} onClick={createSourcesFromSelected} loading={createSourceMutation.isPending} data-testid="create-sources-btn">
                           Create {selectedSuggestions.size} Source{selectedSuggestions.size > 1 ? 's' : ''}
                         </Button>
                       )}
@@ -526,7 +549,7 @@ export default function FunderDetailPage() {
                   ) : sources?.data?.length ? (
                     <Stack gap="xs">
                       {sources.data.map((source) => (
-                        <Paper key={source.id} p="sm" withBorder>
+                        <Paper key={source.id} p="sm" withBorder data-testid="harvest-source-card">
                           <Group justify="space-between" align="flex-start">
                             <Stack gap={4}>
                               <Text fw={500} size="sm">{source.name}</Text>
@@ -585,7 +608,7 @@ export default function FunderDetailPage() {
                 funder.opportunities.map((opp) => {
                   const recommendation = opp.tags?.find(t => t.startsWith('recommendation:'))?.replace('recommendation:', '');
                   return (
-                    <Paper key={opp.id} p="md" withBorder style={{ cursor: 'pointer' }} onClick={() => navigate(`/opportunities/${opp.id}`)}>
+                    <Paper key={opp.id} p="md" withBorder style={{ cursor: 'pointer' }} onClick={() => navigate(`/opportunities/${opp.id}`)} data-testid="funder-opportunity-card">
                       <Group justify="space-between" align="flex-start">
                         <Stack gap="xs" style={{ flex: 1 }}>
                           <Text fw={600}>{opp.programName}</Text>
@@ -614,6 +637,44 @@ export default function FunderDetailPage() {
               )}
             </Stack>
           </Tabs.Panel>
+
+          {/* ── Applications Tab ── */}
+          {funderApplications.length > 0 && (
+            <Tabs.Panel value="applications" pt="md">
+              <Stack gap="md">
+                {funderApplications.map((app) => (
+                  <Paper key={app.id} p="md" withBorder style={{ cursor: 'pointer' }} onClick={() => navigate(`/applications/${app.id}`)} data-testid="funder-application-card">
+                    <Group justify="space-between" align="flex-start">
+                      <Stack gap="xs" style={{ flex: 1 }}>
+                        <Text fw={600}>{app.title}</Text>
+                        <Group gap="xs">
+                          <Badge size="sm" color={{
+                            TRIAGE: 'gray', PREP: 'blue', DRAFTING: 'indigo',
+                            REVIEW: 'orange', SUBMIT: 'teal', AWARDED: 'green', REJECTED: 'red',
+                          }[app.stage] || 'gray'}>
+                            {app.stage}
+                          </Badge>
+                          {app.outcome !== 'UNKNOWN' && (
+                            <Badge size="sm" variant="outline">{app.outcome}</Badge>
+                          )}
+                          <Badge size="sm" variant="light" color="blue">{app._count?.sections ?? 0} sections</Badge>
+                        </Group>
+                        <Text size="sm" c="dimmed">
+                          Opportunity: {app.opportunityName}
+                        </Text>
+                        {app.leadOwner && (
+                          <Text size="xs" c="dimmed">Lead: {app.leadOwner.name}</Text>
+                        )}
+                        <Text size="xs" c="dimmed">
+                          Created {new Date(app.createdAt).toLocaleDateString()}
+                        </Text>
+                      </Stack>
+                    </Group>
+                  </Paper>
+                ))}
+              </Stack>
+            </Tabs.Panel>
+          )}
 
           {/* ── Statistics Tab ── */}
           <Tabs.Panel value="statistics" pt="md">

@@ -234,7 +234,7 @@ export default function DashboardPage() {
           />
           <StatCard
             icon={IconWorldSearch}
-            label="Harvest Sources"
+            label="Sources Inspected"
             value={metrics.totalSources}
             color="teal"
             subtitle="Configured for automated discovery"
