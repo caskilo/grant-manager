@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Paper,
@@ -23,6 +23,20 @@ export default function LoginPage() {
   const setTokens = useAuthStore((state) => state.setTokens);
   const navigate = useNavigate();
 
+  // Show a notification if the user was redirected due to session expiry
+  useEffect(() => {
+    const expired = sessionStorage.getItem('session_expired');
+    if (expired) {
+      sessionStorage.removeItem('session_expired');
+      notifications.show({
+        title: 'Session Expired',
+        message: 'Your session has expired. Please sign in again.',
+        color: 'orange',
+        autoClose: 8000,
+      });
+    }
+  }, []);
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -41,11 +55,31 @@ export default function LoginPage() {
       });
       navigate('/dashboard');
     } catch (error: any) {
-      notifications.show({
-        title: 'Authentication failed',
-        message: error.response?.data?.message || 'Invalid username or password',
-        color: 'red',
-      });
+      const status = error.response?.status;
+      const serverMsg = error.response?.data?.message;
+
+      let title = 'Authentication failed';
+      let message = 'An unexpected error occurred. Please try again.';
+      let color = 'red';
+
+      if (!error.response) {
+        title = 'Connection error';
+        message = 'Could not reach the server. Please check your internet connection.';
+        color = 'orange';
+      } else if (status === 401) {
+        message = serverMsg || 'Invalid username or password. Please try again.';
+      } else if (status === 403) {
+        title = 'Account disabled';
+        message = serverMsg || 'Your account has been disabled. Please contact an administrator.';
+      } else if (status && status >= 500) {
+        title = 'Server error';
+        message = 'The server encountered an error. Please try again later.';
+        color = 'orange';
+      } else {
+        message = serverMsg || message;
+      }
+
+      notifications.show({ title, message, color });
     } finally {
       setLoading(false);
     }

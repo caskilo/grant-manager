@@ -41,29 +41,45 @@ interface GuideOverlayProps {
 
 export default function GuideOverlay({ opened, onClose }: GuideOverlayProps) {
   const location = useLocation();
+  const GUIDE_STATE_KEY = 'guide-expanded-items';
   const [searchQuery, setSearchQuery] = useState('');
-  const [expandedItems, setExpandedItems] = useState<string[]>([]);
+  const [expandedItems, setExpandedItems] = useState<string[]>(() => {
+    try {
+      const stored = localStorage.getItem(GUIDE_STATE_KEY);
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
+  const [hasBeenOpened, setHasBeenOpened] = useState(false);
 
-  // Context-aware: auto-expand the most relevant module on open
+  // On first open only: if no saved state, auto-expand the current page's module
   useEffect(() => {
     if (opened) {
       setSearchQuery('');
-      const path = location.pathname;
-      const match = GUIDE_MODULES.find((m) =>
-        m.relatedRoutes.some((route) => {
-          if (route.endsWith('/')) {
-            return path.startsWith(route) || path === route.slice(0, -1);
-          }
-          return path === route || path.startsWith(route + '/');
-        }),
-      );
-      if (match) {
-        setExpandedItems([match.id]);
-      } else {
-        setExpandedItems([]);
+      if (!hasBeenOpened) {
+        setHasBeenOpened(true);
+        // Only auto-expand if there's no saved state
+        try {
+          const stored = localStorage.getItem(GUIDE_STATE_KEY);
+          if (stored && JSON.parse(stored).length > 0) return;
+        } catch { /* ignore */ }
+
+        const path = location.pathname;
+        const match = GUIDE_MODULES.find((m) =>
+          m.relatedRoutes.some((route) => {
+            if (route.endsWith('/')) {
+              return path.startsWith(route) || path === route.slice(0, -1);
+            }
+            return path === route || path.startsWith(route + '/');
+          }),
+        );
+        if (match) {
+          setExpandedItems([match.id]);
+        }
       }
     }
-  }, [opened, location.pathname]);
+  }, [opened]);
 
   // Filter modules by search query
   const filteredModules = useMemo(() => {
@@ -147,7 +163,10 @@ export default function GuideOverlay({ opened, onClose }: GuideOverlayProps) {
                     <Accordion
                       multiple
                       value={expandedItems}
-                      onChange={setExpandedItems}
+                      onChange={(val) => {
+                        setExpandedItems(val);
+                        try { localStorage.setItem(GUIDE_STATE_KEY, JSON.stringify(val)); } catch { /* ignore */ }
+                      }}
                       variant="separated"
                       styles={{
                         item: {

@@ -1,0 +1,11 @@
+{
+  "funder": {
+    "funderName": "European Research Council (ERC)",
+    "website": "https://erc.europa.eu/",
+    "type": "EU research funder",
+    "focus": "Frontier research",
+    "geography": "EU & associated",
+    "notes": "Open data: Yes"
+  },
+  "opportunities": []
+}

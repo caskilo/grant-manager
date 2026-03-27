@@ -117,6 +117,8 @@ export const applicationsApi = {
     notes?: string;
     expectedAwardAmount?: number;
     expectedCurrency?: string;
+    leadOwnerId?: string;
+    generatedFrom?: string;
   }) => api.patch<Application>(`/applications/${id}`, data),
 
   delete: (id: string) => api.delete(`/applications/${id}`),

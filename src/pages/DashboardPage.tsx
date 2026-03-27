@@ -4,8 +4,7 @@ import {
 } from '@mantine/core';
 import {
   IconBuildingBank, IconSparkles, IconWorldSearch,
-  IconFileText, IconCalendar, IconArrowRight,
-  IconRocket, IconLock, IconCoins, IconChartBar,
+  IconArrowRight, IconRocket, IconCoins,
 } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
@@ -83,6 +82,19 @@ function formatCurrency(amount: number, currency: string = 'GBP'): string {
   if (amount >= 1_000_000) return `${sym}${(amount / 1_000_000).toFixed(1)}M`;
   if (amount >= 1_000) return `${sym}${(amount / 1_000).toFixed(0)}k`;
   return `${sym}${amount.toLocaleString()}`;
+}
+
+/** Normalise an award amount that may have been entered in different scales.
+ *  - Values < 100 are likely in millions (e.g. 0.5 = £0.5M) → multiply by 1M
+ *  - Values > 100M are likely erroneous → cap at 10M as a safety valve
+ *  - null/undefined/NaN → 0 */
+function normaliseAward(amount: number | null | undefined): number {
+  if (amount == null || isNaN(Number(amount))) return 0;
+  let v = Number(amount);
+  if (v <= 0) return 0;
+  if (v < 100) v *= 1_000_000;         // likely entered in millions
+  if (v > 100_000_000) return 10_000_000; // cap implausible values at £10M
+  return v;
 }
 
 const ACTION_COLORS: Record<string, string> = {
@@ -209,9 +221,8 @@ export default function DashboardPage() {
       || activeApplications.find(app => app.opportunity?.currency)?.opportunity?.currency
       || 'GBP';
     const pursuePipelineValue = activeApplications.reduce((sum, app) => {
-      const expected = app.expectedAwardAmount ?? undefined;
-      const fallback = app.opportunity?.maxAward ?? 0;
-      return sum + (expected ?? fallback ?? 0);
+      const raw = app.expectedAwardAmount ?? app.opportunity?.maxAward ?? 0;
+      return sum + normaliseAward(raw);
     }, 0);
 
     return {
@@ -464,48 +475,11 @@ export default function DashboardPage() {
           </Grid.Col>
         </Grid>
 
-        {/* ── Coming Soon: Applications ───────────────────────────────────── */}
-        <Paper
-          withBorder p="xl" radius="md"
-          style={{
-            background: 'linear-gradient(135deg, rgba(121, 80, 242, 0.04) 0%, rgba(34, 139, 230, 0.04) 100%)',
-            borderStyle: 'dashed',
-          }}
-        >
-          <Group justify="space-between" align="center">
-            <Group gap="lg">
-              <ThemeIcon size={56} radius="xl" variant="light" color="violet">
-                <IconRocket size={28} />
-              </ThemeIcon>
-              <div>
-                <Group gap={8}>
-                  <Text fw={700} size="lg">Application Tracker</Text>
-                  <Badge variant="light" color="violet" size="sm" leftSection={<IconLock size={10} />}>
-                    Coming Soon
-                  </Badge>
-                </Group>
-                <Text size="sm" c="dimmed" mt={4} maw={500}>
-                  Track applications from draft to submission, manage deadlines, collaborate with team members,
-                  and monitor outcomes — all connected to your discovered opportunities.
-                </Text>
-              </div>
-            </Group>
-            <Stack gap={4} align="flex-end">
-              <Group gap="xs">
-                <IconFileText size={16} color="var(--mantine-color-dimmed)" />
-                <Text size="sm" c="dimmed">Draft & submit applications</Text>
-              </Group>
-              <Group gap="xs">
-                <IconCalendar size={16} color="var(--mantine-color-dimmed)" />
-                <Text size="sm" c="dimmed">Deadline management</Text>
-              </Group>
-              <Group gap="xs">
-                <IconChartBar size={16} color="var(--mantine-color-dimmed)" />
-                <Text size="sm" c="dimmed">Success rate analytics</Text>
-              </Group>
-            </Stack>
-          </Group>
-        </Paper>
+        {/* ── Application Tracker ───────────────────────────────────────── */}
+        <ApplicationTracker
+          applications={applicationsData?.data || []}
+          navigate={navigate}
+        />
 
       </Stack>
 
@@ -554,5 +528,176 @@ function LegendItem({ color, label, count }: { color: string; label: string; cou
       <Text size="sm">{label}</Text>
       <Text size="sm" fw={700}>{count}</Text>
     </Group>
+  );
+}
+
+// ── Application Tracker ─────────────────────────────────────────────────────
+
+const STAGE_ORDER = ['TRIAGE', 'PREP', 'DRAFTING', 'REVIEW', 'SUBMIT', 'AWARDED', 'REJECTED'] as const;
+const STAGE_META: Record<string, { color: string; label: string }> = {
+  TRIAGE: { color: 'gray', label: 'Triage' },
+  PREP: { color: 'blue', label: 'Prep' },
+  DRAFTING: { color: 'indigo', label: 'Drafting' },
+  REVIEW: { color: 'orange', label: 'Review' },
+  SUBMIT: { color: 'teal', label: 'Submit' },
+  AWARDED: { color: 'green', label: 'Awarded' },
+  REJECTED: { color: 'red', label: 'Rejected' },
+};
+
+function ApplicationTracker({
+  applications,
+  navigate,
+}: {
+  applications: ApplicationSummary[];
+  navigate: (path: string) => void;
+}) {
+  if (applications.length === 0) {
+    return (
+      <Paper withBorder p="xl" radius="md" style={{ borderStyle: 'dashed' }}>
+        <Group justify="space-between" align="center">
+          <Group gap="lg">
+            <ThemeIcon size={56} radius="xl" variant="light" color="violet">
+              <IconRocket size={28} />
+            </ThemeIcon>
+            <div>
+              <Text fw={700} size="lg">Application Tracker</Text>
+              <Text size="sm" c="dimmed" mt={4} maw={500}>
+                No applications yet. Start by pursuing an opportunity — the tracker will show your
+                pipeline from triage through to submission and outcome.
+              </Text>
+            </div>
+          </Group>
+        </Group>
+      </Paper>
+    );
+  }
+
+  const stageCounts = STAGE_ORDER.reduce((acc, s) => {
+    acc[s] = applications.filter(a => a.stage === s).length;
+    return acc;
+  }, {} as Record<string, number>);
+
+  const active = applications.filter(a => !['AWARDED', 'REJECTED'].includes(a.stage));
+  const awarded = stageCounts['AWARDED'] || 0;
+  const rejected = stageCounts['REJECTED'] || 0;
+  const total = applications.length;
+
+  const pipelineValue = active.reduce((sum, app) => {
+    return sum + normaliseAward(app.expectedAwardAmount ?? app.opportunity?.maxAward ?? null);
+  }, 0);
+  const pipelineCurrency = active.find(a => a.expectedCurrency)?.expectedCurrency
+    || active.find(a => a.opportunity?.currency)?.opportunity?.currency || 'GBP';
+
+  // Most recent 5 active applications
+  const recentActive = active.slice(0, 5);
+
+  return (
+    <Paper withBorder p="lg" radius="md">
+      <Group justify="space-between" mb="md">
+        <div>
+          <Text fw={700} size="lg">Application Tracker</Text>
+          <Text size="sm" c="dimmed">
+            {active.length} active · {awarded} awarded · {rejected} rejected
+          </Text>
+        </div>
+        <Anchor size="sm" onClick={() => navigate('/applications')} style={{ cursor: 'pointer' }}>
+          View all <IconArrowRight size={14} style={{ verticalAlign: 'middle' }} />
+        </Anchor>
+      </Group>
+
+      {/* Stage pipeline bar */}
+      <Stack gap="xs" mb="lg">
+        <Group gap={4} style={{ height: 32 }}>
+          {STAGE_ORDER.filter(s => stageCounts[s] > 0).map(stage => {
+            const meta = STAGE_META[stage];
+            const pct = Math.max((stageCounts[stage] / total) * 100, 8); // min width for visibility
+            return (
+              <Tooltip key={stage} label={`${meta.label}: ${stageCounts[stage]}`}>
+                <Box
+                  style={{
+                    width: `${pct}%`,
+                    height: '100%',
+                    backgroundColor: `var(--mantine-color-${meta.color}-5)`,
+                    borderRadius: 4,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    transition: 'opacity 150ms',
+                  }}
+                  onClick={() => navigate('/applications')}
+                >
+                  {stageCounts[stage] > 0 && (
+                    <Text size="xs" fw={700} c="white">{stageCounts[stage]}</Text>
+                  )}
+                </Box>
+              </Tooltip>
+            );
+          })}
+        </Group>
+        <Group gap="md" justify="center">
+          {STAGE_ORDER.filter(s => stageCounts[s] > 0).map(stage => (
+            <Group key={stage} gap={4}>
+              <Box w={8} h={8} style={{ borderRadius: 2, backgroundColor: `var(--mantine-color-${STAGE_META[stage].color}-5)` }} />
+              <Text size="xs" c="dimmed">{STAGE_META[stage].label}</Text>
+            </Group>
+          ))}
+        </Group>
+      </Stack>
+
+      {/* Key metrics row */}
+      <SimpleGrid cols={{ base: 2, sm: 4 }} mb="lg">
+        <Paper withBorder p="sm" radius="sm" style={{ textAlign: 'center' }}>
+          <Text size="xs" c="dimmed" tt="uppercase" fw={600}>In Flight</Text>
+          <Text size="xl" fw={700} c="blue">{active.length}</Text>
+        </Paper>
+        <Paper withBorder p="sm" radius="sm" style={{ textAlign: 'center' }}>
+          <Text size="xs" c="dimmed" tt="uppercase" fw={600}>Pipeline Value</Text>
+          <Text size="xl" fw={700} c="green">
+            {pipelineValue > 0 ? formatCurrency(pipelineValue, pipelineCurrency) : '—'}
+          </Text>
+        </Paper>
+        <Paper withBorder p="sm" radius="sm" style={{ textAlign: 'center' }}>
+          <Text size="xs" c="dimmed" tt="uppercase" fw={600}>Awarded</Text>
+          <Text size="xl" fw={700} c="teal">{awarded}</Text>
+        </Paper>
+        <Paper withBorder p="sm" radius="sm" style={{ textAlign: 'center' }}>
+          <Text size="xs" c="dimmed" tt="uppercase" fw={600}>Success Rate</Text>
+          <Text size="xl" fw={700} c={awarded > 0 ? 'teal' : 'dimmed'}>
+            {awarded + rejected > 0 ? `${Math.round((awarded / (awarded + rejected)) * 100)}%` : '—'}
+          </Text>
+        </Paper>
+      </SimpleGrid>
+
+      {/* Recent active applications */}
+      {recentActive.length > 0 && (
+        <Stack gap="xs">
+          <Text size="sm" fw={600} c="dimmed">Recent Active</Text>
+          {recentActive.map(app => {
+            const meta = STAGE_META[app.stage] || STAGE_META.TRIAGE;
+            return (
+              <Paper
+                key={app.id}
+                withBorder p="sm" radius="sm"
+                style={{ cursor: 'pointer' }}
+                onClick={() => navigate(`/applications/${app.id}`)}
+              >
+                <Group justify="space-between" wrap="nowrap">
+                  <Text size="sm" fw={500} truncate style={{ flex: 1 }}>{app.title}</Text>
+                  <Group gap={6} wrap="nowrap">
+                    {app.expectedAwardAmount && (
+                      <Text size="xs" c="dimmed">
+                        {formatCurrency(normaliseAward(app.expectedAwardAmount), app.expectedCurrency || 'GBP')}
+                      </Text>
+                    )}
+                    <Badge size="sm" color={meta.color} variant="light">{meta.label}</Badge>
+                  </Group>
+                </Group>
+              </Paper>
+            );
+          })}
+        </Stack>
+      )}
+    </Paper>
   );
 }

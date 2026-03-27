@@ -1,0 +1,50 @@
+:root {
+  /* Odyssean Institute Brand Colors (Extracted) */
+  --color-odyssean: #1e3a5f;
+  --color-grain: #0c3a29;
+  --color-white: #FFFFFF;
+  
+  /* Extended Brand Palette */
+  --color-strategic: #2874A6;
+  --color-flourishing: #27AE60;
+  --color-neutral: #95A5A6;
+  --color-authority: #2C3E50;
+  
+  /* Background & Surface */
+  --color-background: #F8F9FA;
+  --color-surface: #FFFFFF;
+  --color-text-primary: #2C3E50;
+  --color-text-secondary: #95A5A6;
+  --color-border: #BDC3C7;
+  
+  /* Semantic Aliases */
+  --color-primary: var(--color-odyssean);
+  --color-success: var(--color-grain);
+  --color-warning: var(--color-strategic);
+  --color-error: var(--color-authority);
+  --color-info: var(--color-odyssean);
+  
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+  
+  /* Border Radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.2s ease;
+  --transition-slow: 0.3s ease;
+}

@@ -23,6 +23,7 @@ import {
   Menu,
   Tabs,
   ScrollArea,
+  NumberInput,
 } from '@mantine/core';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -45,8 +46,11 @@ import {
   IconInfoCircle,
   IconPencil,
   IconWorld,
+  IconDeviceFloppy,
+  IconX,
 } from '@tabler/icons-react';
 import { applicationsApi, Application, ApplicationSection } from '../lib/applications';
+import { useAuthStore } from '../stores/authStore';
 import api from '../lib/api';
 
 const STAGE_CONFIG: Record<string, { color: string; label: string; order: number }> = {
@@ -100,6 +104,14 @@ export default function ApplicationDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const currentUser = useAuthStore((s) => s.user);
+
+  // Quick Info editing state
+  const [editingQuickInfo, setEditingQuickInfo] = useState(false);
+  const [editAwardAmount, setEditAwardAmount] = useState<number | string>('');
+  const [editCurrency, setEditCurrency] = useState('GBP');
+  const [editModel, setEditModel] = useState('');
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
 
   const [editingSection, setEditingSection] = useState<string | null>(null);
   const [sectionContent, setSectionContent] = useState<Record<string, string>>({});
@@ -252,6 +264,21 @@ export default function ApplicationDetailPage() {
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: () => applicationsApi.delete(id!),
+    onSuccess: () => {
+      notifications.show({ title: 'Deleted', message: 'Application has been deleted.', color: 'orange' });
+      navigate('/applications');
+    },
+    onError: (err: any) => {
+      notifications.show({
+        title: 'Error',
+        message: err?.response?.data?.message || 'Failed to delete application',
+        color: 'red',
+      });
+    },
+  });
+
   const opportunityUrl = application?.opportunity?.opportunityUrl || application?.opportunity?.sourceUrl || null;
   const opportunityDomain = opportunityUrl ? (() => { try { return new URL(opportunityUrl).hostname; } catch { return null; } })() : null;
   const faviconUrl = opportunityDomain ? `https://www.google.com/s2/favicons?domain=${opportunityDomain}&sz=32` : null;
@@ -393,32 +420,114 @@ export default function ApplicationDetailPage() {
             )}
 
             {/* Quick Info */}
-            <Group gap="xl" wrap="wrap">
-              {application.expectedAwardAmount && (
+            {editingQuickInfo ? (
+              <Paper p="sm" withBorder bg="gray.0">
+                <Stack gap="sm">
+                  <Group gap="md" grow>
+                    <NumberInput
+                      label="Expected Award"
+                      value={editAwardAmount}
+                      onChange={setEditAwardAmount}
+                      min={0}
+                      thousandSeparator=","
+                      size="sm"
+                    />
+                    <Select
+                      label="Currency"
+                      data={['GBP', 'USD', 'EUR', 'CHF']}
+                      value={editCurrency}
+                      onChange={(v) => setEditCurrency(v || 'GBP')}
+                      size="sm"
+                      style={{ maxWidth: 120 }}
+                    />
+                    <TextInput
+                      label="Model / Generation Source"
+                      value={editModel}
+                      onChange={(e) => setEditModel(e.currentTarget.value)}
+                      placeholder="e.g. llm_gemini-flash"
+                      size="sm"
+                    />
+                  </Group>
+                  <Group justify="flex-end" gap="xs">
+                    <Button size="xs" variant="subtle" leftSection={<IconX size={14} />} onClick={() => setEditingQuickInfo(false)}>
+                      Cancel
+                    </Button>
+                    <Button
+                      size="xs"
+                      leftSection={<IconDeviceFloppy size={14} />}
+                      loading={updateMutation.isPending}
+                      onClick={() => {
+                        const data: Record<string, any> = {};
+                        const amt = typeof editAwardAmount === 'number' ? editAwardAmount : parseFloat(String(editAwardAmount));
+                        if (!isNaN(amt) && amt > 0) data.expectedAwardAmount = amt;
+                        if (editCurrency) data.expectedCurrency = editCurrency;
+                        if (editModel !== (application.generatedFrom || '')) data.generatedFrom = editModel || undefined;
+                        updateMutation.mutate(data);
+                        setEditingQuickInfo(false);
+                      }}
+                    >
+                      Save
+                    </Button>
+                  </Group>
+                </Stack>
+              </Paper>
+            ) : (
+              <Group gap="xl" wrap="wrap" align="flex-end">
                 <div>
                   <Text size="xs" c="dimmed">Expected Award</Text>
                   <Text size="sm" fw={500}>
-                    {application.expectedCurrency || ''}{Number(application.expectedAwardAmount).toLocaleString()}
+                    {application.expectedAwardAmount
+                      ? `${application.expectedCurrency || '£'}${Number(application.expectedAwardAmount).toLocaleString()}`
+                      : '—'}
                   </Text>
                 </div>
-              )}
-              {application.generatedFrom && (
                 <div>
                   <Text size="xs" c="dimmed">Model</Text>
-                  <Badge size="sm" variant="light" color="violet">
-                    {getModelDisplayName(application.generatedFrom)}
-                  </Badge>
+                  {application.generatedFrom ? (
+                    <Badge size="sm" variant="light" color="violet">
+                      {getModelDisplayName(application.generatedFrom)}
+                    </Badge>
+                  ) : (
+                    <Text size="sm" c="dimmed">—</Text>
+                  )}
                 </div>
-              )}
-              <div>
-                <Text size="xs" c="dimmed">Owner</Text>
-                <Text size="sm">{application.leadOwner?.name}</Text>
-              </div>
-              <div>
-                <Text size="xs" c="dimmed">Last Updated</Text>
-                <Text size="sm">{new Date(application.updatedAt).toLocaleDateString()}</Text>
-              </div>
-            </Group>
+                <div>
+                  <Text size="xs" c="dimmed">Owner</Text>
+                  <Text size="sm">{application.leadOwner?.name || '—'}</Text>
+                </div>
+                <div>
+                  <Text size="xs" c="dimmed">Last Updated</Text>
+                  <Text size="sm">{new Date(application.updatedAt).toLocaleDateString()}</Text>
+                </div>
+                <Tooltip label="Edit details">
+                  <ActionIcon
+                    variant="subtle"
+                    color="gray"
+                    size="sm"
+                    onClick={() => {
+                      setEditAwardAmount(application.expectedAwardAmount ? Number(application.expectedAwardAmount) : '');
+                      setEditCurrency(application.expectedCurrency || 'GBP');
+                      setEditModel(application.generatedFrom || '');
+                      setEditingQuickInfo(true);
+                    }}
+                  >
+                    <IconPencil size={14} />
+                  </ActionIcon>
+                </Tooltip>
+                {(currentUser?.id === application.leadOwnerId || currentUser?.role === 'ADMIN') && (
+                  <Tooltip label="Delete application">
+                    <ActionIcon
+                      variant="subtle"
+                      color="red"
+                      size="sm"
+                      onClick={() => setDeleteConfirmOpen(true)}
+                    >
+                      <IconTrash size={14} />
+                    </ActionIcon>
+                  </Tooltip>
+                )}
+              </Group>
+            )}
 
             {/* Links */}
             {opportunityUrl && (
@@ -1020,6 +1129,35 @@ export default function ApplicationDetailPage() {
           <Group justify="flex-end">
             <Button variant="subtle" onClick={() => setTemplateModalSection(null)}>
               Cancel
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        opened={deleteConfirmOpen}
+        onClose={() => setDeleteConfirmOpen(false)}
+        title="Delete Application"
+        size="sm"
+      >
+        <Stack gap="md">
+          <Text size="sm">
+            Are you sure you want to delete this application? This action cannot be undone.
+          </Text>
+          <Group justify="flex-end" gap="xs">
+            <Button variant="subtle" onClick={() => setDeleteConfirmOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              color="red"
+              onClick={() => {
+                deleteMutation.mutate();
+                setDeleteConfirmOpen(false);
+              }}
+              loading={deleteMutation.isPending}
+            >
+              Delete Application
             </Button>
           </Group>
         </Stack>

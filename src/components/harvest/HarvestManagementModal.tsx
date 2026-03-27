@@ -104,7 +104,7 @@ export default function HarvestManagementModal({ opened, funder, onClose }: Harv
       } else if (status.state === 'failed') {
         setHarvestStatus('failed');
         setHarvestProgress(null);
-        notifications.show({ title: 'Inspection Failed', message: 'Please check the logs and try again.', color: 'red', autoClose: 5000 });
+        notifications.show({ title: 'Inspection Failed', message: status.failedReason || 'The page could not be inspected. This may be due to anti-bot protection, a timeout, or the page structure not containing recognisable grant information. Try a different source URL.', color: 'red', autoClose: 8000 });
       }
       
       return status;

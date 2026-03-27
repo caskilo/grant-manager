@@ -1,0 +1,170 @@
+{
+  "runId": "arts-and-humanities-research-council-ahrc_2026-03-13T15-42-58-245Z",
+  "sourceType": "llm_extraction",
+  "sourceName": "Arts and Humanities Research Council (AHRC)",
+  "sourceUrl": "https://ahrc.ukri.org/councils/ahrc/funding-assessment-and-award-management/",
+  "funderId": "5f17ecd3-dae0-4824-9ba5-efeae49e8295",
+  "funderName": "AHRC (Arts & Humanities Research Council)",
+  "config": {
+    "extractionMethod": "llm",
+    "tokensUsed": 15081,
+    "extractionConfidence": 0.8
+  },
+  "timestamp": "2026-03-13T15:43:05.501Z",
+  "stats": {
+    "totalOpportunities": 2,
+    "newOpportunities": 2,
+    "updatedOpportunities": 0,
+    "unchangedOpportunities": 0
+  },
+  "opportunities": [
+    {
+      "programName": "UKRI Translation: Proof of Concept",
+      "description": "Apply for proof-of-concept funding to support early to mid-stage commercialisation of research in any discipline or remit, leading to the development of new products, processes or services.",
+      "url": "https://www.ukri.org/opportunity/ukri-translation-proof-of-concept/",
+      "eligibility": "**Eligible organizations:** university, research_institute\n\n**Geographic restrictions:** UK only\n\n**Funding history:** Not mentioned\n\n**Collaboration:** Not mentioned\n\n\n**Note:** Some information could not be determined: Career stage not mentioned, Discipline restrictions not mentioned\n\n\n*Confidence: 90% | Completeness: 80% | Method: inferred*",
+      "fundingAmount": {
+        "min": 100000,
+        "max": 250000,
+        "currency": "GBP",
+        "description": "£100,000 - £250,000"
+      },
+      "deadline": {
+        "date": "2026-05-13",
+        "description": "13 May 2026",
+        "isRolling": false
+      },
+      "duration": null,
+      "geographies": [
+        "UK"
+      ],
+      "focusAreas": null,
+      "applicantTypes": [
+        "UK research organisation"
+      ],
+      "applicationProcess": null,
+      "contactInfo": null,
+      "confidence": 0.8,
+      "reasoning": "Found clear program name, funding amount range, and deadline. Missing some details like duration and application process.",
+      "eligibilityDetailed": {
+        "organizationTypes": [
+          "university",
+          "research_institute"
+        ],
+        "geographicRestrictions": [
+          "UK only"
+        ],
+        "fundingHistory": "Not mentioned",
+        "collaborationRequirements": "Not mentioned",
+        "otherCriteria": null,
+        "confidence": 0.9,
+        "completeness": 0.8,
+        "uncertainties": [
+          "Career stage not mentioned",
+          "Discipline restrictions not mentioned"
+        ],
+        "reasoning": "First pass: The eligibility criteria explicitly state that applicants must be based at a UK research organization eligible for UKRI funding, which includes universities and research institutes. However, the other eligibility criteria are not clearly stated, such as career stage, discipline restrictions, funding history requirements, and collaboration requirements.\n\nSecond pass: The eligibility criteria explicitly state that applicants must be based at a UK research organization eligible for UKRI funding, which includes universities and research institutes. However, the program page does not mention any specific requirements related to career stage or discipline restrictions. While these are common eligibility criteria for research grants, they are not clearly stated in the information provided. The funding history and collaboration requirements are also not mentioned, so I have marked those as 'Not mentioned'. Overall, the key eligibility criteria are clear, but some details are still uncertain.",
+        "extractionMethod": "inferred"
+      },
+      "alignmentScore": {
+        "overall": 0.445,
+        "dimensions": {
+          "researchStrandMatch": 0.3,
+          "methodologicalFit": 0.4,
+          "thematicAlignment": 0.5,
+          "impactPotential": 0.6,
+          "practicalFeasibility": 0.7
+        },
+        "matchedStrands": [
+          {
+            "strand": "Odyssean Process",
+            "relevance": 0.4,
+            "reasoning": "The grant supports early-stage commercialization of research, which could involve decision-making under uncertainty and participatory governance approaches, but the focus is narrower than the OI's broader agenda around systemic change and democratic innovation."
+          }
+        ],
+        "strengths": [
+          "The grant supports interdisciplinary, applied research with a focus on real-world impact and commercialization.",
+          "The funding amount and timeline are well-suited to the OI's needs.",
+          "The grant is open to a wide range of disciplines, which aligns with the OI's interdisciplinary approach."
+        ],
+        "concerns": [
+          "The grant is limited to the UK, whereas the OI has a global focus.",
+          "The grant does not explicitly mention supporting futures methodologies, citizen assemblies, or other key OI approaches.",
+          "The grant's emphasis on commercialization may not fully align with the OI's broader agenda around systemic change and public engagement."
+        ],
+        "recommendation": "somewhat_relevant",
+        "confidence": 0.8,
+        "reasoning": "The UKRI Translation: Proof of Concept grant has some relevant elements for the Odyssean Institute, particularly in terms of supporting interdisciplinary, applied research with a focus on real-world impact. However, the grant's narrower scope and emphasis on commercialization may not fully align with the OI's broader agenda around systemic change, democratic innovation, and long-term human flourishing. While the grant could be a good fit for certain OI projects, it may not be the best match for the institute's overall research agenda.",
+        "tokensUsed": 1872
+      }
+    },
+    {
+      "programName": "AHRC Collaborative Doctoral Project Nominations 2026 (invite only)",
+      "description": "Higher education institutions (HEIs) offered a studentship through the AHRC Collaborative Doctoral Partnership (CDP) scheme round 4 are invited to nominate projects for studentships starting in October 2026.",
+      "url": "https://www.ukri.org/opportunity/ahrc-collaborative-doctoral-project-nominations-2026-invite-only/",
+      "eligibility": "**Eligible organizations:** university\n\n**Funding history:** Applicants must have been offered a studentship through the AHRC Collaborative Doctoral Partnership (CDP) scheme round 4\n\n**Collaboration:** Must be collaborative\n\n**Other criteria:** Invited by AHRC to apply\n\n\n*Confidence: 90% | Completeness: 90% | Method: inferred*",
+      "fundingAmount": null,
+      "deadline": {
+        "date": "2026-03-26",
+        "description": "26 March 2026",
+        "isRolling": false
+      },
+      "duration": null,
+      "geographies": null,
+      "focusAreas": null,
+      "applicantTypes": [
+        "Higher education institutions"
+      ],
+      "applicationProcess": null,
+      "contactInfo": null,
+      "confidence": 0.6,
+      "reasoning": "Found program name, deadline, and eligible applicant type. Missing key details like funding amount and duration.",
+      "eligibilityDetailed": {
+        "organizationTypes": [
+          "university"
+        ],
+        "fundingHistory": "Applicants must have been offered a studentship through the AHRC Collaborative Doctoral Partnership (CDP) scheme round 4",
+        "collaborationRequirements": "Must be collaborative",
+        "otherCriteria": [
+          "Invited by AHRC to apply"
+        ],
+        "confidence": 0.9,
+        "completeness": 0.9,
+        "uncertainties": [],
+        "reasoning": "First pass: The eligibility criteria explicitly state that the opportunity is only open to higher education institutions (HEIs) that have been offered a studentship through the AHRC Collaborative Doctoral Partnership (CDP) scheme round 4. The opportunity also requires that the applicants must be invited by AHRC to apply. However, the criteria do not explicitly mention any geographic restrictions, career stage requirements, discipline restrictions, or funding history requirements.\n\nSecond pass: The eligibility criteria explicitly state that the opportunity is only open to higher education institutions (HEIs) that have been offered a studentship through the AHRC Collaborative Doctoral Partnership (CDP) scheme round 4. The opportunity also requires that the applicants must be invited by AHRC to apply. While the criteria do not explicitly mention any geographic restrictions, career stage requirements, or discipline restrictions, the context of the AHRC Collaborative Doctoral Partnership scheme suggests that these are likely not restricted. Additionally, the funding history requirement is clearly stated.",
+        "extractionMethod": "inferred"
+      },
+      "alignmentScore": {
+        "overall": 0.41000000000000003,
+        "dimensions": {
+          "researchStrandMatch": 0.3,
+          "methodologicalFit": 0.4,
+          "thematicAlignment": 0.4,
+          "impactPotential": 0.5,
+          "practicalFeasibility": 0.7
+        },
+        "matchedStrands": [
+          {
+            "strand": "Odyssean Process",
+            "relevance": 0.4,
+            "reasoning": "The grant focuses on collaborative doctoral projects, which could involve participatory governance and decision-making under uncertainty, aligning with the Odyssean Process strand. However, the scope is narrower than the institute's ambitious, systemic approach."
+          }
+        ],
+        "strengths": [
+          "The grant supports interdisciplinary collaboration between universities and external partners, which aligns with the OI's emphasis on interdisciplinary work.",
+          "The funding duration of 1-3 years is a good fit for the OI's typical project timelines.",
+          "The eligibility for universities matches the OI's typical applicant profile."
+        ],
+        "concerns": [
+          "The grant is focused on doctoral projects, which may have a more limited scope and impact compared to the OI's broader, systemic interventions.",
+          "The methodologies supported, while potentially relevant, are not a direct match for the OI's core futures-oriented, participatory, and DMDU-focused approaches.",
+          "The grant does not explicitly address the OI's cross-cutting priorities like collapse/extinction risk mitigation or institutional innovation."
+        ],
+        "recommendation": "somewhat_relevant",
+        "confidence": 0.8,
+        "reasoning": "The AHRC Collaborative Doctoral Project Nominations grant has some alignment with the Odyssean Institute's research agenda, particularly in the Odyssean Process strand, but the scope and methodological focus are not a strong fit. The grant could provide opportunities for collaboration and capacity building, but may not directly support the institute's ambitious, systemic approach to addressing grand challenges.",
+        "tokensUsed": 1864
+      }
+    }
+  ]
+}

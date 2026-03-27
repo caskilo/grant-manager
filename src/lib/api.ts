@@ -19,15 +19,21 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Request interceptor for error handling
+// Debounce session-expiry redirect so we don't fire multiple times
+let isRedirectingToLogin = false;
+
+// Response interceptor for error handling
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      // Clear tokens and redirect to login
+    const requestUrl = error.config?.url || '';
+    const isLoginRequest = requestUrl.includes('/auth/login');
+
+    if (error.response?.status === 401 && !isLoginRequest && !isRedirectingToLogin) {
+      isRedirectingToLogin = true;
       localStorage.removeItem('access_token');
       localStorage.removeItem('refresh_token');
-      // Use import.meta.env.BASE_URL to account for subdirectory deployment
+      sessionStorage.setItem('session_expired', '1');
       const basePath = import.meta.env.BASE_URL;
       window.location.href = `${basePath}login`;
     }

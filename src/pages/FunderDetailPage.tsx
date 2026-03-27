@@ -46,6 +46,7 @@ interface FunderDetail {
     aiFitScore: number | null;
     tags: string[];
     createdAt: string;
+    sourceUrl: string;
     applications?: Array<{
       id: string;
       title: string;
@@ -120,6 +121,13 @@ export default function FunderDetailPage() {
     enabled: !!id,
   });
 
+  // Activity log: past harvest/inspection runs for this funder
+  const { data: harvestRuns, isLoading: isLoadingRuns } = useQuery({
+    queryKey: ['harvestRuns', id],
+    queryFn: () => harvestApi.listRuns(id!),
+    enabled: !!id,
+  });
+
   // Poll discovery job
   useQuery({
     queryKey: ['jobStatus', discoveryJobId],
@@ -159,7 +167,7 @@ export default function FunderDetailPage() {
       } else if (status.state === 'failed') {
         setHarvestStatus('failed');
         setHarvestProgress(null);
-        notifications.show({ title: 'Inspection Failed', message: 'Please check the logs.', color: 'red', autoClose: 5000 });
+        notifications.show({ title: 'Inspection Failed', message: status.failedReason || 'The page could not be inspected. This may be due to anti-bot protection, a timeout, or the page structure not containing recognisable grant information. Try a different source URL.', color: 'red', autoClose: 8000 });
       }
       return status;
     },
@@ -598,6 +606,48 @@ export default function FunderDetailPage() {
                   )}
                 </Stack>
               </Paper>
+
+              {/* Activity Log */}
+              <Paper withBorder p="md">
+                <Stack gap="md">
+                  <div>
+                    <Text fw={600} size="lg">Activity Log</Text>
+                    <Text size="sm" c="dimmed">History of discovery and inspection runs for this funder</Text>
+                  </div>
+
+                  {isLoadingRuns ? (
+                    <Text size="sm" c="dimmed">Loading activity log...</Text>
+                  ) : harvestRuns && harvestRuns.length > 0 ? (
+                    <Stack gap="xs">
+                      {harvestRuns.map((run) => (
+                        <Paper key={run.runId} p="sm" withBorder>
+                          <Group justify="space-between" align="flex-start">
+                            <Stack gap={4}>
+                              <Group gap="xs">
+                                <Text fw={500} size="sm">{run.sourceName}</Text>
+                                <Badge size="xs" color={run.stats?.newOpportunities > 0 ? 'green' : 'gray'}>
+                                  {run.stats?.opportunitiesFound ?? 0} found
+                                </Badge>
+                                {run.stats?.newOpportunities > 0 && (
+                                  <Badge size="xs" color="teal">{run.stats.newOpportunities} new</Badge>
+                                )}
+                                {run.stats?.updatedOpportunities > 0 && (
+                                  <Badge size="xs" color="blue">{run.stats.updatedOpportunities} updated</Badge>
+                                )}
+                              </Group>
+                              <Text size="xs" c="dimmed">
+                                {new Date(run.timestamp).toLocaleString()}
+                              </Text>
+                            </Stack>
+                          </Group>
+                        </Paper>
+                      ))}
+                    </Stack>
+                  ) : (
+                    <Text size="sm" c="dimmed">No inspection runs yet. Configure sources above and run an inspection.</Text>
+                  )}
+                </Stack>
+              </Paper>
             </Stack>
           </Tabs.Panel>
 
@@ -605,31 +655,59 @@ export default function FunderDetailPage() {
           <Tabs.Panel value="opportunities" pt="md">
             <Stack gap="md">
               {funder.opportunities.length > 0 ? (
-                funder.opportunities.map((opp) => {
-                  const recommendation = opp.tags?.find(t => t.startsWith('recommendation:'))?.replace('recommendation:', '');
-                  return (
-                    <Paper key={opp.id} p="md" withBorder style={{ cursor: 'pointer' }} onClick={() => navigate(`/opportunities/${opp.id}`)} data-testid="funder-opportunity-card">
-                      <Group justify="space-between" align="flex-start">
-                        <Stack gap="xs" style={{ flex: 1 }}>
-                          <Text fw={600}>{opp.programName}</Text>
-                          <Group gap="xs">
-                            <Badge size="sm" variant="dot">{opp.status}</Badge>
-                            {typeof opp.aiFitScore === 'number' && (
-                              <Badge size="sm" color={opp.aiFitScore >= 7 ? 'green' : opp.aiFitScore >= 4 ? 'yellow' : 'gray'}>
-                                Fit: {Number(opp.aiFitScore).toFixed(1)}/10
-                              </Badge>
-                            )}
-                            {recommendation && (
-                              <Badge size="sm" variant="light">
-                                {recommendation.replace(/_/g, ' ')}
-                              </Badge>
-                            )}
-                          </Group>
-                        </Stack>
-                      </Group>
-                    </Paper>
+                (() => {
+                  // Deduplicate opportunities by programName + sourceUrl
+                  const uniqueOpps = new Map();
+                  funder.opportunities.forEach(opp => {
+                    const key = `${opp.programName}-${opp.sourceUrl}`;
+                    if (!uniqueOpps.has(key) || new Date(opp.createdAt) > new Date(uniqueOpps.get(key).createdAt)) {
+                      uniqueOpps.set(key, opp);
+                    }
+                  });
+                  
+                  // Sort by creation date (newest first)
+                  const sortedOpps = Array.from(uniqueOpps.values()).sort((a, b) => 
+                    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
                   );
-                })
+                  
+                  return sortedOpps.map((opp) => {
+                    const recommendation = opp.tags?.find((t: string) => t.startsWith('recommendation:'))?.replace('recommendation:', '');
+                    const createdDate = new Date(opp.createdAt);
+                    const daysSinceCreated = Math.floor((Date.now() - createdDate.getTime()) / (1000 * 60 * 60 * 24));
+                    const isNew = daysSinceCreated <= 7;
+                    
+                    return (
+                      <Paper key={opp.id} p="md" withBorder style={{ cursor: 'pointer' }} onClick={() => navigate(`/opportunities/${opp.id}`)} data-testid="funder-opportunity-card">
+                        <Group justify="space-between" align="flex-start">
+                          <Stack gap="xs" style={{ flex: 1 }}>
+                            <Group gap="xs">
+                              <Text fw={600}>{opp.programName}</Text>
+                              {isNew && (
+                                <Badge size="sm" color="teal" variant="filled">NEW</Badge>
+                              )}
+                            </Group>
+                            <Group gap="xs">
+                              <Badge size="sm" variant="dot">{opp.status}</Badge>
+                              {typeof opp.aiFitScore === 'number' && (
+                                <Badge size="sm" color={opp.aiFitScore >= 7 ? 'green' : opp.aiFitScore >= 4 ? 'yellow' : 'gray'}>
+                                  Fit: {Number(opp.aiFitScore).toFixed(1)}/10
+                                </Badge>
+                              )}
+                              {recommendation && (
+                                <Badge size="sm" variant="light">
+                                  {recommendation.replace(/_/g, ' ')}
+                                </Badge>
+                              )}
+                              <Text size="xs" c="dimmed">
+                                Added {daysSinceCreated === 0 ? 'today' : daysSinceCreated === 1 ? 'yesterday' : `${daysSinceCreated} days ago`}
+                              </Text>
+                            </Group>
+                          </Stack>
+                        </Group>
+                      </Paper>
+                    );
+                  });
+                })()
               ) : (
                 <Paper p="xl" withBorder>
                   <Text ta="center" c="dimmed">No opportunities found. Inspect a source to extract opportunities.</Text>

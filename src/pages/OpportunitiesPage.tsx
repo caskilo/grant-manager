@@ -1,8 +1,8 @@
-import { Container, Title, Button, Group, Stack, Badge, Text, Anchor, Tooltip, Paper, Accordion, ThemeIcon, Loader, Center, TextInput, Select } from '@mantine/core';
-import { useQuery } from '@tanstack/react-query';
+import { Container, Title, Button, Group, Stack, Badge, Text, Anchor, Tooltip, Paper, Accordion, ThemeIcon, Loader, Center, TextInput, Select, Modal, Textarea } from '@mantine/core';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { IconExternalLink, IconCalendar, IconCoins, IconBuildingBank, IconSparkles, IconTarget, IconSearch } from '@tabler/icons-react';
-import { useMemo, useState } from 'react';
+import { IconExternalLink, IconCalendar, IconCoins, IconBuildingBank, IconSparkles, IconTarget, IconSearch, IconPlus } from '@tabler/icons-react';
+import { useMemo, useState, useCallback } from 'react';
 import api from '../lib/api';
 
 interface DeadlineEntry {
@@ -61,11 +61,48 @@ interface GroupedOpportunities {
 
 const STORAGE_KEY = 'opportunities-accordion-state';
 
+interface FunderOption {
+  id: string;
+  name: string;
+}
+
 export default function OpportunitiesPage() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  // Add Opportunity modal state
+  const [addModalOpen, setAddModalOpen] = useState(false);
+  const [newOpp, setNewOpp] = useState({ funderId: '', programName: '', sourceUrl: '', description: '', applicationType: 'OPEN' });
+
+  const { data: funderOptions } = useQuery<{ data: FunderOption[] }>({
+    queryKey: ['funders-select'],
+    queryFn: async () => {
+      const response = await api.get('/funders', { params: { page: 1, limit: 500 } });
+      return response.data;
+    },
+    enabled: addModalOpen,
+  });
+
+  const createOppMutation = useMutation({
+    mutationFn: async (data: typeof newOpp) => {
+      return api.post('/opportunities', data);
+    },
+    onSuccess: (res) => {
+      queryClient.invalidateQueries({ queryKey: ['opportunities'] });
+      setAddModalOpen(false);
+      setNewOpp({ funderId: '', programName: '', sourceUrl: '', description: '', applicationType: 'OPEN' });
+      navigate(`/opportunities/${res.data.id}`);
+    },
+  });
   const [searchQuery, setSearchQuery] = useState('');
   const [alignmentFilter, setAlignmentFilter] = useState<string | null>(null);
   const [amountFilter, setAmountFilter] = useState<string | null>(null);
+  const [sortBy, setSortBy] = useState<string | null>(() => {
+    try { return localStorage.getItem('opportunities-sort-by'); } catch { return null; }
+  });
+  const [viewMode, setViewMode] = useState<'grouped' | 'flat'>(() => {
+    try { return (localStorage.getItem('opportunities-view-mode') as 'grouped' | 'flat') || 'grouped'; } catch { return 'grouped'; }
+  });
   
   // Load accordion state from localStorage
   const [expandedGroups, setExpandedGroups] = useState<string[]>(() => {
@@ -86,6 +123,16 @@ export default function OpportunitiesPage() {
       // Ignore localStorage errors
     }
   };
+
+  const handleSortChange = useCallback((value: string | null) => {
+    setSortBy(value);
+    try { if (value) localStorage.setItem('opportunities-sort-by', value); else localStorage.removeItem('opportunities-sort-by'); } catch {}
+  }, []);
+
+  const handleViewModeChange = useCallback((mode: 'grouped' | 'flat') => {
+    setViewMode(mode);
+    try { localStorage.setItem('opportunities-view-mode', mode); } catch {}
+  }, []);
 
   const { data, isLoading } = useQuery<{ data: Opportunity[] }>({
     queryKey: ['opportunities'],
@@ -167,6 +214,32 @@ export default function OpportunitiesPage() {
     );
   }, [groupedOpportunities]);
 
+  // Flat sorted list of all filtered opportunities
+  const flatSortedOpportunities = useMemo(() => {
+    const allOpps = Object.values(groupedOpportunities).flatMap(g => g.opportunities);
+    const getSort = (opp: Opportunity): number => {
+      if (sortBy === 'fit-desc' || sortBy === 'fit-asc') {
+        const alignment = extractAlignmentScore(opp.tags || []);
+        if (alignment !== null) return alignment;
+        if (opp.aiFitScore !== null) return Number(opp.aiFitScore) * 10;
+        return -1;
+      }
+      if (sortBy === 'deadline') {
+        const d = getDeadlineDate(opp.deadlines);
+        return d ? d.getTime() : Infinity;
+      }
+      if (sortBy === 'amount-desc') return opp.maxAward || 0;
+      return 0;
+    };
+    return [...allOpps].sort((a, b) => {
+      const sa = getSort(a);
+      const sb = getSort(b);
+      if (sortBy === 'fit-asc') return sa - sb;
+      if (sortBy === 'deadline') return sa - sb;
+      return sb - sa; // desc by default
+    });
+  }, [groupedOpportunities, sortBy]);
+
   const totalOpportunities = data?.data?.length || 0;
 
   // Helper functions for alignment scores
@@ -217,7 +290,10 @@ export default function OpportunitiesPage() {
     <Container size="xl">
       <Stack gap="lg">
         <div>
-          <Title order={1}>Grant Opportunities</Title>
+          <Group justify="space-between" align="flex-end">
+            <Title order={1}>Grant Opportunities</Title>
+            <Button leftSection={<IconPlus size={16} />} onClick={() => setAddModalOpen(true)}>Add Opportunity</Button>
+          </Group>
           <Text size="sm" c="dimmed" mt={4}>
             {filteredTotal} of {totalOpportunities} opportunities from {Object.keys(groupedOpportunities).length} funders
           </Text>
@@ -233,6 +309,20 @@ export default function OpportunitiesPage() {
               onChange={(e) => setSearchQuery(e.currentTarget.value)}
             />
             <Group gap="md">
+              <Select
+                label="Sort By"
+                placeholder="Default"
+                data={[
+                  { value: 'fit-desc', label: 'Fit Score (High to Low)' },
+                  { value: 'fit-asc', label: 'Fit Score (Low to High)' },
+                  { value: 'deadline', label: 'Deadline (Soonest)' },
+                  { value: 'amount-desc', label: 'Award Amount (Highest)' },
+                ]}
+                value={sortBy}
+                onChange={handleSortChange}
+                clearable
+                style={{ flex: 1 }}
+              />
               <Select
                 label="Alignment Match"
                 placeholder="All"
@@ -261,6 +351,17 @@ export default function OpportunitiesPage() {
                 searchable
                 style={{ flex: 1 }}
               />
+              <Select
+                label="View"
+                placeholder="Grouped"
+                data={[
+                  { value: 'grouped', label: 'Group by Funder' },
+                  { value: 'flat', label: 'Flat List' },
+                ]}
+                value={viewMode}
+                onChange={(v) => handleViewModeChange((v as 'grouped' | 'flat') || 'grouped')}
+                style={{ flex: 1 }}
+              />
             </Group>
           </Stack>
         </Paper>
@@ -282,6 +383,75 @@ export default function OpportunitiesPage() {
               <Button onClick={() => navigate('/funders')}>Go to Funders</Button>
             </Stack>
           </Paper>
+        ) : viewMode === 'flat' && sortBy ? (
+          <Stack gap="md">
+            {flatSortedOpportunities.map((opp) => {
+              const rawScore = opp.aiFitScore;
+              const scoreNumber = typeof rawScore === 'number' ? rawScore : rawScore != null ? Number(rawScore) : null;
+              const hasValidScore = typeof scoreNumber === 'number' && !Number.isNaN(scoreNumber);
+              const isHarvest = opp.tags?.some(tag => tag === 'HARVEST');
+              const isDiscovery = opp.tags?.some(tag => tag.includes('DISCOVERY'));
+              const alignmentScore = extractAlignmentScore(opp.tags || []);
+              const recommendation = extractRecommendation(opp.tags || []);
+              const matchedStrands = extractMatchedStrands(opp.tags || []);
+              const hasAlignment = alignmentScore !== null;
+              const awardRange = opp.minAward && opp.maxAward
+                ? `${opp.currency || ''}${opp.minAward.toLocaleString()}-${opp.maxAward.toLocaleString()}`
+                : opp.maxAward ? `Up to ${opp.currency || ''}${opp.maxAward.toLocaleString()}`
+                : opp.minAward ? `${opp.currency || ''}${opp.minAward.toLocaleString()}+` : null;
+              const deadlineDate = getDeadlineDate(opp.deadlines);
+              const isDeadlineSoon = deadlineDate && deadlineDate.getTime() - Date.now() < 30 * 24 * 60 * 60 * 1000;
+              return (
+                <Paper key={opp.id} p="md" withBorder data-testid="opportunity-card" style={{ transition: 'all 0.2s' }} className="hover-lift">
+                  <Group justify="space-between" align="flex-start" wrap="nowrap">
+                    <Stack gap="xs" style={{ flex: 1 }}>
+                      <Group gap="xs">
+                        <Text
+                          fw={600} size="md"
+                          onClick={() => navigate(`/opportunities/${opp.id}`)}
+                          style={{ cursor: 'pointer', display: 'inline-block', padding: '2px 8px', marginLeft: -8, borderRadius: 6, backgroundColor: 'var(--mantine-color-blue-0)', transition: 'background-color 150ms' }}
+                          onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--mantine-color-blue-1)'; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'var(--mantine-color-blue-0)'; }}
+                        >{opp.programName}</Text>
+                        {hasValidScore && scoreNumber >= 7 && (
+                          <Tooltip label="High fit score"><ThemeIcon size="sm" color="green" variant="light"><IconSparkles size={12} /></ThemeIcon></Tooltip>
+                        )}
+                      </Group>
+                      {opp.funder && <Text size="xs" c="dimmed">{opp.funder.name}</Text>}
+                      {opp.description && <Text size="sm" c="dimmed" lineClamp={2}>{opp.description}</Text>}
+                      <Group gap="lg">
+                        {deadlineDate && (
+                          <Group gap={6}><ThemeIcon size="sm" variant="light" color={isDeadlineSoon ? 'orange' : 'blue'}><IconCalendar size={14} /></ThemeIcon><Text size="sm" c={isDeadlineSoon ? 'orange' : undefined}>{deadlineDate.toLocaleDateString()}</Text></Group>
+                        )}
+                        {awardRange && (
+                          <Group gap={6}><ThemeIcon size="sm" variant="light" color="teal"><IconCoins size={14} /></ThemeIcon><Text size="sm">{awardRange}</Text></Group>
+                        )}
+                        {opp.geographies && opp.geographies.length > 0 && (
+                          <Badge size="sm" variant="light">{opp.geographies[0]}{opp.geographies.length > 1 && ` +${opp.geographies.length - 1}`}</Badge>
+                        )}
+                      </Group>
+                      <Group gap="xs">
+                        <Badge size="xs" variant="light" color="gray">{opp.status}</Badge>
+                        {isHarvest && <Badge size="xs" color="violet">Harvest</Badge>}
+                        {isDiscovery && <Badge size="xs" color="blue">Discovery</Badge>}
+                        {hasAlignment && alignmentScore !== null && (
+                          <Tooltip label={`Odyssean Alignment: ${alignmentScore}%`}><Badge size="xs" color={getAlignmentColor(alignmentScore)} variant="filled" leftSection={<IconTarget size={10} />}>{alignmentScore}% Match</Badge></Tooltip>
+                        )}
+                        {recommendation && <Badge size="xs" color={getRecommendationColor(recommendation)} variant="light">{formatRecommendation(recommendation)}</Badge>}
+                        {matchedStrands.length > 0 && (
+                          <Tooltip label={`Research Strands: ${matchedStrands.join(', ')}`}><Badge size="xs" variant="dot" color="indigo">{matchedStrands.length} {matchedStrands.length === 1 ? 'Strand' : 'Strands'}</Badge></Tooltip>
+                        )}
+                        {!hasAlignment && hasValidScore && (
+                          <Badge size="xs" color={scoreNumber >= 7 ? 'green' : scoreNumber >= 4 ? 'yellow' : 'gray'}>Fit: {Math.round(scoreNumber * 10) / 10}/10</Badge>
+                        )}
+                      </Group>
+                    </Stack>
+                    <Button size="sm" variant="light" onClick={(e) => { e.stopPropagation(); navigate(`/opportunities/${opp.id}`); }}>Details</Button>
+                  </Group>
+                </Paper>
+              );
+            })}
+          </Stack>
         ) : (
           <Accordion multiple variant="separated" value={expandedGroups} onChange={handleAccordionChange}>
             {sortedFunders.map(([funderName, group]) => (
@@ -353,14 +523,19 @@ export default function OpportunitiesPage() {
                           p="md"
                           withBorder
                           data-testid="opportunity-card"
-                          style={{ cursor: 'pointer', transition: 'all 0.2s' }}
-                          onClick={() => navigate(`/opportunities/${opp.id}`)}
+                          style={{ transition: 'all 0.2s' }}
                           className="hover-lift"
                         >
                           <Group justify="space-between" align="flex-start" wrap="nowrap">
                             <Stack gap="xs" style={{ flex: 1 }}>
                               <Group gap="xs">
-                                <Text fw={600} size="md">{opp.programName}</Text>
+                                <Text
+                                  fw={600} size="md"
+                                  onClick={() => navigate(`/opportunities/${opp.id}`)}
+                                  style={{ cursor: 'pointer', display: 'inline-block', padding: '2px 8px', marginLeft: -8, borderRadius: 6, backgroundColor: 'var(--mantine-color-blue-0)', transition: 'background-color 150ms' }}
+                                  onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--mantine-color-blue-1)'; }}
+                                  onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'var(--mantine-color-blue-0)'; }}
+                                >{opp.programName}</Text>
                                 {hasValidScore && scoreNumber >= 7 && (
                                   <Tooltip label="High fit score">
                                     <ThemeIcon size="sm" color="green" variant="light">
@@ -499,6 +674,62 @@ export default function OpportunitiesPage() {
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
       `}</style>
+
+      {/* Add Opportunity Modal */}
+      <Modal opened={addModalOpen} onClose={() => setAddModalOpen(false)} title="Add Opportunity Manually" size="lg">
+        <Stack gap="md">
+          <Select
+            label="Funder"
+            placeholder="Select a funder (required)"
+            required
+            searchable
+            data={(funderOptions?.data || []).map(f => ({ value: f.id, label: f.name }))}
+            value={newOpp.funderId}
+            onChange={(v) => setNewOpp({ ...newOpp, funderId: v || '' })}
+          />
+          <TextInput
+            label="Program Name"
+            placeholder="e.g. Open Research Fund 2025"
+            required
+            value={newOpp.programName}
+            onChange={(e) => setNewOpp({ ...newOpp, programName: e.currentTarget.value })}
+          />
+          <TextInput
+            label="Source URL"
+            placeholder="https://funder.org/grants/programme"
+            required
+            value={newOpp.sourceUrl}
+            onChange={(e) => setNewOpp({ ...newOpp, sourceUrl: e.currentTarget.value })}
+          />
+          <Textarea
+            label="Description (optional)"
+            placeholder="Brief description of the opportunity..."
+            value={newOpp.description}
+            onChange={(e) => setNewOpp({ ...newOpp, description: e.currentTarget.value })}
+            minRows={2}
+          />
+          <Select
+            label="Application Type"
+            data={[
+              { value: 'OPEN', label: 'Open' },
+              { value: 'INVITED', label: 'Invited' },
+              { value: 'ROLLING', label: 'Rolling' },
+            ]}
+            value={newOpp.applicationType}
+            onChange={(v) => setNewOpp({ ...newOpp, applicationType: v || 'OPEN' })}
+          />
+          <Group justify="flex-end">
+            <Button variant="subtle" onClick={() => setAddModalOpen(false)}>Cancel</Button>
+            <Button
+              onClick={() => createOppMutation.mutate(newOpp)}
+              loading={createOppMutation.isPending}
+              disabled={!newOpp.funderId || !newOpp.programName || !newOpp.sourceUrl}
+            >
+              Create Opportunity
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
     </Container>
   );
 }
