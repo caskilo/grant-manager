@@ -1,0 +1,19 @@
+{
+  "runId": "arts-and-humanities-research-council-ahrc_2026-03-13T15-42-58-245Z",
+  "source": {
+    "id": "84f729da-8131-4445-bf8d-5db7d9968b8b",
+    "name": "Arts and Humanities Research Council (AHRC)",
+    "baseUrl": "https://ahrc.ukri.org/councils/ahrc/funding-assessment-and-award-management/"
+  },
+  "funder": {
+    "id": "5f17ecd3-dae0-4824-9ba5-efeae49e8295",
+    "name": "AHRC (Arts & Humanities Research Council)"
+  },
+  "executedAt": "2026-03-13T15:43:05.506Z",
+  "status": "completed",
+  "stats": {
+    "opportunitiesFound": 2,
+    "newOpportunities": 2,
+    "updatedOpportunities": 0
+  }
+}

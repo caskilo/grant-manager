@@ -37,6 +37,16 @@ interface FundersResponse {
   };
 }
 
+interface CatalogueDiff {
+  newFunders: Array<{ name: string; type: string; website?: string }>;
+  deletedFunders: Array<{ id: string; name: string; type: string }>;
+  updatedFunders: Array<{ 
+    id: string; 
+    name: string; 
+    changes: { field: string; oldValue: any; newValue: any }[] 
+  }>;
+}
+
 const isCatalogueFunder = (tags: string[]): boolean => {
   return tags.some(tag => tag.includes('DISCOVERY') || tag.includes('CATALOGUE'));
 };
@@ -50,7 +60,10 @@ export default function FundersPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [integrationModalOpen, setIntegrationModalOpen] = useState(false);
+  const [integrationResult, setIntegrationResult] = useState<{ fundersCreated: number; warnings: string[] } | null>(null);
   const [searchFilter, setSearchFilter] = useState('');
+  const [diffModalOpen, setDiffModalOpen] = useState(false);
+  const [catalogueDiff, setCatalogueDiff] = useState<CatalogueDiff | null>(null);
 
   const { data, isLoading } = useQuery<FundersResponse>({
     queryKey: ['funders'],
@@ -77,9 +90,98 @@ export default function FundersPage() {
     );
   }) || [];
 
-  const integrateCatalogueMutation = useMutation({
+  // First fetch catalogue and calculate diff
+  const calculateDiffMutation = useMutation({
+    mutationFn: async () => {
+      // Get catalogue entries
+      const catalogueResponse = await discoveryApi.getCatalogue();
+      const catalogueEntries = catalogueResponse.data;
+      
+      // Get current funders
+      const fundersResponse = await api.get('/funders', { params: { limit: 1000 } });
+      const currentFunders = fundersResponse.data.data as Funder[];
+      
+      // Calculate diff
+      const diff: CatalogueDiff = {
+        newFunders: [],
+        deletedFunders: [],
+        updatedFunders: []
+      };
+      
+      // Find new and updated funders
+      for (const entry of catalogueEntries) {
+        const existing = currentFunders.find(f => 
+          f.name.toLowerCase() === entry.name.toLowerCase() ||
+          (entry.websiteUrl && f.websiteUrl === entry.websiteUrl)
+        );
+        
+        if (!existing) {
+          diff.newFunders.push({
+            name: entry.name,
+            type: entry.type || 'Unknown',
+            website: entry.websiteUrl
+          });
+        } else {
+          // Check for updates
+          const changes: { field: string; oldValue: any; newValue: any }[] = [];
+          
+          if (entry.type && getCatalogueType(existing.tags) !== entry.type) {
+            changes.push({ 
+              field: 'type', 
+              oldValue: getCatalogueType(existing.tags) || existing.type, 
+              newValue: entry.type 
+            });
+          }
+          
+          if (entry.websiteUrl && existing.websiteUrl !== entry.websiteUrl) {
+            changes.push({ 
+              field: 'website', 
+              oldValue: existing.websiteUrl, 
+              newValue: entry.websiteUrl 
+            });
+          }
+          
+          if (changes.length > 0) {
+            diff.updatedFunders.push({
+              id: existing.id,
+              name: existing.name,
+              changes
+            });
+          }
+        }
+      }
+      
+      // Find deleted funders (catalogue funders not in the new catalogue)
+      const catalogueFunders = currentFunders.filter(f => isCatalogueFunder(f.tags));
+      for (const funder of catalogueFunders) {
+        const stillExists = catalogueEntries.some(e => 
+          e.name.toLowerCase() === funder.name.toLowerCase() ||
+          (e.websiteUrl && funder.websiteUrl === e.websiteUrl)
+        );
+        
+        if (!stillExists) {
+          diff.deletedFunders.push({
+            id: funder.id,
+            name: funder.name,
+            type: getCatalogueType(funder.tags) || funder.type
+          });
+        }
+      }
+      
+      return diff;
+    },
+    onSuccess: (diff) => {
+      setCatalogueDiff(diff);
+      setDiffModalOpen(true);
+    }
+  });
+  
+  // Apply the confirmed changes
+  const applyChangesMutation = useMutation({
     mutationFn: () => discoveryApi.runCatalogue(),
-    onSuccess: () => {
+    onSuccess: (result) => {
+      setIntegrationResult(result);
+      setDiffModalOpen(false);
       setIntegrationModalOpen(true);
       queryClient.invalidateQueries({ queryKey: ['funders'] });
     },
@@ -92,8 +194,8 @@ export default function FundersPage() {
           <Title order={1}>Funders</Title>
           <Group>
             <Button
-              loading={integrateCatalogueMutation.isPending}
-              onClick={() => integrateCatalogueMutation.mutate()}
+              loading={calculateDiffMutation.isPending}
+              onClick={() => calculateDiffMutation.mutate()}
             >
               Update from Catalogue
             </Button>
@@ -125,8 +227,7 @@ export default function FundersPage() {
                 key={funder.id}
                 p="lg"
                 withBorder
-                style={{ cursor: 'pointer', transition: 'all 0.2s' }}
-                onClick={() => navigate(`/funders/${funder.id}`)}
+                style={{ transition: 'all 0.2s' }}
                 className="hover-lift"
                 data-testid="funder-card"
               >
@@ -134,7 +235,24 @@ export default function FundersPage() {
                   <Stack gap="xs" style={{ flex: 1 }}>
                     {/* Funder Name and Website */}
                     <div>
-                      <Text fw={600} size="lg">{funder.name}</Text>
+                      <Text
+                        fw={600}
+                        size="lg"
+                        onClick={() => navigate(`/funders/${funder.id}`)}
+                        style={{
+                          cursor: 'pointer',
+                          display: 'inline-block',
+                          padding: '2px 8px',
+                          marginLeft: -8,
+                          borderRadius: 6,
+                          backgroundColor: 'var(--mantine-color-blue-0)',
+                          transition: 'background-color 150ms',
+                        }}
+                        onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--mantine-color-blue-1)'; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'var(--mantine-color-blue-0)'; }}
+                      >
+                        {funder.name}
+                      </Text>
                       {funder.websiteUrl && (
                         <Anchor
                           href={funder.websiteUrl}
@@ -230,26 +348,144 @@ export default function FundersPage() {
         `}</style>
       </Stack>
 
+      {/* Diff Modal - shows changes before applying */}
+      <Modal
+        opened={diffModalOpen}
+        onClose={() => setDiffModalOpen(false)}
+        title="Catalogue Update Preview"
+        size="lg"
+      >
+        <Stack gap="md">
+          {catalogueDiff && (
+            <>
+              {/* Summary */}
+              <Alert color="blue" icon={<IconAlertCircle size={16} />}>
+                <Text size="sm">
+                  Found {catalogueDiff.newFunders.length} new, {catalogueDiff.updatedFunders.length} updated, 
+                  and {catalogueDiff.deletedFunders.length} deleted funders.
+                </Text>
+              </Alert>
+
+              {/* New Funders */}
+              {catalogueDiff.newFunders.length > 0 && (
+                <div>
+                  <Text fw={600} size="sm" mb="xs">New Funders to Create:</Text>
+                  <Stack gap="xs">
+                    {catalogueDiff.newFunders.map((funder, idx) => (
+                      <Paper key={idx} p="xs" withBorder>
+                        <Group justify="space-between">
+                          <Text size="sm">{funder.name}</Text>
+                          <Badge size="sm" color="green">NEW</Badge>
+                        </Group>
+                        <Text size="xs" c="dimmed">Type: {funder.type}</Text>
+                        {funder.website && <Text size="xs" c="dimmed">Website: {funder.website}</Text>}
+                      </Paper>
+                    ))}
+                  </Stack>
+                </div>
+              )}
+
+              {/* Updated Funders */}
+              {catalogueDiff.updatedFunders.length > 0 && (
+                <div>
+                  <Text fw={600} size="sm" mb="xs">Funders to Update:</Text>
+                  <Stack gap="xs">
+                    {catalogueDiff.updatedFunders.map((funder) => (
+                      <Paper key={funder.id} p="xs" withBorder>
+                        <Text size="sm" fw={500}>{funder.name}</Text>
+                        {funder.changes.map((change, idx) => (
+                          <Text key={idx} size="xs" c="dimmed">
+                            {change.field}: {change.oldValue || 'none'} → {change.newValue}
+                          </Text>
+                        ))}
+                      </Paper>
+                    ))}
+                  </Stack>
+                </div>
+              )}
+
+              {/* Deleted Funders */}
+              {catalogueDiff.deletedFunders.length > 0 && (
+                <div>
+                  <Text fw={600} size="sm" mb="xs">Funders No Longer in Catalogue:</Text>
+                  <Alert color="orange" icon={<IconAlertCircle size={16} />} mb="xs">
+                    <Text size="xs">
+                      These funders will be marked but not deleted. You can manually remove them if needed.
+                    </Text>
+                  </Alert>
+                  <Stack gap="xs">
+                    {catalogueDiff.deletedFunders.map((funder) => (
+                      <Paper key={funder.id} p="xs" withBorder>
+                        <Group justify="space-between">
+                          <Text size="sm">{funder.name}</Text>
+                          <Badge size="sm" color="red">REMOVED</Badge>
+                        </Group>
+                        <Text size="xs" c="dimmed">Type: {funder.type}</Text>
+                      </Paper>
+                    ))}
+                  </Stack>
+                </div>
+              )}
+
+              {/* No changes */}
+              {catalogueDiff.newFunders.length === 0 && 
+               catalogueDiff.updatedFunders.length === 0 && 
+               catalogueDiff.deletedFunders.length === 0 && (
+                <Alert color="gray">
+                  <Text size="sm">The catalogue is already up to date. No changes needed.</Text>
+                </Alert>
+              )}
+            </>
+          )}
+
+          {/* Actions */}
+          <Group justify="flex-end">
+            <Button variant="subtle" onClick={() => setDiffModalOpen(false)}>
+              Cancel
+            </Button>
+            {catalogueDiff && (catalogueDiff.newFunders.length > 0 || catalogueDiff.updatedFunders.length > 0) && (
+              <Button 
+                onClick={() => applyChangesMutation.mutate()}
+                loading={applyChangesMutation.isPending}
+              >
+                Apply Changes
+              </Button>
+            )}
+          </Group>
+        </Stack>
+      </Modal>
+
+      {/* Integration Complete Modal */}
       {integrationModalOpen && (
         <Modal
           opened={integrationModalOpen}
           onClose={() => setIntegrationModalOpen(false)}
           title="Catalogue Integration Complete"
         >
-          <Alert icon={<IconCheck size={16} />} color="green">
-            Catalogue entries have been successfully integrated as funders!
-          </Alert>
+          <Stack gap="sm">
+            <Alert icon={<IconCheck size={16} />} color="green">
+              {integrationResult && integrationResult.fundersCreated > 0
+                ? `${integrationResult.fundersCreated} new funder${integrationResult.fundersCreated !== 1 ? 's' : ''} created from catalogue entries.`
+                : 'All catalogue entries are already integrated. No new funders to add.'}
+            </Alert>
+            {integrationResult?.warnings && integrationResult.warnings.length > 0 && (
+              <Alert icon={<IconAlertCircle size={16} />} color="yellow">
+                {integrationResult.warnings.length} warning{integrationResult.warnings.length !== 1 ? 's' : ''}: {integrationResult.warnings[0]}
+                {integrationResult.warnings.length > 1 && ` (+${integrationResult.warnings.length - 1} more)`}
+              </Alert>
+            )}
+          </Stack>
         </Modal>
       )}
 
-      {integrateCatalogueMutation.isError && (
+      {applyChangesMutation.isError && (
         <Modal
-          opened={integrateCatalogueMutation.isError}
-          onClose={() => integrateCatalogueMutation.reset()}
+          opened={applyChangesMutation.isError}
+          onClose={() => applyChangesMutation.reset()}
           title="Integration Failed"
         >
           <Alert icon={<IconAlertCircle size={16} />} color="red">
-            {(integrateCatalogueMutation.error as Error)?.message || 'An error occurred'}
+            {(applyChangesMutation.error as Error)?.message || 'An error occurred'}
           </Alert>
         </Modal>
       )}

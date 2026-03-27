@@ -1,4 +1,4 @@
-import { Group, Title, Button } from '@mantine/core';
+import { Group, Title, Button, Text } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../stores/authStore';
 import api from '../../lib/api';
@@ -17,7 +17,7 @@ export default function AppHeader() {
       notifications.show({
         title: 'Success',
         message: 'Logged out successfully',
-        color: 'green',
+        color: 'grain',
       });
     } catch (error) {
       console.error('Logout error:', error);
@@ -29,10 +29,10 @@ export default function AppHeader() {
 
   return (
     <Group h="100%" px="md" justify="space-between" data-testid="app-header">
-      <Title order={3}>Odyssean Grant Manager</Title>
+      <Title order={3} c="odyssean">Odyssean Grant Manager</Title>
       <Group>
-        <span>{user?.name}</span>
-        <Button variant="subtle" onClick={handleLogout}>
+        <Text c="dimmed">{user?.name}</Text>
+        <Button variant="subtle" color="odyssean" onClick={handleLogout}>
           Logout
         </Button>
       </Group>

@@ -164,16 +164,18 @@ const opportunities: GuideModule = {
         '• AI recommendation (PURSUE / MONITOR / NO_GO)\n' +
         '• Award amount and deadline\n' +
         '• Link to the official funder page\n\n' +
-        'Use the filters at the top to search by name, filter by alignment level, or filter by award amount.',
+        'Use the filters at the top to search by name, filter by alignment level, or filter by award amount.\n\n' +
+        'Use **Sort By** to rank opportunities by fit score, deadline, or award amount. Switch **View** to "Flat List" for a single sorted list instead of funder groups.',
       tips: [
         'Accordion state is saved in your browser — sections you expand will stay open when you return.',
+        'Click "Add Opportunity" at the top right to manually add an opportunity you found outside the system.',
       ],
     },
     {
       heading: 'Opportunity Detail — Overview',
       content:
         'The detail page header shows the program name, funder link, OI alignment score badge, deadline status (with colour coding for upcoming/past), award range, duration, geography, and eligible applicant types.\n\n' +
-        'Click "View Official Page" to open the funder\'s original page in a new tab.',
+        'Click "View Official Page" to open the funder\'s original page in a new tab. If the URL is wrong, click the pencil icon next to the buttons to edit it.',
     },
     {
       heading: 'Opportunity Detail — OI Alignment Tab',
@@ -476,6 +478,41 @@ const wfSourceInspection: GuideModule = {
   ],
 };
 
+const wfAddOpportunity: GuideModule = {
+  id: 'wf-add-opportunity',
+  group: 'workflow',
+  title: 'Adding Opportunities Manually',
+  icon: 'IconSparkles',
+  summary:
+    'How to add a grant opportunity you found outside the automated discovery pipeline.',
+  relatedRoutes: ['/opportunities'],
+  sections: [
+    {
+      heading: 'When to Add Manually',
+      content:
+        'The automated pipeline (Source Discovery → Source Inspection) is the primary way opportunities enter the system. However, you may find opportunities through personal research, email alerts, or colleague recommendations that are not on a monitored source page.\n\n' +
+        'Manual entry lets you add these to the system so they can be tracked, scored, and managed alongside automated discoveries.',
+    },
+    {
+      heading: 'Adding an Opportunity',
+      content: '',
+      steps: [
+        'Go to the Opportunities page.',
+        'Click the "Add Opportunity" button at the top right.',
+        'Select the **Funder** from the dropdown (required). If the funder is not listed, add them via the Catalogue Editor first.',
+        'Enter the **Program Name** (e.g. "Open Research Fund 2025").',
+        'Paste the **Source URL** — the web page where you found the opportunity.',
+        'Optionally add a description and select the application type (Open, Invited, or Rolling).',
+        'Click "Create Opportunity". You will be taken to the new opportunity\'s detail page.',
+      ],
+      tips: [
+        'After creation, you can edit the URLs by clicking the pencil icon on the detail page.',
+        'Manually added opportunities do not have AI scores initially. You can trigger scoring from the detail page once more data is added.',
+      ],
+    },
+  ],
+};
+
 const wfOpportunityReview: GuideModule = {
   id: 'wf-opportunity-review',
   group: 'workflow',
@@ -705,6 +742,7 @@ export const GUIDE_MODULES: GuideModule[] = [
   wfCatalogueIntegrate,
   wfSourceDiscovery,
   wfSourceInspection,
+  wfAddOpportunity,
   wfOpportunityReview,
   wfPipeline,
   // Reference

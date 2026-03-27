@@ -20,9 +20,12 @@ import {
   RingProgress,
   Modal,
   Textarea,
+  TextInput,
+  ActionIcon,
+  Collapse,
 } from '@mantine/core';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { notifications } from '@mantine/notifications';
 import {
@@ -39,6 +42,9 @@ import {
   IconTarget,
   IconFileText,
   IconSparkles,
+  IconEdit,
+  IconDeviceFloppy,
+  IconX,
 } from '@tabler/icons-react';
 import api from '../lib/api';
 import { applicationsApi } from '../lib/applications';
@@ -163,6 +169,32 @@ function formatRecommendation(rec: string): string {
 export default function OpportunityDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  // Inline URL editing state
+  const [editingUrls, setEditingUrls] = useState(false);
+  const [editSourceUrl, setEditSourceUrl] = useState('');
+  const [editOpportunityUrl, setEditOpportunityUrl] = useState('');
+  
+  // Expandable scoring details state
+  const [showScoringDetails, setShowScoringDetails] = useState(false);
+
+  const updateUrlsMutation = useMutation({
+    mutationFn: async (data: { sourceUrl?: string; opportunityUrl?: string }) => {
+      const payload: Record<string, string> = {};
+      if (data.sourceUrl) payload.sourceUrl = data.sourceUrl;
+      if (data.opportunityUrl !== undefined) payload.opportunityUrl = data.opportunityUrl;
+      return api.patch(`/opportunities/${id}`, payload);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['opportunity', id] });
+      setEditingUrls(false);
+      notifications.show({ title: 'Updated', message: 'URLs saved successfully.', color: 'green', autoClose: 3000 });
+    },
+    onError: (err: any) => {
+      notifications.show({ title: 'Error', message: err?.response?.data?.message || 'Failed to update URLs.', color: 'red' });
+    },
+  });
 
   const { data: opportunity, isLoading, error } = useQuery<Opportunity>({
     queryKey: ['opportunity', id],
@@ -412,6 +444,49 @@ export default function OpportunityDetailPage() {
               )}
             </Group>
 
+            {/* URL editing section */}
+            {editingUrls ? (
+              <Paper p="sm" withBorder mt="md" bg="gray.0">
+                <Stack gap="sm">
+                  <TextInput
+                    label="Source URL"
+                    placeholder="https://..."
+                    value={editSourceUrl}
+                    onChange={(e) => setEditSourceUrl(e.currentTarget.value)}
+                    size="sm"
+                  />
+                  <TextInput
+                    label="Opportunity URL (direct link to application page)"
+                    placeholder="https://..."
+                    value={editOpportunityUrl}
+                    onChange={(e) => setEditOpportunityUrl(e.currentTarget.value)}
+                    size="sm"
+                  />
+                  <Group gap="xs" justify="flex-end">
+                    <Button
+                      size="xs"
+                      variant="subtle"
+                      leftSection={<IconX size={14} />}
+                      onClick={() => setEditingUrls(false)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      size="xs"
+                      leftSection={<IconDeviceFloppy size={14} />}
+                      loading={updateUrlsMutation.isPending}
+                      onClick={() => updateUrlsMutation.mutate({
+                        sourceUrl: editSourceUrl,
+                        opportunityUrl: editOpportunityUrl || undefined,
+                      })}
+                    >
+                      Save URLs
+                    </Button>
+                  </Group>
+                </Stack>
+              </Paper>
+            ) : null}
+
             <Group gap="xs" mt="md">
               {linkedApp ? (
                 <Button
@@ -454,6 +529,19 @@ export default function OpportunityDetailPage() {
                   View Source Page
                 </Button>
               )}
+              <ActionIcon
+                variant="subtle"
+                color="gray"
+                size="lg"
+                onClick={() => {
+                  setEditSourceUrl(opportunity.sourceUrl || '');
+                  setEditOpportunityUrl(opportunity.opportunityUrl || '');
+                  setEditingUrls(true);
+                }}
+                title="Edit URLs"
+              >
+                <IconEdit size={18} />
+              </ActionIcon>
             </Group>
           </Stack>
         </Paper>
@@ -538,7 +626,16 @@ export default function OpportunityDetailPage() {
                 <Paper p="md" withBorder>
                   <Group justify="space-between" align="flex-start" mb="md">
                     <Stack gap="xs" style={{ flex: 1 }}>
-                      <Text size="sm" fw={500}>Odyssean Institute Alignment</Text>
+                      <Group gap="xs">
+                        <Text size="sm" fw={500}>Odyssean Institute Alignment</Text>
+                        <ActionIcon
+                          variant="subtle"
+                          size="sm"
+                          onClick={() => setShowScoringDetails(!showScoringDetails)}
+                        >
+                          <IconInfoCircle size={16} />
+                        </ActionIcon>
+                      </Group>
                       <Text size="xs" c="dimmed">
                         Automated analysis of how well this opportunity aligns with OI research strands and methodology.
                       </Text>
@@ -571,6 +668,43 @@ export default function OpportunityDetailPage() {
                       )}
                     </Group>
                   </Group>
+
+                  <Collapse in={showScoringDetails}>
+                    <Divider my="sm" />
+                    <Stack gap="sm">
+                      <Text size="xs" fw={600}>How the Alignment Score is Calculated</Text>
+                      <Text size="xs" c="dimmed">
+                        The AI analyzes the opportunity against Odyssean Institute's research priorities and methodology:
+                      </Text>
+                      <List size="xs" spacing="xs">
+                        <List.Item>
+                          <Text span fw={500}>Research Strand Match (30%):</Text> Alignment with OI's three main strands - 
+                          Transformative Technology & Society, Institutions for Human Flourishing, and Wisdom & Contemplative Science
+                        </List.Item>
+                        <List.Item>
+                          <Text span fw={500}>Methodological Fit (25%):</Text> Preference for interdisciplinary, long-term, 
+                          exploratory research with practical applications
+                        </List.Item>
+                        <List.Item>
+                          <Text span fw={500}>Thematic Alignment (20%):</Text> Match with cross-cutting themes like 
+                          collective intelligence, governance innovation, and human development
+                        </List.Item>
+                        <List.Item>
+                          <Text span fw={500}>Impact Potential (15%):</Text> Potential for transformative outcomes and 
+                          contribution to OI's mission
+                        </List.Item>
+                        <List.Item>
+                          <Text span fw={500}>Practical Feasibility (10%):</Text> Geographic fit, funding amount, 
+                          timeline compatibility, and administrative requirements
+                        </List.Item>
+                      </List>
+                      <Text size="xs" c="dimmed" mt="xs">
+                        Scores above 70% indicate strong alignment and are typically marked as "Highly Relevant". 
+                        Scores between 50-70% suggest good fit with some limitations. Below 50% may have significant 
+                        misalignments but could still be worth considering for specific aspects.
+                      </Text>
+                    </Stack>
+                  </Collapse>
                 </Paper>
 
                 {/* Dimensional Breakdown - from real tag data */}
