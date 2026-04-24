@@ -35,5 +35,7 @@ Thumbs.db
 # Prisma
 prisma/migrations/dev.db*
 
-# Uploads (local dev)
+# Local Dev
 uploads/
+discovery/
+smart-discovery/

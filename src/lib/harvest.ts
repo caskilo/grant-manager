@@ -71,6 +71,7 @@ export interface JobStatus {
   };
   failedReason?: string;
   data: any;
+  result?: any;
   timestamp: number;
   processedOn?: number;
   finishedOn?: number;
@@ -196,4 +197,31 @@ export const harvestApi = {
     const response = await api.get(`/harvest/jobs/${jobId}/status`);
     return response.data;
   },
+
+  listDiscoveryRuns: async (funderId: string): Promise<DiscoveryRun[]> => {
+    const response = await api.get(`/harvest/funders/${funderId}/discovery-runs`);
+    return response.data;
+  },
 };
+
+export interface DiscoveryRun {
+  runId: string;
+  timestamp: string;
+  pagesExplored: number;
+  opportunitiesExtracted: number;
+  tokensUsed: number;
+  errors: string[];
+  saveStats?: {
+    created: number;
+    updated: number;
+    failed: number;
+    failures: string[];
+  };
+  opportunities: Array<{
+    programName: string;
+    sourceUrl: string;
+    confidence: number;
+    status: string;
+  }>;
+}
+

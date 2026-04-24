@@ -7,7 +7,7 @@ interface GuideLauncherProps {
 
 export default function GuideLauncher({ onClick }: GuideLauncherProps) {
   return (
-    <Tooltip label="User Guide" position="right" withArrow>
+    <Tooltip label="User Guide" position="left" withArrow>
       <ActionIcon
         onClick={onClick}
         size={48}
@@ -17,7 +17,7 @@ export default function GuideLauncher({ onClick }: GuideLauncherProps) {
         style={{
           position: 'fixed',
           bottom: 24,
-          left: 24,
+          right: 24,
           zIndex: 200,
           boxShadow: '0 4px 14px rgba(0, 0, 0, 0.15)',
           transition: 'transform 150ms ease, box-shadow 150ms ease',

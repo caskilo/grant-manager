@@ -4,7 +4,7 @@ import { MantineProvider } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+// import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import App from './App';
 import { theme } from './theme';
 import '@mantine/core/styles.css';
@@ -26,9 +26,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <MantineProvider theme={theme}>
       <ModalsProvider>
         <QueryClientProvider client={queryClient}>
-          <Notifications position="top-right" />
+          <Notifications position="top-center" />
           <App />
-          <ReactQueryDevtools initialIsOpen={false} />
+          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
         </QueryClientProvider>
       </ModalsProvider>
     </MantineProvider>
