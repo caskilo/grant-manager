@@ -26,7 +26,7 @@ import {
 } from '@mantine/core';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { notifications } from '@mantine/notifications';
 import {
   IconExternalLink,
@@ -115,12 +115,69 @@ function getDeadlineDate(deadlines: DeadlineEntry[] | string[] | null): Date | n
   return null;
 }
 
+/** Render a markdown string using Mantine typography — no external library needed. */
+function renderMarkdown(text: string): React.ReactNode {
+  // Inline bold: split on **…**
+  function inlineParse(str: string): React.ReactNode {
+    const parts = str.split(/(\*\*[^*]+\*\*)/g);
+    if (parts.length === 1) return str;
+    return parts.map((p, i) =>
+      p.startsWith('**') && p.endsWith('**')
+        ? <span key={i} style={{ fontWeight: 600 }}>{p.slice(2, -2)}</span>
+        : p
+    );
+  }
+
+  const blocks = text.split(/\n{2,}/);
+  return (
+    <Stack gap="xs">
+      {blocks.map((block, bi) => {
+        const lines = block.split('\n').filter(l => l !== undefined);
+        // Heading
+        const headingMatch = lines[0]?.match(/^(#{1,3})\s+(.+)/);
+        if (headingMatch) {
+          return (
+            <Text key={bi} size="sm" fw={600} mt={bi > 0 ? 4 : 0}>
+              {inlineParse(headingMatch[2])}
+            </Text>
+          );
+        }
+        // List
+        if (lines.every(l => /^[-*]\s+/.test(l) || /^\d+\.\s+/.test(l) || l.trim() === '')) {
+          const items = lines.filter(l => l.trim()).map(l => l.replace(/^[-*]\s+/, '').replace(/^\d+\.\s+/, ''));
+          return (
+            <List key={bi} size="sm" spacing={2}>
+              {items.map((item, ii) => <List.Item key={ii}>{inlineParse(item)}</List.Item>)}
+            </List>
+          );
+        }
+        // Paragraph (join soft-wrapped lines)
+        return (
+          <Text key={bi} size="sm">
+            {inlineParse(lines.join(' '))}
+          </Text>
+        );
+      })}
+    </Stack>
+  );
+}
+
 function getDeadlineDescription(deadlines: DeadlineEntry[] | string[] | null): string | null {
   if (!deadlines || !Array.isArray(deadlines) || deadlines.length === 0) return null;
   const first = deadlines[0];
   if (typeof first === 'object' && first?.description) return first.description;
   return null;
 }
+
+// Weights MUST mirror backend ALIGNMENT_WEIGHTS in odyssean-criteria.ts
+// (sum = 1.0). If you change one, change the other.
+const DIM_WEIGHTS: Record<string, number> = {
+  'Research Strand Match': 0.35,
+  'Methodological Fit': 0.20,
+  'Thematic Alignment': 0.20,
+  'Impact Potential': 0.15,
+  'Practical Feasibility': 0.10,
+};
 
 /** Extract dimension scores from tags like dim:research=30% */
 function extractDimensions(tags: string[]): Record<string, number> {
@@ -141,6 +198,27 @@ function extractDimensions(tags: string[]): Record<string, number> {
     }
   }
   return dims;
+}
+
+/**
+ * Compute the weighted overall alignment (0-100) from dimensional scores.
+ * Returns null if no dimensions present. Uses only the weights of dims
+ * actually present (re-normalised) so partial data still produces a
+ * meaningful score instead of silently undercounting.
+ */
+function computeOverallAlignment(dims: Record<string, number>): number | null {
+  const entries = Object.entries(dims);
+  if (entries.length === 0) return null;
+  let weightedSum = 0;
+  let weightTotal = 0;
+  for (const [label, value] of entries) {
+    const w = DIM_WEIGHTS[label];
+    if (typeof w !== 'number') continue;
+    weightedSum += value * w;
+    weightTotal += w;
+  }
+  if (weightTotal === 0) return null;
+  return Math.round(weightedSum / weightTotal);
 }
 
 function extractRecommendation(tags: string[]): string | null {
@@ -280,6 +358,15 @@ export default function OpportunityDetailPage() {
   const recommendation = extractRecommendation(opportunity.tags || []);
   const dimensions = extractDimensions(opportunity.tags || []);
   const hasDimensions = Object.keys(dimensions).length > 0;
+  // Prefer the weighted overall computed from dimensions (this is the same
+  // model the Dimensional Breakdown uses). Fall back to aiFitScore*10 only
+  // when dimensional tags are absent.
+  const overallAlignment: number | null = hasDimensions
+    ? computeOverallAlignment(dimensions)
+    : hasValidScore
+    ? Math.round(scoreNumber * 10)
+    : null;
+  const hasOverall = typeof overallAlignment === 'number' && !Number.isNaN(overallAlignment);
 
   const awardRange = opportunity.minAward && opportunity.maxAward
     ? `${opportunity.currency || ''}${opportunity.minAward.toLocaleString()}–${opportunity.maxAward.toLocaleString()}`
@@ -346,14 +433,14 @@ export default function OpportunityDetailPage() {
                 )}
               </div>
 
-              {hasValidScore && (
+              {hasOverall && (
                 <Paper p="md" withBorder style={{ textAlign: 'center', minWidth: 120 }}>
                   <Text size="xs" c="dimmed" mb={4}>OI Alignment</Text>
                   <Badge
                     size="xl"
-                    color={scoreNumber >= 7 ? 'green' : scoreNumber >= 4 ? 'yellow' : 'red'}
+                    color={getAlignmentColor(overallAlignment!)}
                   >
-                    {Math.round(scoreNumber * 10) / 10}/10
+                    {overallAlignment}%
                   </Badge>
                 </Paper>
               )}
@@ -641,12 +728,12 @@ export default function OpportunityDetailPage() {
                       </Text>
                     </Stack>
                     <Group gap="md" align="flex-start">
-                      {hasValidScore && (
+                      {hasOverall && (
                         <RingProgress
-                          sections={[{ value: scoreNumber * 10, color: getAlignmentColor(scoreNumber * 10) }]}
+                          sections={[{ value: overallAlignment!, color: getAlignmentColor(overallAlignment!) }]}
                           label={
                             <div style={{ textAlign: 'center' }}>
-                              <Text fw={700} size="lg">{Math.round(scoreNumber * 10)}%</Text>
+                              <Text fw={700} size="lg">{overallAlignment}%</Text>
                               <Text size="xs" c="dimmed">Match</Text>
                             </div>
                           }
@@ -678,11 +765,11 @@ export default function OpportunityDetailPage() {
                       </Text>
                       <List size="xs" spacing="xs">
                         <List.Item>
-                          <Text span fw={500}>Research Strand Match (30%):</Text> Alignment with OI's three main strands - 
-                          Transformative Technology & Society, Institutions for Human Flourishing, and Wisdom & Contemplative Science
+                          <Text span fw={500}>Research Strand Match (35%):</Text> Alignment with OI's three main strands - 
+                          Odyssean Process, GRAIN, and Aeonic Flourishing
                         </List.Item>
                         <List.Item>
-                          <Text span fw={500}>Methodological Fit (25%):</Text> Preference for interdisciplinary, long-term, 
+                          <Text span fw={500}>Methodological Fit (20%):</Text> Preference for interdisciplinary, long-term, 
                           exploratory research with practical applications
                         </List.Item>
                         <List.Item>
@@ -829,9 +916,7 @@ export default function OpportunityDetailPage() {
               {hasEligibility && (
                 <Paper p="md" withBorder>
                   <Text size="sm" fw={500} mb="md">Full Eligibility Information</Text>
-                  <Text size="sm" style={{ whiteSpace: 'pre-wrap' }}>
-                    {opportunity.rawDescription}
-                  </Text>
+                  {opportunity.rawDescription ? renderMarkdown(opportunity.rawDescription) : null}
                 </Paper>
               )}
 

@@ -85,7 +85,7 @@ export default function ApplicationsPage() {
 
         {/* Filter Bar */}
         <Paper p="md" withBorder>
-          <Group gap="md">
+          <Group gap="md" align="center">
             <TextInput
               data-testid="applications-search"
               placeholder="Search applications..."
@@ -96,7 +96,6 @@ export default function ApplicationsPage() {
             />
             <Select
               data-testid="applications-stage-filter"
-              label="Stage"
               placeholder="All stages"
               data={Object.entries(STAGE_CONFIG).map(([val, cfg]) => ({
                 value: val,

@@ -1,8 +1,9 @@
-import { Container, Title, Button, Group, Stack, Badge, Text, Anchor, Tooltip, Paper, Accordion, ThemeIcon, Loader, Center, TextInput, Select, Modal, Textarea } from '@mantine/core';
+import { Container, Title, Button, Group, Stack, Badge, Text, Anchor, Tooltip, Paper, Accordion, ThemeIcon, Loader, Center, TextInput, Select, Modal, Textarea, ActionIcon, Switch, Grid } from '@mantine/core';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { IconExternalLink, IconCalendar, IconCoins, IconBuildingBank, IconSparkles, IconTarget, IconSearch, IconPlus } from '@tabler/icons-react';
+import { IconCalendar, IconCoins, IconBuildingBank, IconSparkles, IconTarget, IconSearch, IconPlus, IconStar, IconStarFilled } from '@tabler/icons-react';
 import { useMemo, useState, useCallback } from 'react';
+import { notifications } from '@mantine/notifications';
 import api from '../lib/api';
 
 interface DeadlineEntry {
@@ -35,6 +36,9 @@ interface Opportunity {
     name: string;
     type: string;
   } | null;
+  isFavourite?: boolean;
+  isStruckOff?: boolean;
+  strikeOffReason?: string | null;
 }
 
 /** Extract the earliest deadline date from the deadlines JSON array */
@@ -94,6 +98,49 @@ export default function OpportunitiesPage() {
       navigate(`/opportunities/${res.data.id}`);
     },
   });
+
+  // ── Favourite / Hide ──
+  const [showHidden, setShowHidden] = useState<boolean>(() => {
+    try { return localStorage.getItem('opportunities-show-hidden') === '1'; } catch { return false; }
+  });
+  const [hideTarget, setHideTarget] = useState<Opportunity | null>(null);
+  const [hideReasonPreset, setHideReasonPreset] = useState<string | null>(null);
+  const [hideReasonCustom, setHideReasonCustom] = useState('');
+
+  const favouriteMutation = useMutation({
+    mutationFn: async ({ id, isFavourite }: { id: string; isFavourite: boolean }) => {
+      return api.patch(`/opportunities/${id}/favourite`, { isFavourite });
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['opportunities'] }),
+  });
+
+  const hideMutation = useMutation({
+    mutationFn: async ({ id, reason }: { id: string; reason: string }) => {
+      return api.post(`/opportunities/${id}/strike-off`, { reason });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['opportunities'] });
+      setHideTarget(null);
+      setHideReasonPreset(null);
+      setHideReasonCustom('');
+      notifications.show({ color: 'gray', title: 'Hidden', message: 'Opportunity hidden from the main list.' });
+    },
+    onError: (err: any) => {
+      notifications.show({ color: 'red', title: 'Failed to hide', message: err?.response?.data?.message || err?.message || 'Unknown error' });
+    },
+  });
+
+  const unHideMutation = useMutation({
+    mutationFn: async (id: string) => api.post(`/opportunities/${id}/unstrike-off`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['opportunities'] });
+      notifications.show({ color: 'teal', title: 'Restored', message: 'Opportunity is back on the main list.' });
+    },
+  });
+  const handleShowHiddenChange = useCallback((next: boolean) => {
+    setShowHidden(next);
+    try { localStorage.setItem('opportunities-show-hidden', next ? '1' : '0'); } catch {}
+  }, []);
   const [searchQuery, setSearchQuery] = useState('');
   const [alignmentFilter, setAlignmentFilter] = useState<string | null>(null);
   const [amountFilter, setAmountFilter] = useState<string | null>(null);
@@ -135,12 +182,13 @@ export default function OpportunitiesPage() {
   }, []);
 
   const { data, isLoading } = useQuery<{ data: Opportunity[] }>({
-    queryKey: ['opportunities'],
+    queryKey: ['opportunities', { showHidden }],
     queryFn: async () => {
       const response = await api.get('/opportunities', {
         params: {
           page: 1,
           limit: 500,
+          ...(showHidden ? { includeStruckOff: true } : {}),
         },
       });
       return response.data;
@@ -232,6 +280,8 @@ export default function OpportunitiesPage() {
       return 0;
     };
     return [...allOpps].sort((a, b) => {
+      // Favourites always pinned to the top regardless of sort mode
+      if (!!a.isFavourite !== !!b.isFavourite) return a.isFavourite ? -1 : 1;
       const sa = getSort(a);
       const sb = getSort(b);
       if (sortBy === 'fit-asc') return sa - sb;
@@ -302,12 +352,21 @@ export default function OpportunitiesPage() {
         {/* Search and Filter Bar */}
         <Paper p="md" withBorder>
           <Stack gap="md">
-            <TextInput
-              placeholder="Search opportunities by name, description, or funder..."
-              leftSection={<IconSearch size={16} />}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.currentTarget.value)}
-            />
+            <Group gap="sm" align="center">
+              <TextInput
+                placeholder="Search opportunities by name, description, or funder..."
+                leftSection={<IconSearch size={16} />}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.currentTarget.value)}
+                style={{ flex: 1 }}
+              />
+              <Tooltip label="Show hidden opportunities">
+                <Switch
+                  checked={showHidden}
+                  onChange={(e) => handleShowHiddenChange(e.currentTarget.checked)}
+                />
+              </Tooltip>
+            </Group>
             <Group gap="md">
               <Select
                 label="Sort By"
@@ -402,19 +461,45 @@ export default function OpportunitiesPage() {
               const deadlineDate = getDeadlineDate(opp.deadlines);
               const isDeadlineSoon = deadlineDate && deadlineDate.getTime() - Date.now() < 30 * 24 * 60 * 60 * 1000;
               return (
-                <Paper key={opp.id} p="md" withBorder data-testid="opportunity-card" style={{ transition: 'all 0.2s' }} className="hover-lift">
+                <Paper
+                  key={opp.id}
+                  p="md"
+                  withBorder
+                  data-testid="opportunity-card"
+                  style={{
+                    transition: 'all 0.2s',
+                    opacity: opp.isStruckOff ? 0.55 : 1,
+                    backgroundColor: opp.isStruckOff ? 'var(--mantine-color-gray-0)' : undefined,
+                  }}
+                  className="hover-lift"
+                >
                   <Group justify="space-between" align="flex-start" wrap="nowrap">
                     <Stack gap="xs" style={{ flex: 1 }}>
                       <Group gap="xs">
+                        <Tooltip label={opp.isFavourite ? 'Unstar' : 'Star to pin to top'}>
+                          <ActionIcon
+                            size="sm"
+                            variant="subtle"
+                            color={opp.isFavourite ? 'yellow' : 'gray'}
+                            onClick={(e) => { e.stopPropagation(); favouriteMutation.mutate({ id: opp.id, isFavourite: !opp.isFavourite }); }}
+                          >
+                            {opp.isFavourite ? <IconStarFilled size={16} /> : <IconStar size={16} />}
+                          </ActionIcon>
+                        </Tooltip>
                         <Text
                           fw={600} size="md"
                           onClick={() => navigate(`/opportunities/${opp.id}`)}
-                          style={{ cursor: 'pointer', display: 'inline-block', padding: '2px 8px', marginLeft: -8, borderRadius: 6, backgroundColor: 'var(--mantine-color-blue-0)', transition: 'background-color 150ms' }}
+                          style={{ cursor: 'pointer', display: 'inline-block', padding: '2px 8px', marginLeft: -4, borderRadius: 6, backgroundColor: 'var(--mantine-color-blue-0)', transition: 'background-color 150ms', textDecoration: opp.isStruckOff ? 'line-through' : undefined }}
                           onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--mantine-color-blue-1)'; }}
                           onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'var(--mantine-color-blue-0)'; }}
                         >{opp.programName}</Text>
                         {hasValidScore && scoreNumber >= 7 && (
                           <Tooltip label="High fit score"><ThemeIcon size="sm" color="green" variant="light"><IconSparkles size={12} /></ThemeIcon></Tooltip>
+                        )}
+                        {opp.isStruckOff && (
+                          <Tooltip label={opp.strikeOffReason || 'Hidden'}>
+                            <Badge size="xs" color="gray" variant="outline">{opp.strikeOffReason || 'Hidden'}</Badge>
+                          </Tooltip>
                         )}
                       </Group>
                       {opp.funder && <Text size="xs" c="dimmed">{opp.funder.name}</Text>}
@@ -446,7 +531,20 @@ export default function OpportunitiesPage() {
                         )}
                       </Group>
                     </Stack>
-                    <Button size="sm" variant="light" onClick={(e) => { e.stopPropagation(); navigate(`/opportunities/${opp.id}`); }}>Details</Button>
+                    <Stack gap={4} align="flex-end">
+                      <Button size="sm" variant="light" onClick={(e) => { e.stopPropagation(); navigate(`/opportunities/${opp.id}`); }}>Details</Button>
+                      {opp.isStruckOff ? (
+                        <Button size="xs" variant="subtle" color="teal" onClick={(e) => { e.stopPropagation(); unHideMutation.mutate(opp.id); }}>
+                          Show
+                        </Button>
+                      ) : (
+                        <Tooltip label="hide with a reason">
+                          <Button size="xs" variant="subtle" color="red" onClick={(e) => { e.stopPropagation(); setHideTarget(opp); setHideReasonPreset(null); setHideReasonCustom(''); }}>
+                            Hide
+                          </Button>
+                        </Tooltip>
+                      )}
+                    </Stack>
                   </Group>
                 </Paper>
               );
@@ -463,26 +561,26 @@ export default function OpportunitiesPage() {
                         <IconBuildingBank size={20} />
                       </ThemeIcon>
                       <div>
-                        <Text fw={600} size="md">{funderName}</Text>
+                        {group.funderId ? (
+                          <Anchor
+                            size="md"
+                            fw={600}
+                            c="#1e3a5f"
+                            onClick={(e: React.MouseEvent) => {
+                              e.stopPropagation();
+                              navigate(`/funders/${group.funderId}`);
+                            }}
+                          >
+                            {funderName}
+                          </Anchor>
+                        ) : (
+                          <Text fw={600} size="md">{funderName}</Text>
+                        )}
                         <Text size="xs" c="dimmed">
                           {group.opportunities.length} {group.opportunities.length === 1 ? 'opportunity' : 'opportunities'}
                         </Text>
                       </div>
                     </Group>
-                    {group.funderId && (
-                      <Text
-                        size="xs"
-                        c="blue"
-                        td="underline"
-                        style={{ cursor: 'pointer' }}
-                        onClick={(e: React.MouseEvent) => {
-                          e.stopPropagation();
-                          navigate(`/funders/${group.funderId}`);
-                        }}
-                      >
-                        View Funder
-                      </Text>
-                    )}
                   </Group>
                 </Accordion.Control>
                 <Accordion.Panel>
@@ -523,19 +621,35 @@ export default function OpportunitiesPage() {
                           p="md"
                           withBorder
                           data-testid="opportunity-card"
-                          style={{ transition: 'all 0.2s' }}
+                          style={{
+                            transition: 'all 0.2s',
+                            opacity: opp.isStruckOff ? 0.55 : 1,
+                            backgroundColor: opp.isStruckOff ? 'var(--mantine-color-gray-0)' : undefined,
+                          }}
                           className="hover-lift"
                         >
-                          <Group justify="space-between" align="flex-start" wrap="nowrap">
-                            <Stack gap="xs" style={{ flex: 1 }}>
-                              <Group gap="xs">
+                          <Grid gutter="xs">
+                            {/* Row 0: Title and status badge */}
+                            <Grid.Col span={12}>
+                              <Group gap="xs" align="flex-start">
+                                <Tooltip label={opp.isFavourite ? 'Unstar' : 'Star to pin to top'}>
+                                  <ActionIcon
+                                    size="sm"
+                                    variant="subtle"
+                                    color={opp.isFavourite ? 'yellow' : 'gray'}
+                                    onClick={(e) => { e.stopPropagation(); favouriteMutation.mutate({ id: opp.id, isFavourite: !opp.isFavourite }); }}
+                                  >
+                                    {opp.isFavourite ? <IconStarFilled size={16} /> : <IconStar size={16} />}
+                                  </ActionIcon>
+                                </Tooltip>
                                 <Text
                                   fw={600} size="md"
                                   onClick={() => navigate(`/opportunities/${opp.id}`)}
-                                  style={{ cursor: 'pointer', display: 'inline-block', padding: '2px 8px', marginLeft: -8, borderRadius: 6, backgroundColor: 'var(--mantine-color-blue-0)', transition: 'background-color 150ms' }}
+                                  style={{ cursor: 'pointer', display: 'inline-block', padding: '2px 8px', marginLeft: -4, borderRadius: 6, backgroundColor: 'var(--mantine-color-blue-0)', transition: 'background-color 150ms', textDecoration: opp.isStruckOff ? 'line-through' : undefined }}
                                   onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--mantine-color-blue-1)'; }}
                                   onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'var(--mantine-color-blue-0)'; }}
                                 >{opp.programName}</Text>
+                                <Badge size="sm" variant="light" color="gray">{opp.status}</Badge>
                                 {hasValidScore && scoreNumber >= 7 && (
                                   <Tooltip label="High fit score">
                                     <ThemeIcon size="sm" color="green" variant="light">
@@ -543,120 +657,89 @@ export default function OpportunitiesPage() {
                                     </ThemeIcon>
                                   </Tooltip>
                                 )}
-                              </Group>
-
-                              {opp.description && (
-                                <Text size="sm" c="dimmed" lineClamp={2}>
-                                  {opp.description}
-                                </Text>
-                              )}
-
-                              <Group gap="lg">
-                                {deadlineDate && (
-                                  <Group gap={6}>
-                                    <ThemeIcon size="sm" variant="light" color={isDeadlineSoon ? 'orange' : 'blue'}>
-                                      <IconCalendar size={14} />
-                                    </ThemeIcon>
-                                    <Text size="sm" c={isDeadlineSoon ? 'orange' : undefined}>
-                                      {deadlineDate.toLocaleDateString()}
-                                    </Text>
-                                  </Group>
-                                )}
-
-                                {awardRange && (
-                                  <Group gap={6}>
-                                    <ThemeIcon size="sm" variant="light" color="teal">
-                                      <IconCoins size={14} />
-                                    </ThemeIcon>
-                                    <Text size="sm">{awardRange}</Text>
-                                  </Group>
-                                )}
-
-                                {opp.geographies && opp.geographies.length > 0 && (
-                                  <Badge size="sm" variant="light">
-                                    {opp.geographies[0]}
-                                    {opp.geographies.length > 1 && ` +${opp.geographies.length - 1}`}
-                                  </Badge>
-                                )}
-                              </Group>
-
-                              <Group gap="xs">
-                                <Badge size="xs" variant="light" color="gray">
-                                  {opp.status}
-                                </Badge>
-                                {isHarvest && <Badge size="xs" color="violet">Harvest</Badge>}
-                                {isDiscovery && <Badge size="xs" color="blue">Discovery</Badge>}
-                                
-                                {/* Show alignment score if available (from LLM harvest) */}
-                                {hasAlignment && alignmentScore !== null && (
-                                  <Tooltip label={`Odyssean Alignment: ${alignmentScore}%`}>
-                                    <Badge
-                                      size="xs"
-                                      color={getAlignmentColor(alignmentScore)}
-                                      variant="filled"
-                                      leftSection={<IconTarget size={10} />}
-                                    >
-                                      {alignmentScore}% Match
-                                    </Badge>
+                                {opp.isStruckOff && (
+                                  <Tooltip label={opp.strikeOffReason || 'Hidden'}>
+                                    <Badge size="xs" color="gray" variant="outline">{opp.strikeOffReason || 'Hidden'}</Badge>
                                   </Tooltip>
                                 )}
-                                
-                                {/* Show recommendation badge */}
-                                {recommendation && (
-                                  <Badge
-                                    size="xs"
-                                    color={getRecommendationColor(recommendation)}
-                                    variant="light"
-                                  >
-                                    {formatRecommendation(recommendation)}
-                                  </Badge>
-                                )}
-                                
-                                {/* Show matched strands */}
-                                {matchedStrands.length > 0 && (
-                                  <Tooltip label={`Research Strands: ${matchedStrands.join(', ')}`}>
-                                    <Badge size="xs" variant="dot" color="indigo">
-                                      {matchedStrands.length} {matchedStrands.length === 1 ? 'Strand' : 'Strands'}
-                                    </Badge>
-                                  </Tooltip>
-                                )}
-                                
-                                {/* Fallback to old fit score if no alignment data */}
-                                {!hasAlignment && hasValidScore && (
-                                  <Badge
-                                    size="xs"
-                                    color={scoreNumber >= 7 ? 'green' : scoreNumber >= 4 ? 'yellow' : 'gray'}
-                                  >
-                                    Fit: {Math.round(scoreNumber * 10) / 10}/10
-                                  </Badge>
-                                )}
                               </Group>
+                            </Grid.Col>
 
-                              <Anchor
-                                href={opp.sourceUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                size="xs"
-                                onClick={(e) => e.stopPropagation()}
-                              >
-                                <Group gap={4}>
-                                  <Text size="xs">View Source</Text>
-                                  <IconExternalLink size={10} />
+                            {/* Row 1: Description/metadata (left) and buttons (right) */}
+                            <Grid.Col span={10}>
+                              <Stack gap="xs">
+                                {/* Source badges */}
+                                <Group gap="xs">
+                                  {isHarvest && <Badge size="xs" color="violet">Harvest</Badge>}
+                                  {isDiscovery && <Badge size="xs" color="blue">Discovery</Badge>}
+                                  {hasAlignment && alignmentScore !== null && (
+                                    <Tooltip label={`Odyssean Alignment: ${alignmentScore}%`}><Badge size="xs" color={getAlignmentColor(alignmentScore)} variant="filled" leftSection={<IconTarget size={10} />}>{alignmentScore}% Match</Badge></Tooltip>
+                                  )}
+                                  {recommendation && <Badge size="xs" color={getRecommendationColor(recommendation)} variant="light">{formatRecommendation(recommendation)}</Badge>}
+                                  {matchedStrands.length > 0 && (
+                                    <Tooltip label={`Research Strands: ${matchedStrands.join(', ')}`}><Badge size="xs" variant="dot" color="indigo">{matchedStrands.length} {matchedStrands.length === 1 ? 'Strand' : 'Strands'}</Badge></Tooltip>
+                                  )}
+                                  {!hasAlignment && hasValidScore && (
+                                    <Badge size="xs" color={scoreNumber >= 7 ? 'green' : scoreNumber >= 4 ? 'yellow' : 'gray'}>Fit: {Math.round(scoreNumber * 10) / 10}/10</Badge>
+                                  )}
                                 </Group>
-                              </Anchor>
-                            </Stack>
 
-                            <Button
-                              size="sm"
-                              variant="light"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                navigate(`/opportunities/${opp.id}`);
-                              }}
-                            >
-                              Details
-                            </Button>
-                          </Group>
+                                {/* Description */}
+                                {opp.description && (
+                                  <Text size="sm" c="dimmed" lineClamp={2}>
+                                    {opp.description}
+                                  </Text>
+                                )}
+
+                                {/* Metadata */}
+                                <Group gap="lg">
+                                  {deadlineDate && (
+                                    <Group gap={6}>
+                                      <ThemeIcon size="sm" variant="light" color={isDeadlineSoon ? 'orange' : 'blue'}>
+                                        <IconCalendar size={14} />
+                                      </ThemeIcon>
+                                      <Text size="sm" c={isDeadlineSoon ? 'orange' : undefined}>
+                                        {deadlineDate.toLocaleDateString()}
+                                      </Text>
+                                    </Group>
+                                  )}
+
+                                  {awardRange && (
+                                    <Group gap={6}>
+                                      <ThemeIcon size="sm" variant="light" color="teal">
+                                        <IconCoins size={14} />
+                                      </ThemeIcon>
+                                      <Text size="sm">{awardRange}</Text>
+                                    </Group>
+                                  )}
+
+                                  {opp.geographies && opp.geographies.length > 0 && (
+                                    <Badge size="sm" variant="light">
+                                      {opp.geographies[0]}
+                                      {opp.geographies.length > 1 && ` +${opp.geographies.length - 1}`}
+                                    </Badge>
+                                  )}
+                                </Group>
+                              </Stack>
+                            </Grid.Col>
+
+                            <Grid.Col span={2}>
+                              <Stack gap={4} align="flex-end">
+                                <Button size="sm" variant="light" onClick={(e) => { e.stopPropagation(); navigate(`/opportunities/${opp.id}`); }}>Details</Button>
+                                {opp.isStruckOff ? (
+                                  <Button size="xs" variant="subtle" color="teal" onClick={(e) => { e.stopPropagation(); unHideMutation.mutate(opp.id); }}>
+                                    Show
+                                  </Button>
+                                ) : (
+                                  <Tooltip label="hide with a reason">
+                                    <Button size="xs" variant="subtle" color="red" onClick={(e) => { e.stopPropagation(); setHideTarget(opp); setHideReasonPreset(null); setHideReasonCustom(''); }}>
+                                      Hide
+                                    </Button>
+                                  </Tooltip>
+                                )}
+                              </Stack>
+                            </Grid.Col>
+                          </Grid>
                         </Paper>
                       );
                     })}
@@ -729,6 +812,61 @@ export default function OpportunitiesPage() {
             </Button>
           </Group>
         </Stack>
+      </Modal>
+
+      {/* Hide Confirmation Modal */}
+      <Modal
+        opened={!!hideTarget}
+        onClose={() => { setHideTarget(null); setHideReasonPreset(null); setHideReasonCustom(''); }}
+        title="Hide opportunity"
+        size="md"
+      >
+        {hideTarget && (
+          <Stack gap="md">
+            <Text size="sm">
+              Hide <Text span fw={600}>{hideTarget.programName}</Text> from the main list.
+              The record is preserved and can be restored later.
+            </Text>
+            <Select
+              label="Reason"
+              placeholder="Select a reason"
+              data={[
+                { value: 'Closed', label: 'Closed' },
+                { value: 'Out of scope', label: 'Out of scope' },
+                { value: 'Poor match', label: 'Poor match' },
+                { value: 'Duplicate', label: 'Duplicate' },
+                { value: 'Other', label: 'Other' },
+              ]}
+              value={hideReasonPreset}
+              onChange={setHideReasonPreset}
+              clearable
+            />
+            {hideReasonPreset === 'Other' && (
+              <Textarea
+                label="Custom reason"
+                placeholder="Describe why you're hiding this opportunity..."
+                value={hideReasonCustom}
+                onChange={(e) => setHideReasonCustom(e.currentTarget.value)}
+                minRows={2}
+                autosize
+              />
+            )}
+            <Group justify="flex-end">
+              <Button variant="subtle" onClick={() => { setHideTarget(null); setHideReasonPreset(null); setHideReasonCustom(''); }}>Cancel</Button>
+              <Button
+                color="red"
+                loading={hideMutation.isPending}
+                disabled={!hideReasonPreset || (hideReasonPreset === 'Other' && !hideReasonCustom.trim())}
+                onClick={() => {
+                  const reason = hideReasonPreset === 'Other' ? hideReasonCustom.trim() : hideReasonPreset;
+                  hideMutation.mutate({ id: hideTarget.id, reason: reason || '' });
+                }}
+              >
+                Hide
+              </Button>
+            </Group>
+          </Stack>
+        )}
       </Modal>
     </Container>
   );

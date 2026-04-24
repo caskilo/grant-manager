@@ -114,7 +114,7 @@ export default function GuideOverlay({ opened, onClose }: GuideOverlayProps) {
     <Drawer
       opened={opened}
       onClose={onClose}
-      position="left"
+      position="right"
       size="lg"
       title={
         <Group gap="xs">

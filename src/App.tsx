@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AppShell } from '@mantine/core';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useAuthStore } from './stores/authStore';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
@@ -38,6 +38,16 @@ function App() {
   const user = useAuthStore((state) => state.user);
   const basename = import.meta.env.BASE_URL;
   const [guideOpen, setGuideOpen] = useState(false);
+  const [navbarCollapsed, setNavbarCollapsed] = useState(
+    () => localStorage.getItem('ody-nav-collapsed') === 'true'
+  );
+  const toggleNavbar = useCallback(() => {
+    setNavbarCollapsed(prev => {
+      const next = !prev;
+      localStorage.setItem('ody-nav-collapsed', String(next));
+      return next;
+    });
+  }, []);
 
   if (!user) {
     console.log('No user, showing login page with basename:', basename);
@@ -55,7 +65,8 @@ function App() {
     <BrowserRouter basename={basename}>
       <AppShell
         header={{ height: 60 }}
-        navbar={{ width: 250, breakpoint: 'sm' }}
+        navbar={{ width: navbarCollapsed ? 72 : { base: '100vw', sm: 250 }, breakpoint: 'xs' }}
+        styles={{ navbar: { transition: 'width 200ms ease' }, main: { transition: 'padding-left 200ms ease' } }}
         padding="md"
       >
         <AppShell.Header>
@@ -63,7 +74,7 @@ function App() {
         </AppShell.Header>
 
         <AppShell.Navbar>
-          <AppNavbar />
+          <AppNavbar collapsed={navbarCollapsed} onToggle={toggleNavbar} />
         </AppShell.Navbar>
 
         <AppShell.Main>

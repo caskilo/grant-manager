@@ -1,7 +1,8 @@
 import { Container, Title, Button, Group, Stack, Badge, Text, Tooltip, Modal, Alert, TextInput, Paper, Anchor } from '@mantine/core';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useAuthStore } from '../stores/authStore';
 import { IconAlertCircle, IconCheck, IconSearch, IconExternalLink } from '@tabler/icons-react';
 import api from '../lib/api';
 import { discoveryApi } from '../lib/discovery';
@@ -39,12 +40,20 @@ interface FundersResponse {
 
 interface CatalogueDiff {
   newFunders: Array<{ name: string; type: string; website?: string }>;
-  deletedFunders: Array<{ id: string; name: string; type: string }>;
+  deletedFunders: Array<{ id: string; name: string; type: string; tags: string[] }>;
   updatedFunders: Array<{ 
     id: string; 
     name: string; 
+    currentTags: string[];
     changes: { field: string; oldValue: any; newValue: any }[] 
   }>;
+}
+
+interface ApplyResult {
+  created: number;
+  updated: number;
+  marked: number;
+  warnings: string[];
 }
 
 const isCatalogueFunder = (tags: string[]): boolean => {
@@ -59,8 +68,18 @@ const getCatalogueType = (tags: string[]): string | null => {
 export default function FundersPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const user = useAuthStore((state) => state.user);
   const [integrationModalOpen, setIntegrationModalOpen] = useState(false);
-  const [integrationResult, setIntegrationResult] = useState<{ fundersCreated: number; warnings: string[] } | null>(null);
+
+  // Restore scroll position when returning from funder detail
+  useEffect(() => {
+    const saved = sessionStorage.getItem('funders-scroll-y');
+    if (saved) {
+      window.scrollTo(0, parseInt(saved, 10));
+      sessionStorage.removeItem('funders-scroll-y');
+    }
+  }, []);
+  const [integrationResult, setIntegrationResult] = useState<ApplyResult | null>(null);
   const [searchFilter, setSearchFilter] = useState('');
   const [diffModalOpen, setDiffModalOpen] = useState(false);
   const [catalogueDiff, setCatalogueDiff] = useState<CatalogueDiff | null>(null);
@@ -79,6 +98,7 @@ export default function FundersPage() {
   });
 
   const filteredFunders = data?.data?.filter((funder) => {
+    // Catalogue is source of truth - removed items are already deleted
     if (!searchFilter.trim()) return true;
     const searchLower = searchFilter.toLowerCase();
     return (
@@ -145,6 +165,7 @@ export default function FundersPage() {
             diff.updatedFunders.push({
               id: existing.id,
               name: existing.name,
+              currentTags: existing.tags,
               changes
             });
           }
@@ -163,7 +184,8 @@ export default function FundersPage() {
           diff.deletedFunders.push({
             id: funder.id,
             name: funder.name,
-            type: getCatalogueType(funder.tags) || funder.type
+            type: getCatalogueType(funder.tags) || funder.type,
+            tags: funder.tags,
           });
         }
       }
@@ -176,9 +198,45 @@ export default function FundersPage() {
     }
   });
   
-  // Apply the confirmed changes
+  // Apply the confirmed changes, honouring all three diff types
   const applyChangesMutation = useMutation({
-    mutationFn: () => discoveryApi.runCatalogue(),
+    mutationFn: async (diff: CatalogueDiff): Promise<ApplyResult> => {
+      const result: ApplyResult = { created: 0, updated: 0, marked: 0, warnings: [] };
+
+      // 1. Apply field updates via PATCH
+      for (const funder of diff.updatedFunders) {
+        const patch: Record<string, any> = {};
+        let tags = [...funder.currentTags];
+        for (const change of funder.changes) {
+          if (change.field === 'website') {
+            patch.websiteUrl = change.newValue;
+          } else if (change.field === 'type') {
+            tags = tags.filter(t => !t.startsWith('CATALOGUE_TYPE:'));
+            tags.push(`CATALOGUE_TYPE:${change.newValue}`);
+            patch.tags = tags;
+          }
+        }
+        if (Object.keys(patch).length > 0) {
+          await api.patch(`/funders/${funder.id}`, patch);
+          result.updated++;
+        }
+      }
+
+      // 2. Permanently delete funders removed from the catalogue
+      for (const funder of diff.deletedFunders) {
+        await api.delete(`/funders/${funder.id}`);
+        result.marked++;
+      }
+
+      // 3. Create genuinely new funders via the catalogue run
+      if (diff.newFunders.length > 0) {
+        const catalogueResult = await discoveryApi.runCatalogue();
+        result.created = catalogueResult.fundersCreated;
+        if (catalogueResult.warnings?.length) result.warnings.push(...catalogueResult.warnings);
+      }
+
+      return result;
+    },
     onSuccess: (result) => {
       setIntegrationResult(result);
       setDiffModalOpen(false);
@@ -192,15 +250,17 @@ export default function FundersPage() {
       <Stack gap="lg">
         <Group justify="space-between">
           <Title order={1}>Funders</Title>
-          <Group>
-            <Button
-              loading={calculateDiffMutation.isPending}
-              onClick={() => calculateDiffMutation.mutate()}
-            >
-              Update from Catalogue
-            </Button>
-            <Button onClick={() => navigate('/catalogue')}>Edit Catalogue</Button>
-          </Group>
+          {user?.role === 'ADMIN' && (
+            <Group>
+              <Button
+                loading={calculateDiffMutation.isPending}
+                onClick={() => calculateDiffMutation.mutate()}
+              >
+                Update from Catalogue
+              </Button>
+              <Button onClick={() => navigate('/catalogue')}>Edit Catalogue</Button>
+            </Group>
+          )}
         </Group>
 
         {/* Search Bar */}
@@ -238,18 +298,11 @@ export default function FundersPage() {
                       <Text
                         fw={600}
                         size="lg"
-                        onClick={() => navigate(`/funders/${funder.id}`)}
-                        style={{
-                          cursor: 'pointer',
-                          display: 'inline-block',
-                          padding: '2px 8px',
-                          marginLeft: -8,
-                          borderRadius: 6,
-                          backgroundColor: 'var(--mantine-color-blue-0)',
-                          transition: 'background-color 150ms',
+                        onClick={() => {
+                          sessionStorage.setItem('funders-scroll-y', String(window.scrollY));
+                          navigate(`/funders/${funder.id}`);
                         }}
-                        onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--mantine-color-blue-1)'; }}
-                        onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'var(--mantine-color-blue-0)'; }}
+                        className="funder-title-link"
                       >
                         {funder.name}
                       </Text>
@@ -261,79 +314,72 @@ export default function FundersPage() {
                           size="sm"
                           c="dimmed"
                           onClick={(e) => e.stopPropagation()}
+                          style={{ display: 'flex', width: 'fit-content' }}
                         >
-                          <Group gap={4}>
+                          <Group gap={4} wrap="nowrap">
                             <Text size="sm">{new URL(funder.websiteUrl).hostname}</Text>
                             <IconExternalLink size={12} />
                           </Group>
                         </Anchor>
                       )}
                     </div>
-
-                    {/* Description */}
-                    {funder.description && (
-                      <Text size="sm" c="dimmed" lineClamp={2}>
-                        {funder.description}
-                      </Text>
-                    )}
-
-                    {/* Metadata Row */}
-                    <Group gap="lg" wrap="wrap">
-                      {/* Type */}
-                      <Group gap={6}>
-                        <Text size="sm" fw={500}>Type:</Text>
-                        <Badge size="sm" variant="light">{getCatalogueType(funder.tags) || funder.type}</Badge>
-                      </Group>
-
-                      {/* Location */}
-                      {funder.geographies && funder.geographies.length > 0 && (
-                        <Group gap={6}>
-                          <Text size="sm" fw={500}>Location:</Text>
-                          <Text size="sm">{funder.geographies.join(', ')}</Text>
-                        </Group>
-                      )}
-
-                      {/* Opportunities Count */}
-                      <Group gap={6}>
-                        <Text size="sm" fw={500}>Opportunities:</Text>
-                        <Badge size="sm" color="blue">{funder._count?.opportunities || 0}</Badge>
-                      </Group>
-
-                      {/* Average Fit Score */}
-                      {funder.stats?.avgFitScore !== null && funder.stats?.avgFitScore !== undefined && (
-                        <Tooltip label={`${funder.stats.highFitCount} high-fit opportunities (7+)`}>
-                          <Badge 
-                            size="sm" 
-                            color={funder.stats.avgFitScore >= 7 ? 'green' : funder.stats.avgFitScore >= 5 ? 'yellow' : 'gray'}
-                            variant="filled"
-                          >
-                            Avg Fit: {funder.stats.avgFitScore.toFixed(1)}/10
-                          </Badge>
-                        </Tooltip>
-                      )}
-
-                      {/* Alignment Score */}
-                      {funder.stats?.avgAlignment !== null && funder.stats?.avgAlignment !== undefined && (
-                        <Tooltip label={`${funder.stats.highAlignmentCount} highly aligned opportunities (70%+)`}>
-                          <Badge 
-                            size="sm" 
-                            color={funder.stats.avgAlignment >= 70 ? 'green' : funder.stats.avgAlignment >= 50 ? 'blue' : 'gray'}
-                            variant="dot"
-                          >
-                            {Math.round(funder.stats.avgAlignment)}% Match
-                          </Badge>
-                        </Tooltip>
-                      )}
-
-                      {/* Source */}
-                      {isCatalogueFunder(funder.tags) && (
-                        <Badge size="sm" variant="dot" color="blue">
-                          Catalogue
-                        </Badge>
-                      )}
-                    </Group>
                   </Stack>
 
+                  {/* Description — top right, inline with title */}
+                  {funder.description && (
+                    <Text size="sm" c="dimmed" lineClamp={2} style={{ maxWidth: 280, textAlign: 'right' }}>
+                      {funder.description}
+                    </Text>
+                  )}
+                </Group>
+
+                {/* Metadata Row */}
+                <Group justify="space-between" align="center" wrap="nowrap" mt="xs">
+                  {/* Left: Type + Location */}
+                  <Group gap="lg" wrap="wrap">
+                    <Group gap={6}>
+                      <Text size="sm" fw={500}>Type:</Text>
+                      <Badge size="sm" variant="light">{getCatalogueType(funder.tags) || funder.type}</Badge>
+                    </Group>
+                    {funder.geographies && funder.geographies.length > 0 && (
+                      <Group gap={6}>
+                        <Text size="sm" fw={500}>Location:</Text>
+                        <Text size="sm">{funder.geographies.join(', ')}</Text>
+                      </Group>
+                    )}
+                  </Group>
+
+                  {/* Middle: Avg Fit, Alignment, Removed indicator */}
+                  <Group gap="sm" wrap="wrap" justify="flex-end">
+                    {funder.stats?.avgFitScore !== null && funder.stats?.avgFitScore !== undefined && (
+                      <Tooltip label={`${funder.stats.highFitCount} high-fit opportunities (7+)`}>
+                        <Badge 
+                          size="sm" 
+                          color={funder.stats.avgFitScore >= 7 ? 'green' : funder.stats.avgFitScore >= 5 ? 'yellow' : 'gray'}
+                          variant="filled"
+                        >
+                          Avg Fit: {funder.stats.avgFitScore.toFixed(1)}/10
+                        </Badge>
+                      </Tooltip>
+                    )}
+                    {funder.stats?.avgAlignment !== null && funder.stats?.avgAlignment !== undefined && (
+                      <Tooltip label={`${funder.stats.highAlignmentCount} highly aligned opportunities (70%+)`}>
+                        <Badge 
+                          size="sm" 
+                          color={funder.stats.avgAlignment >= 70 ? 'green' : funder.stats.avgAlignment >= 50 ? 'blue' : 'gray'}
+                          variant="dot"
+                        >
+                          {Math.round(funder.stats.avgAlignment)}% Match
+                        </Badge>
+                      </Tooltip>
+                    )}
+                  </Group>
+
+                  {/* Right: Opportunities */}
+                  <Group gap={6} justify="flex-end">
+                    <Text size="sm" fw={500}>Opportunities:</Text>
+                    <Badge size="sm" color="blue">{funder._count?.opportunities || 0}</Badge>
+                  </Group>
                 </Group>
               </Paper>
             ))}
@@ -344,6 +390,17 @@ export default function FundersPage() {
           .hover-lift:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+          }
+          .funder-title-link {
+            cursor: pointer;
+            display: inline-block;
+            padding: 2px 8px;
+            margin-left: -8px;
+            border-radius: 6px;
+            transition: background-color 150ms ease;
+          }
+          .funder-title-link:hover {
+            background-color: var(--mantine-color-blue-1);
           }
         `}</style>
       </Stack>
@@ -409,8 +466,8 @@ export default function FundersPage() {
                 <div>
                   <Text fw={600} size="sm" mb="xs">Funders No Longer in Catalogue:</Text>
                   <Alert color="orange" icon={<IconAlertCircle size={16} />} mb="xs">
-                    <Text size="xs">
-                      These funders will be marked but not deleted. You can manually remove them if needed.
+                    <Text size="xs" c="dimmed">
+                      These funders will be permanently deleted from the system.
                     </Text>
                   </Alert>
                   <Stack gap="xs">
@@ -443,9 +500,9 @@ export default function FundersPage() {
             <Button variant="subtle" onClick={() => setDiffModalOpen(false)}>
               Cancel
             </Button>
-            {catalogueDiff && (catalogueDiff.newFunders.length > 0 || catalogueDiff.updatedFunders.length > 0) && (
+            {catalogueDiff && (catalogueDiff.newFunders.length > 0 || catalogueDiff.updatedFunders.length > 0 || catalogueDiff.deletedFunders.length > 0) && (
               <Button 
-                onClick={() => applyChangesMutation.mutate()}
+                onClick={() => applyChangesMutation.mutate(catalogueDiff)}
                 loading={applyChangesMutation.isPending}
               >
                 Apply Changes
@@ -464,14 +521,16 @@ export default function FundersPage() {
         >
           <Stack gap="sm">
             <Alert icon={<IconCheck size={16} />} color="green">
-              {integrationResult && integrationResult.fundersCreated > 0
-                ? `${integrationResult.fundersCreated} new funder${integrationResult.fundersCreated !== 1 ? 's' : ''} created from catalogue entries.`
-                : 'All catalogue entries are already integrated. No new funders to add.'}
+              {integrationResult ? (
+                [integrationResult.created > 0 && `${integrationResult.created} funder${integrationResult.created !== 1 ? 's' : ''} created`,
+                 integrationResult.updated > 0 && `${integrationResult.updated} updated`,
+                 integrationResult.marked > 0 && `${integrationResult.marked} deleted`]
+                  .filter(Boolean).join(', ') || 'No changes were needed.'
+              ) : 'Done.'}
             </Alert>
             {integrationResult?.warnings && integrationResult.warnings.length > 0 && (
               <Alert icon={<IconAlertCircle size={16} />} color="yellow">
-                {integrationResult.warnings.length} warning{integrationResult.warnings.length !== 1 ? 's' : ''}: {integrationResult.warnings[0]}
-                {integrationResult.warnings.length > 1 && ` (+${integrationResult.warnings.length - 1} more)`}
+                {integrationResult.warnings[0]}{integrationResult.warnings.length > 1 && ` (+${integrationResult.warnings.length - 1} more)`}
               </Alert>
             )}
           </Stack>

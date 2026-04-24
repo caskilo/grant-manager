@@ -3,12 +3,14 @@ import { MantineColorsTuple } from '@mantine/core';
 export const theme = {
   colors: {
     // Odyssean Institute Brand Colors (Extracted from Logo Assets)
-    odyssean: ['#1e3a5f', '#1e3a5f', '#2874A6', '#3498DB', '#5DADE2', '#85C1E2', '#AED6F1', '#D6EAF8', '#EBF5FB', '#F8F9FA'] as MantineColorsTuple,
-    grain: ['#0c3a29', '#0c3a29', '#27AE60', '#7D8A2E', '#87A96B', '#ABEBC6', '#D5F4E6', '#E8F8F5', '#F1FBF9', '#F8FEF9'] as MantineColorsTuple,
-    authority: ['#1e3a5f', '#1e3a5f', '#2874A6', '#2C3E50', '#34495E', '#5D6D7E', '#85929E', '#AEB6BF', '#D5D8DC', '#EAEDED'] as MantineColorsTuple,
-    flourishing: ['#0c3a29', '#0c3a29', '#27AE60', '#7D8A2E', '#229954', '#1E8449', '#52BE80', '#76D7C4', '#A9DFBF', '#D5F4E6'] as MantineColorsTuple,
-    strategic: ['#2874A6', '#2874A6', '#3498DB', '#5DADE2', '#1B4F72', '#154360', '#1A5276', '#21618C', '#2874A6', '#3498DB'] as MantineColorsTuple,
-    neutral: ['#95A5A6', '#95A5A6', '#BDC3C7', '#D5DBDB', '#E5E7E9', '#F8F9FA', '#FDFEFE', '#F8F9FA', '#F4F6F7', '#F0F3F4'] as MantineColorsTuple,
+    // NOTE: Mantine expects tuples ordered LIGHT (index 0) -> DARK (index 9).
+    // Filled variants default to shade 6, so we place the primary hue there.
+    odyssean: ['#EBF5FB', '#D6EAF8', '#AED6F1', '#85C1E2', '#5DADE2', '#3498DB', '#2874A6', '#1E5A8B', '#1e3a5f', '#13263F'] as MantineColorsTuple,
+    grain: ['#F1FBF9', '#E8F8F5', '#D5F4E6', '#ABEBC6', '#87A96B', '#7D8A2E', '#27AE60', '#1E8449', '#166036', '#0c3a29'] as MantineColorsTuple,
+    authority: ['#EAEDED', '#D5D8DC', '#AEB6BF', '#85929E', '#5D6D7E', '#34495E', '#2C3E50', '#1E5A8B', '#1e3a5f', '#13263F'] as MantineColorsTuple,
+    flourishing: ['#D5F4E6', '#A9DFBF', '#76D7C4', '#52BE80', '#27AE60', '#229954', '#1E8449', '#176F3A', '#0c3a29', '#082B1F'] as MantineColorsTuple,
+    strategic: ['#D6EAF8', '#AED6F1', '#85C1E2', '#5DADE2', '#3498DB', '#2874A6', '#21618C', '#1A5276', '#154360', '#1B4F72'] as MantineColorsTuple,
+    neutral: ['#FDFEFE', '#F8F9FA', '#F0F3F4', '#E5E7E9', '#D5DBDB', '#BDC3C7', '#95A5A6', '#7F8C8D', '#566573', '#34495E'] as MantineColorsTuple,
     // Include default Mantine colors to satisfy type requirements
     dark: ['#d1d5db', '#9ca3af', '#6b7280', '#4b5563', '#374151', '#1f2937', '#111827', '#030712', '#020617', '#030712'] as MantineColorsTuple,
     gray: ['#f8fafc', '#f1f5f9', '#e2e8f0', '#cbd5e1', '#94a3b8', '#64748b', '#475569', '#334155', '#1e293b', '#0f172a'] as MantineColorsTuple,
@@ -33,6 +35,7 @@ export const theme = {
   fontFamily: 'Inter, system-ui, sans-serif',
   fontFamilyMonospace: 'JetBrains Mono, monospace',
   primaryColor: 'odyssean',
+  primaryShade: { light: 6, dark: 5 } as const,
   defaultRadius: 'md',
 };
 
