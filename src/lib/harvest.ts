@@ -202,6 +202,11 @@ export const harvestApi = {
     const response = await api.get(`/harvest/funders/${funderId}/discovery-runs`);
     return response.data;
   },
+
+  purgeOpportunities: async (funderId: string): Promise<{ deleted: number }> => {
+    const response = await api.delete(`/harvest/funders/${funderId}/opportunities`);
+    return response.data;
+  },
 };
 
 export interface DiscoveryRun {

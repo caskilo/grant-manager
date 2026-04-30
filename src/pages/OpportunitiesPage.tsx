@@ -41,16 +41,25 @@ interface Opportunity {
   strikeOffReason?: string | null;
 }
 
-/** Extract the earliest deadline date from the deadlines JSON array */
+const CLOSING_TYPES = new Set(['deadline', 'closing', 'close']);
+
+/** Extract the closing deadline date, ignoring opening/decision entries */
 function getDeadlineDate(deadlines: DeadlineEntry[] | string[] | null): Date | null {
   if (!deadlines || !Array.isArray(deadlines) || deadlines.length === 0) return null;
-  const first = deadlines[0];
-  if (typeof first === 'string') {
-    const d = new Date(first);
+  const typed = (deadlines as DeadlineEntry[]).filter(
+    d => typeof d === 'object' && d?.type && CLOSING_TYPES.has(d.type.toLowerCase())
+  );
+  const candidate = typed.length > 0 ? typed[0] : (
+    (deadlines as DeadlineEntry[]).find(d => typeof d === 'object' && !d?.type)
+    ?? (typeof deadlines[0] === 'string' ? deadlines[0] : null)
+  );
+  if (!candidate) return null;
+  if (typeof candidate === 'string') {
+    const d = new Date(candidate);
     return isNaN(d.getTime()) ? null : d;
   }
-  if (first?.date) {
-    const d = new Date(first.date);
+  if ((candidate as DeadlineEntry)?.date) {
+    const d = new Date((candidate as DeadlineEntry).date!);
     return isNaN(d.getTime()) ? null : d;
   }
   return null;

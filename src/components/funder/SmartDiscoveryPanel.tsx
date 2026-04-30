@@ -78,11 +78,12 @@ export default function SmartDiscoveryPanel({
   const [showHistory, setShowHistory] = useState(true);
   const lastLoggedProgress = useRef<string>(''); // Track last logged progress to avoid duplicates
 
-  // Discovery runs history query
+  // Discovery runs history query — staleTime:0 ensures invalidation always triggers a refetch
   const { data: discoveryRuns, isLoading: isLoadingRuns } = useQuery<DiscoveryRun[]>({
     queryKey: ['discoveryRuns', funderId],
     queryFn: () => harvestApi.listDiscoveryRuns(funderId),
     enabled: showHistory,
+    staleTime: 0,
   });
 
   // Add log entry
@@ -177,7 +178,10 @@ export default function SmartDiscoveryPanel({
           clearInterval(pollInterval);
           addLog('success', `Discovery completed! Found ${job.result?.opportunities?.length || 0} opportunities`);
           queryClient.invalidateQueries({ queryKey: ['funder', funderId] });
-          queryClient.invalidateQueries({ queryKey: ['discoveryRuns', funderId] });
+          // Delay history invalidation slightly so the backend has time to finish writing the run JSON file
+          setTimeout(() => {
+            queryClient.invalidateQueries({ queryKey: ['discoveryRuns', funderId] });
+          }, 2000);
         }
 
         // Handle failure

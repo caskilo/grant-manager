@@ -45,6 +45,11 @@ import {
   IconEdit,
   IconDeviceFloppy,
   IconX,
+  IconRefresh,
+  IconShieldCheck,
+  IconLink,
+  IconPlus,
+  IconTrash,
 } from '@tabler/icons-react';
 import api from '../lib/api';
 import { applicationsApi } from '../lib/applications';
@@ -100,16 +105,28 @@ interface Opportunity {
   updatedAt: string;
 }
 
-/** Extract the earliest deadline date from the deadlines JSON array */
+const CLOSING_TYPES = new Set(['deadline', 'closing', 'close']);
+
+/** Extract the closing deadline date, ignoring opening/decision entries */
 function getDeadlineDate(deadlines: DeadlineEntry[] | string[] | null): Date | null {
   if (!deadlines || !Array.isArray(deadlines) || deadlines.length === 0) return null;
-  const first = deadlines[0];
-  if (typeof first === 'string') {
-    const d = new Date(first);
+  // Prefer explicitly typed closing/deadline entries
+  const typed = (deadlines as DeadlineEntry[]).filter(
+    d => typeof d === 'object' && d?.type && CLOSING_TYPES.has(d.type.toLowerCase())
+  );
+  const candidate = typed.length > 0 ? typed[0] : (
+    // Fall back to untyped entries (never use opening/decision)
+    (deadlines as DeadlineEntry[]).find(
+      d => typeof d === 'object' && !d?.type
+    ) ?? (typeof deadlines[0] === 'string' ? deadlines[0] : null)
+  );
+  if (!candidate) return null;
+  if (typeof candidate === 'string') {
+    const d = new Date(candidate);
     return isNaN(d.getTime()) ? null : d;
   }
-  if (first?.date) {
-    const d = new Date(first.date);
+  if ((candidate as DeadlineEntry)?.date) {
+    const d = new Date((candidate as DeadlineEntry).date!);
     return isNaN(d.getTime()) ? null : d;
   }
   return null;
@@ -164,8 +181,11 @@ function renderMarkdown(text: string): React.ReactNode {
 
 function getDeadlineDescription(deadlines: DeadlineEntry[] | string[] | null): string | null {
   if (!deadlines || !Array.isArray(deadlines) || deadlines.length === 0) return null;
-  const first = deadlines[0];
-  if (typeof first === 'object' && first?.description) return first.description;
+  const typed = (deadlines as DeadlineEntry[]).filter(
+    d => typeof d === 'object' && d?.type && CLOSING_TYPES.has(d.type.toLowerCase())
+  );
+  const entry = typed.length > 0 ? typed[0] : deadlines[0];
+  if (typeof entry === 'object' && (entry as DeadlineEntry)?.description) return (entry as DeadlineEntry).description!;
   return null;
 }
 
@@ -249,28 +269,69 @@ export default function OpportunityDetailPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  // Inline URL editing state
+  // Inline URL + deadline editing state
   const [editingUrls, setEditingUrls] = useState(false);
   const [editSourceUrl, setEditSourceUrl] = useState('');
   const [editOpportunityUrl, setEditOpportunityUrl] = useState('');
-  
+  const [editDeadlineDate, setEditDeadlineDate] = useState('');
+
   // Expandable scoring details state
   const [showScoringDetails, setShowScoringDetails] = useState(false);
 
+  // Eligibility check state
+  const [eligibilityResult, setEligibilityResult] = useState<{
+    isEligible: boolean;
+    reasons: string[];
+    details: { geographyMatch: boolean; applicantTypeMatch: boolean; awardSizeMatch: boolean };
+  } | null>(null);
+
+  // Extra links for eligibility context
+  const [extraLinks, setExtraLinks] = useState<Array<{ url: string; label: string }>>([]);
+  const [newLinkUrl, setNewLinkUrl] = useState('');
+  const [newLinkLabel, setNewLinkLabel] = useState('');
+
   const updateUrlsMutation = useMutation({
-    mutationFn: async (data: { sourceUrl?: string; opportunityUrl?: string }) => {
-      const payload: Record<string, string> = {};
+    mutationFn: async (data: { sourceUrl?: string; opportunityUrl?: string; deadlines?: any[] }) => {
+      const payload: Record<string, any> = {};
       if (data.sourceUrl) payload.sourceUrl = data.sourceUrl;
       if (data.opportunityUrl !== undefined) payload.opportunityUrl = data.opportunityUrl;
+      if (data.deadlines !== undefined) payload.deadlines = data.deadlines;
       return api.patch(`/opportunities/${id}`, payload);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['opportunity', id] });
       setEditingUrls(false);
-      notifications.show({ title: 'Updated', message: 'URLs saved successfully.', color: 'green', autoClose: 3000 });
+      notifications.show({ title: 'Updated', message: 'Saved successfully.', color: 'green', autoClose: 3000 });
     },
     onError: (err: any) => {
-      notifications.show({ title: 'Error', message: err?.response?.data?.message || 'Failed to update URLs.', color: 'red' });
+      notifications.show({ title: 'Error', message: err?.response?.data?.message || 'Failed to update.', color: 'red' });
+    },
+  });
+
+  const checkEligibilityMutation = useMutation({
+    mutationFn: async () => {
+      const res = await api.get(`/opportunities/${id}/eligibility`);
+      return res.data;
+    },
+    onSuccess: (data) => {
+      setEligibilityResult(data);
+    },
+    onError: () => {
+      notifications.show({ title: 'Error', message: 'Failed to check eligibility.', color: 'red' });
+    },
+  });
+
+  const rescoreMutation = useMutation({
+    mutationFn: async () => {
+      const res = await api.post(`/opportunities/${id}/calculate-score`);
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['opportunity', id] });
+      notifications.show({ title: 'Rescored', message: 'Alignment scores updated.', color: 'teal', autoClose: 3000 });
+    },
+    onError: () => {
+      notifications.show({ title: 'Error', message: 'Failed to rescore.', color: 'red' });
     },
   });
 
@@ -466,7 +527,7 @@ export default function OpportunityDetailPage() {
                     <IconCalendar size={18} />
                   </ThemeIcon>
                   <div>
-                    <Text size="xs" c="dimmed">Deadline</Text>
+                    <Text size="xs" c="dimmed">Application Deadline</Text>
                     <Text size="sm" fw={500} c={isPastDeadline ? 'red' : isDeadlineSoon ? 'orange' : undefined}>
                       {deadlineDesc || deadlineDate.toLocaleDateString()}
                       {isPastDeadline && ' (Closed)'}
@@ -531,7 +592,7 @@ export default function OpportunityDetailPage() {
               )}
             </Group>
 
-            {/* URL editing section */}
+            {/* URL + deadline editing section */}
             {editingUrls ? (
               <Paper p="sm" withBorder mt="md" bg="gray.0">
                 <Stack gap="sm">
@@ -549,6 +610,15 @@ export default function OpportunityDetailPage() {
                     onChange={(e) => setEditOpportunityUrl(e.currentTarget.value)}
                     size="sm"
                   />
+                  <TextInput
+                    label="Application Deadline (override)"
+                    description="YYYY-MM-DD — corrects the closing deadline date stored for this opportunity"
+                    placeholder="e.g. 2026-06-10"
+                    value={editDeadlineDate}
+                    onChange={(e) => setEditDeadlineDate(e.currentTarget.value)}
+                    size="sm"
+                    leftSection={<IconCalendar size={14} />}
+                  />
                   <Group gap="xs" justify="flex-end">
                     <Button
                       size="xs"
@@ -562,12 +632,24 @@ export default function OpportunityDetailPage() {
                       size="xs"
                       leftSection={<IconDeviceFloppy size={14} />}
                       loading={updateUrlsMutation.isPending}
-                      onClick={() => updateUrlsMutation.mutate({
-                        sourceUrl: editSourceUrl,
-                        opportunityUrl: editOpportunityUrl || undefined,
-                      })}
+                      onClick={() => {
+                        // Build updated deadlines: replace any existing closing deadline,
+                        // keep opening/decision entries intact.
+                        const existing = (opportunity!.deadlines as DeadlineEntry[]) || [];
+                        let newDeadlines: DeadlineEntry[] = existing.filter(
+                          d => typeof d === 'object' && d?.type && !CLOSING_TYPES.has((d.type || '').toLowerCase())
+                        );
+                        if (editDeadlineDate) {
+                          newDeadlines = [...newDeadlines, { date: editDeadlineDate, type: 'deadline' }];
+                        }
+                        updateUrlsMutation.mutate({
+                          sourceUrl: editSourceUrl,
+                          opportunityUrl: editOpportunityUrl || undefined,
+                          deadlines: editDeadlineDate ? newDeadlines : undefined,
+                        });
+                      }}
                     >
-                      Save URLs
+                      Save
                     </Button>
                   </Group>
                 </Stack>
@@ -623,9 +705,14 @@ export default function OpportunityDetailPage() {
                 onClick={() => {
                   setEditSourceUrl(opportunity.sourceUrl || '');
                   setEditOpportunityUrl(opportunity.opportunityUrl || '');
+                  const existing = (opportunity.deadlines as DeadlineEntry[]) || [];
+                  const closing = existing.find(
+                    d => typeof d === 'object' && d?.type && CLOSING_TYPES.has((d.type || '').toLowerCase())
+                  );
+                  setEditDeadlineDate(closing?.date || '');
                   setEditingUrls(true);
                 }}
-                title="Edit URLs"
+                title="Edit URLs &amp; deadline"
               >
                 <IconEdit size={18} />
               </ActionIcon>
@@ -634,19 +721,17 @@ export default function OpportunityDetailPage() {
         </Paper>
 
         {/* Tabs */}
-        <Tabs defaultValue={linkedApp ? 'application' : hasDimensions ? 'alignment' : 'eligibility'}>
+        <Tabs defaultValue={linkedApp ? 'application' : 'alignment'}>
           <Tabs.List>
             {linkedApp && (
               <Tabs.Tab value="application" leftSection={<IconFileText size={16} />}>
                 Application
               </Tabs.Tab>
             )}
-            {hasDimensions && (
-              <Tabs.Tab value="alignment" leftSection={<IconTarget size={16} />}>
-                OI Alignment
-              </Tabs.Tab>
-            )}
-            <Tabs.Tab value="eligibility" leftSection={<IconCheck size={16} />}>
+            <Tabs.Tab value="alignment" leftSection={<IconTarget size={16} />}>
+              OI Alignment
+            </Tabs.Tab>
+            <Tabs.Tab value="eligibility" leftSection={<IconShieldCheck size={16} />}>
               Eligibility
             </Tabs.Tab>
             <Tabs.Tab value="details" leftSection={<IconInfoCircle size={16} />}>
@@ -706,55 +791,114 @@ export default function OpportunityDetailPage() {
             </Tabs.Panel>
           )}
 
-          {/* Alignment Tab - driven by real data from tags */}
-          {hasDimensions && (
-            <Tabs.Panel value="alignment" pt="md">
-              <Stack gap="md">
-                <Paper p="md" withBorder>
-                  <Group justify="space-between" align="flex-start" mb="md">
-                    <Stack gap="xs" style={{ flex: 1 }}>
-                      <Group gap="xs">
-                        <Text size="sm" fw={500}>Odyssean Institute Alignment</Text>
-                        <ActionIcon
-                          variant="subtle"
-                          size="sm"
-                          onClick={() => setShowScoringDetails(!showScoringDetails)}
-                        >
-                          <IconInfoCircle size={16} />
-                        </ActionIcon>
-                      </Group>
-                      <Text size="xs" c="dimmed">
-                        Automated analysis of how well this opportunity aligns with OI research strands and methodology.
-                      </Text>
+          {/* Alignment Tab - always visible */}
+          <Tabs.Panel value="alignment" pt="md">
+            <Stack gap="md">
+              {!hasDimensions && !hasValidScore && (
+                <Alert icon={<IconSparkles size={16} />} color="blue" variant="light">
+                  <Group justify="space-between" align="center">
+                    <Stack gap={2} style={{ flex: 1 }}>
+                      <Text size="sm" fw={500}>No alignment scores yet.</Text>
+                      <Text size="xs" c="dimmed">Run basic scoring now, or re-run Smart Discovery for full dimensional analysis.</Text>
                     </Stack>
-                    <Group gap="md" align="flex-start">
-                      {hasOverall && (
-                        <RingProgress
-                          sections={[{ value: overallAlignment!, color: getAlignmentColor(overallAlignment!) }]}
-                          label={
-                            <div style={{ textAlign: 'center' }}>
-                              <Text fw={700} size="lg">{overallAlignment}%</Text>
-                              <Text size="xs" c="dimmed">Match</Text>
-                            </div>
-                          }
-                          size={100}
-                          thickness={8}
-                        />
-                      )}
-                      {recommendation && (
-                        <Stack gap={4}>
-                          <Text size="xs" c="dimmed">Recommendation</Text>
-                          <Badge
-                            color={getRecommendationColor(recommendation)}
-                            size="lg"
-                            variant="filled"
-                          >
-                            {formatRecommendation(recommendation)}
-                          </Badge>
-                        </Stack>
-                      )}
+                    <Button
+                      size="xs"
+                      leftSection={<IconRefresh size={14} />}
+                      loading={rescoreMutation.isPending}
+                      onClick={() => rescoreMutation.mutate()}
+                    >
+                      Score Now
+                    </Button>
+                  </Group>
+                </Alert>
+              )}
+              {!hasDimensions && hasValidScore && (
+                <Paper p="md" withBorder>
+                  <Group justify="space-between" align="center">
+                    <Stack gap={2}>
+                      <Text size="sm" fw={500}>Basic Fit Score</Text>
+                      <Text size="xs" c="dimmed">Run Smart Discovery to get a full dimensional breakdown.</Text>
+                    </Stack>
+                    <Group gap="sm">
+                      <Badge size="xl" color={getAlignmentColor(Math.round(scoreNumber! * 10))}>
+                        {Math.round(scoreNumber! * 10)}%
+                      </Badge>
+                      <Button
+                        size="xs"
+                        variant="subtle"
+                        leftSection={<IconRefresh size={14} />}
+                        loading={rescoreMutation.isPending}
+                        onClick={() => rescoreMutation.mutate()}
+                      >
+                        Rescore
+                      </Button>
                     </Group>
                   </Group>
+                  {opportunity.aiFitReasons && opportunity.aiFitReasons.length > 0 && (
+                    <Stack gap="xs" mt="md">
+                      {opportunity.aiFitReasons.map((r, i) => (
+                        <Text key={i} size="sm" c="dimmed">• {r}</Text>
+                      ))}
+                    </Stack>
+                  )}
+                </Paper>
+              )}
+              {hasDimensions && (
+              <Paper p="md" withBorder>
+                <Group justify="space-between" align="flex-start" mb="md">
+                  <Stack gap="xs" style={{ flex: 1 }}>
+                    <Group gap="xs">
+                      <Text size="sm" fw={500}>Odyssean Institute Alignment</Text>
+                      <ActionIcon
+                        variant="subtle"
+                        size="sm"
+                        onClick={() => setShowScoringDetails(!showScoringDetails)}
+                      >
+                        <IconInfoCircle size={16} />
+                      </ActionIcon>
+                    </Group>
+                    <Text size="xs" c="dimmed">
+                      Automated analysis of how well this opportunity aligns with OI research strands and methodology.
+                    </Text>
+                  </Stack>
+                    <Group gap="md" align="flex-start">
+                    {hasOverall && (
+                      <RingProgress
+                        sections={[{ value: overallAlignment!, color: getAlignmentColor(overallAlignment!) }]}
+                        label={
+                          <div style={{ textAlign: 'center' }}>
+                            <Text fw={700} size="lg">{overallAlignment}%</Text>
+                            <Text size="xs" c="dimmed">Match</Text>
+                          </div>
+                        }
+                        size={100}
+                        thickness={8}
+                      />
+                    )}
+                    {recommendation && (
+                      <Stack gap={4}>
+                        <Text size="xs" c="dimmed">Recommendation</Text>
+                        <Badge
+                          color={getRecommendationColor(recommendation)}
+                          size="lg"
+                          variant="filled"
+                        >
+                          {formatRecommendation(recommendation)}
+                        </Badge>
+                      </Stack>
+                    )}
+                    <Button
+                      size="xs"
+                      variant="subtle"
+                      leftSection={<IconRefresh size={14} />}
+                      loading={rescoreMutation.isPending}
+                      onClick={() => rescoreMutation.mutate()}
+                      title="Re-run alignment scoring"
+                    >
+                      Rescore
+                    </Button>
+                  </Group>
+                </Group>
 
                   <Collapse in={showScoringDetails}>
                     <Divider my="sm" />
@@ -793,7 +937,10 @@ export default function OpportunityDetailPage() {
                     </Stack>
                   </Collapse>
                 </Paper>
+              )}
 
+                {hasDimensions && (
+                <>
                 {/* Dimensional Breakdown - from real tag data */}
                 <Paper p="md" withBorder>
                   <Text size="sm" fw={500} mb="md">Dimensional Breakdown</Text>
@@ -858,56 +1005,108 @@ export default function OpportunityDetailPage() {
                     </Stack>
                   </Paper>
                 )}
+                </>
+                )}
               </Stack>
             </Tabs.Panel>
-          )}
 
-          {/* Eligibility Tab - uses rawDescription (eligibility markdown) + eligibleApplicantTypes + processSteps */}
+          {/* Eligibility Tab */}
           <Tabs.Panel value="eligibility" pt="md">
             <Stack gap="md">
-              {hasApplicantTypes && (
-                <Paper p="md" withBorder>
-                  <Text size="sm" fw={500} mb="md">Eligible Applicant Types</Text>
-                  <Group gap="sm">
-                    {opportunity.eligibleApplicantTypes.map((type, i) => (
-                      <Badge key={i} size="lg" variant="light" color="indigo">
-                        {type}
-                      </Badge>
+
+              {/* OI Eligibility Check result */}
+              {eligibilityResult && (
+                <Alert
+                  icon={eligibilityResult.isEligible ? <IconCheck size={16} /> : <IconAlertCircle size={16} />}
+                  color={eligibilityResult.isEligible ? 'teal' : 'red'}
+                  variant="light"
+                  withCloseButton
+                  onClose={() => setEligibilityResult(null)}
+                >
+                  <Text size="sm" fw={600} mb={4}>
+                    {eligibilityResult.isEligible ? 'OI appears eligible for this opportunity' : 'OI may not be eligible'}
+                  </Text>
+                  <Stack gap={4}>
+                    {eligibilityResult.reasons.map((r, i) => (
+                      <Text key={i} size="xs">{r}</Text>
                     ))}
+                  </Stack>
+                  <Group gap="xl" mt="sm">
+                    {[
+                      { label: 'Geography', ok: eligibilityResult.details.geographyMatch },
+                      { label: 'Applicant type', ok: eligibilityResult.details.applicantTypeMatch },
+                      { label: 'Award size', ok: eligibilityResult.details.awardSizeMatch },
+                    ].map(({ label, ok }) => (
+                      <Group key={label} gap={4}>
+                        <ThemeIcon size={16} color={ok ? 'teal' : 'red'} variant="light">
+                          {ok ? <IconCheck size={10} /> : <IconX size={10} />}
+                        </ThemeIcon>
+                        <Text size="xs" c={ok ? 'teal' : 'red'}>{label}</Text>
+                      </Group>
+                    ))}
+                  </Group>
+                </Alert>
+              )}
+
+              {/* OI Alignment summary - quick glance without switching tab */}
+              {hasOverall && (
+                <Paper p="md" withBorder>
+                  <Group justify="space-between" align="center">
+                    <Stack gap={2}>
+                      <Text size="sm" fw={500}>OI Alignment Score</Text>
+                      <Text size="xs" c="dimmed">How well this grant fits OI's research priorities</Text>
+                    </Stack>
+                    <Group gap="sm">
+                      {recommendation && (
+                        <Badge color={getRecommendationColor(recommendation)} variant="filled">
+                          {formatRecommendation(recommendation)}
+                        </Badge>
+                      )}
+                      <Badge size="xl" color={getAlignmentColor(overallAlignment!)}>
+                        {overallAlignment}%
+                      </Badge>
+                    </Group>
                   </Group>
                 </Paper>
               )}
 
-              {opportunity.geographies && opportunity.geographies.length > 0 && (
+              {/* Known eligibility from extracted data */}
+              {(hasApplicantTypes || (opportunity.geographies && opportunity.geographies.length > 0)) && (
                 <Paper p="md" withBorder>
-                  <Text size="sm" fw={500} mb="md">Geographic Restrictions</Text>
-                  <Group gap="sm">
-                    {opportunity.geographies.map((geo, i) => (
-                      <Badge key={i} size="lg" variant="light" color="cyan">
-                        {geo}
-                      </Badge>
-                    ))}
-                  </Group>
+                  <Text size="sm" fw={500} mb="md">Extracted Eligibility Criteria</Text>
+                  <Stack gap="sm">
+                    {hasApplicantTypes && (
+                      <div>
+                        <Text size="xs" c="dimmed" mb={6}>Eligible Applicant Types</Text>
+                        <Group gap="sm">
+                          {opportunity.eligibleApplicantTypes.map((type, i) => (
+                            <Badge key={i} size="lg" variant="light" color="indigo">{type}</Badge>
+                          ))}
+                        </Group>
+                      </div>
+                    )}
+                    {opportunity.geographies && opportunity.geographies.length > 0 && (
+                      <div>
+                        <Text size="xs" c="dimmed" mb={6}>Geographic Restrictions</Text>
+                        <Group gap="sm">
+                          {opportunity.geographies.map((geo, i) => (
+                            <Badge key={i} size="lg" variant="light" color="cyan">{geo}</Badge>
+                          ))}
+                        </Group>
+                      </div>
+                    )}
+                  </Stack>
                 </Paper>
               )}
 
               {hasProcessSteps && (
                 <Paper p="md" withBorder>
                   <Text size="sm" fw={500} mb="md">Additional Eligibility Details</Text>
-                  <List
-                    spacing="sm"
-                    size="sm"
-                    center
-                    icon={
-                      <ThemeIcon color="teal" size={20} radius="xl">
-                        <IconCheck size={12} />
-                      </ThemeIcon>
-                    }
+                  <List spacing="sm" size="sm" center
+                    icon={<ThemeIcon color="teal" size={20} radius="xl"><IconCheck size={12} /></ThemeIcon>}
                   >
                     {opportunity.processSteps.map((step, i) => (
-                      <List.Item key={i}>
-                        <Text size="sm">{step}</Text>
-                      </List.Item>
+                      <List.Item key={i}><Text size="sm">{step}</Text></List.Item>
                     ))}
                   </List>
                 </Paper>
@@ -920,13 +1119,86 @@ export default function OpportunityDetailPage() {
                 </Paper>
               )}
 
-              {!hasEligibility && !hasApplicantTypes && !hasProcessSteps && (
-                <Paper p="md" withBorder>
-                  <Text size="sm" c="dimmed">
-                    No detailed eligibility information available. Please check the official page.
-                  </Text>
-                </Paper>
-              )}
+              {/* Check Eligibility panel — always shown */}
+              <Paper p="md" withBorder>
+                <Stack gap="sm">
+                  <Group justify="space-between" align="center">
+                    <Stack gap={2}>
+                      <Text size="sm" fw={500}>Check OI Eligibility</Text>
+                      <Text size="xs" c="dimmed">
+                        Runs a rule-based check against OI's geography, applicant type, and award-size criteria.
+                      </Text>
+                    </Stack>
+                    <Button
+                      size="sm"
+                      leftSection={<IconShieldCheck size={16} />}
+                      loading={checkEligibilityMutation.isPending}
+                      onClick={() => checkEligibilityMutation.mutate()}
+                    >
+                      Check Eligibility
+                    </Button>
+                  </Group>
+
+                  {/* Extra reference links */}
+                  {extraLinks.length > 0 && (
+                    <Stack gap="xs">
+                      <Text size="xs" fw={500} c="dimmed">Reference Links</Text>
+                      {extraLinks.map((link, i) => (
+                        <Group key={i} gap="xs">
+                          <ThemeIcon size={16} variant="light" color="blue"><IconLink size={10} /></ThemeIcon>
+                          <Anchor href={link.url} target="_blank" size="xs" style={{ flex: 1 }}>
+                            {link.label || link.url}
+                          </Anchor>
+                          <ActionIcon
+                            size="xs"
+                            variant="subtle"
+                            color="red"
+                            onClick={() => setExtraLinks(extraLinks.filter((_, idx) => idx !== i))}
+                          >
+                            <IconTrash size={10} />
+                          </ActionIcon>
+                        </Group>
+                      ))}
+                    </Stack>
+                  )}
+
+                  <Divider label="Add reference link" labelPosition="left" />
+                  <Group gap="xs" align="flex-end">
+                    <TextInput
+                      placeholder="https://..."
+                      label="URL"
+                      size="xs"
+                      style={{ flex: 2 }}
+                      value={newLinkUrl}
+                      onChange={(e) => setNewLinkUrl(e.currentTarget.value)}
+                      leftSection={<IconLink size={12} />}
+                    />
+                    <TextInput
+                      placeholder="Label (optional)"
+                      label="Label"
+                      size="xs"
+                      style={{ flex: 1 }}
+                      value={newLinkLabel}
+                      onChange={(e) => setNewLinkLabel(e.currentTarget.value)}
+                    />
+                    <Button
+                      size="xs"
+                      variant="light"
+                      leftSection={<IconPlus size={12} />}
+                      disabled={!newLinkUrl}
+                      onClick={() => {
+                        if (newLinkUrl) {
+                          setExtraLinks([...extraLinks, { url: newLinkUrl, label: newLinkLabel }]);
+                          setNewLinkUrl('');
+                          setNewLinkLabel('');
+                        }
+                      }}
+                    >
+                      Add
+                    </Button>
+                  </Group>
+                </Stack>
+              </Paper>
             </Stack>
           </Tabs.Panel>
 
