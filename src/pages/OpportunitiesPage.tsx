@@ -451,7 +451,7 @@ export default function OpportunitiesPage() {
               <Button onClick={() => navigate('/funders')}>Go to Funders</Button>
             </Stack>
           </Paper>
-        ) : viewMode === 'flat' && sortBy ? (
+        ) : viewMode === 'flat' ? (
           <Stack gap="md">
             {flatSortedOpportunities.map((opp) => {
               const rawScore = opp.aiFitScore;
@@ -570,21 +570,7 @@ export default function OpportunitiesPage() {
                         <IconBuildingBank size={20} />
                       </ThemeIcon>
                       <div>
-                        {group.funderId ? (
-                          <Anchor
-                            size="md"
-                            fw={600}
-                            c="#1e3a5f"
-                            onClick={(e: React.MouseEvent) => {
-                              e.stopPropagation();
-                              navigate(`/funders/${group.funderId}`);
-                            }}
-                          >
-                            {funderName}
-                          </Anchor>
-                        ) : (
-                          <Text fw={600} size="md">{funderName}</Text>
-                        )}
+                        <Text fw={600} size="md">{funderName}</Text>
                         <Text size="xs" c="dimmed">
                           {group.opportunities.length} {group.opportunities.length === 1 ? 'opportunity' : 'opportunities'}
                         </Text>
@@ -727,6 +713,16 @@ export default function OpportunitiesPage() {
                                       {opp.geographies[0]}
                                       {opp.geographies.length > 1 && ` +${opp.geographies.length - 1}`}
                                     </Badge>
+                                  )}
+                                  {group.funderId && (
+                                    <Anchor
+                                      size="xs"
+                                      c="dimmed"
+                                      onClick={(e: React.MouseEvent) => { e.stopPropagation(); navigate(`/funders/${group.funderId}`); }}
+                                      style={{ whiteSpace: 'nowrap' }}
+                                    >
+                                      Funder Page →
+                                    </Anchor>
                                   )}
                                 </Group>
                               </Stack>
