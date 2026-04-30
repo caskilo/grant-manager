@@ -1,9 +1,10 @@
-import { Container, Title, Text, Paper, Stack, Group, Badge, Button, Textarea, Anchor, Divider, Grid, Card, Tabs, ThemeIcon, Progress } from '@mantine/core';
+import { Container, Title, Text, Paper, Stack, Group, Badge, Button, Textarea, Anchor, Divider, Grid, Card, Tabs, ThemeIcon, Progress, Tooltip } from '@mantine/core';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState, useEffect } from 'react';
-import { IconArrowLeft, IconExternalLink, IconDeviceFloppy, IconInfoCircle, IconSparkles, IconChartBar, IconTarget, IconWorldWww, IconFileText } from '@tabler/icons-react';
+import { IconArrowLeft, IconExternalLink, IconDeviceFloppy, IconInfoCircle, IconSparkles, IconChartBar, IconTarget, IconWorldWww, IconFileText, IconTrash } from '@tabler/icons-react';
 import api from '../lib/api';
+import { harvestApi } from '../lib/harvest';
 import SmartDiscoveryPanel from '../components/funder/SmartDiscoveryPanel';
 
 const getCatalogueType = (tags: string[]): string | null => {
@@ -68,6 +69,15 @@ export default function FunderDetailPage() {
   const queryClient = useQueryClient();
   const [notes, setNotes] = useState('');
   const [hasChanges, setHasChanges] = useState(false);
+  const [confirmingPurge, setConfirmingPurge] = useState(false);
+
+  const purgeOpportunitiesMutation = useMutation({
+    mutationFn: () => harvestApi.purgeOpportunities(id!),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['funder', id] });
+      setConfirmingPurge(false);
+    },
+  });
 
   const { data: funder, isLoading } = useQuery<FunderDetail>({
     queryKey: ['funder', id],
@@ -233,6 +243,36 @@ export default function FunderDetailPage() {
           {/* ── Opportunities Tab ── */}
           <Tabs.Panel value="opportunities" pt="md">
             <Stack gap="md">
+              {funder.opportunities.length > 0 && (
+                <Group justify="flex-end">
+                  {confirmingPurge ? (
+                    <Group gap="xs">
+                      <Text size="sm" c="red">Delete all {funder._count.opportunities} opportunities?</Text>
+                      <Button
+                        size="xs"
+                        color="red"
+                        loading={purgeOpportunitiesMutation.isPending}
+                        onClick={() => purgeOpportunitiesMutation.mutate()}
+                      >
+                        Confirm Delete
+                      </Button>
+                      <Button size="xs" variant="subtle" onClick={() => setConfirmingPurge(false)}>Cancel</Button>
+                    </Group>
+                  ) : (
+                    <Tooltip label="Delete all discovered opportunities for this funder">
+                      <Button
+                        size="xs"
+                        variant="subtle"
+                        color="red"
+                        leftSection={<IconTrash size={14} />}
+                        onClick={() => setConfirmingPurge(true)}
+                      >
+                        Clear All
+                      </Button>
+                    </Tooltip>
+                  )}
+                </Group>
+              )}
               {funder.opportunities.length > 0 ? (
                 (() => {
                   // Deduplicate opportunities by programName + sourceUrl
