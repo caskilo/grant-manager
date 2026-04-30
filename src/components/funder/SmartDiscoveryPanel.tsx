@@ -64,18 +64,39 @@ export default function SmartDiscoveryPanel({
   const queryClient = useQueryClient();
   const logsEndRef = useRef<HTMLDivElement>(null);
 
-  // Configuration state
+  // Persist per-funder config to localStorage
+  const storageKey = `smart-discovery-config-${funderId}`;
+  const loadPersistedConfig = () => {
+    try { return JSON.parse(localStorage.getItem(storageKey) || '{}'); } catch { return {}; }
+  };
+  const persistConfig = useCallback((patch: Record<string, any>) => {
+    try {
+      const current = loadPersistedConfig();
+      localStorage.setItem(storageKey, JSON.stringify({ ...current, ...patch }));
+    } catch {}
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [storageKey]);
+
+  // Configuration state — initialise from localStorage where available
   const [seedUrl, setSeedUrl] = useState(funderWebsiteUrl || '');
-  const [manualLinks, setManualLinks] = useState<string[]>([]);
+  const [manualLinks, setManualLinks] = useState<string[]>(() => loadPersistedConfig().manualLinks ?? []);
   const [newLinkInput, setNewLinkInput] = useState('');
-  const [searchDepth, setSearchDepth] = useState<'shallow' | 'standard' | 'deep'>('standard');
-  const [llmProvider, setLlmProvider] = useState<'gemini' | 'anthropic'>('gemini');
-  const [showConfig, { toggle: toggleConfig }] = useDisclosure(true);
+  const [searchDepth, setSearchDepth] = useState<'shallow' | 'standard' | 'deep'>(
+    () => loadPersistedConfig().searchDepth ?? 'standard'
+  );
+  const [llmProvider, setLlmProvider] = useState<'gemini' | 'anthropic'>(
+    () => loadPersistedConfig().llmProvider ?? 'gemini'
+  );
+  const [showConfig, { toggle: toggleConfig }] = useDisclosure(
+    loadPersistedConfig().showConfig ?? true
+  );
 
   // Runtime state
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [progress, setProgress] = useState<DiscoveryProgress | null>(null);
-  const [showHistory, setShowHistory] = useState(true);
+  const [showHistory, setShowHistory] = useState<boolean>(
+    () => loadPersistedConfig().showHistory ?? true
+  );
   const lastLoggedProgress = useRef<string>(''); // Track last logged progress to avoid duplicates
 
   // Discovery runs history query — staleTime:0 ensures invalidation always triggers a refetch
@@ -176,6 +197,7 @@ export default function SmartDiscoveryPanel({
         // Handle completion
         if (job.state === 'completed') {
           clearInterval(pollInterval);
+          setProgress(null);
           addLog('success', `Discovery completed! Found ${job.result?.opportunities?.length || 0} opportunities`);
           queryClient.invalidateQueries({ queryKey: ['funder', funderId] });
           // Delay history invalidation slightly so the backend has time to finish writing the run JSON file
@@ -187,6 +209,7 @@ export default function SmartDiscoveryPanel({
         // Handle failure
         if (job.state === 'failed') {
           clearInterval(pollInterval);
+          setProgress(null);
           addLog('error', `Discovery failed: ${job.failedReason || 'Unknown error'}`);
         }
       } catch (error: any) {
@@ -207,7 +230,9 @@ export default function SmartDiscoveryPanel({
     try {
       new URL(newLinkInput);
       if (!manualLinks.includes(newLinkInput) && newLinkInput !== seedUrl) {
-        setManualLinks([...manualLinks, newLinkInput]);
+        const next = [...manualLinks, newLinkInput];
+        setManualLinks(next);
+        persistConfig({ manualLinks: next });
         setNewLinkInput('');
         addLog('info', `Added manual link: ${newLinkInput}`);
       }
@@ -218,7 +243,9 @@ export default function SmartDiscoveryPanel({
 
   // Remove manual link
   const removeManualLink = (link: string) => {
-    setManualLinks(manualLinks.filter(l => l !== link));
+    const next = manualLinks.filter(l => l !== link);
+    setManualLinks(next);
+    persistConfig({ manualLinks: next });
   };
 
   // Start discovery
@@ -272,7 +299,7 @@ export default function SmartDiscoveryPanel({
       {/* Configuration Panel */}
       <Card withBorder>
         <Stack gap="md">
-          <Group justify="space-between" onClick={toggleConfig} style={{ cursor: 'pointer' }}>
+          <Group justify="space-between" onClick={() => { toggleConfig(); persistConfig({ showConfig: !showConfig }); }} style={{ cursor: 'pointer' }}>
             <Group gap="xs">
               <IconSettings size={18} />
               <Text fw={500}>Configuration</Text>
@@ -287,7 +314,7 @@ export default function SmartDiscoveryPanel({
                 <Text size="sm" fw={500} mb="xs">LLM Provider</Text>
                 <SegmentedControl
                   value={llmProvider}
-                  onChange={(v) => setLlmProvider(v as 'gemini' | 'anthropic')}
+                  onChange={(v) => { setLlmProvider(v as 'gemini' | 'anthropic'); persistConfig({ llmProvider: v }); }}
                   data={[
                     { value: 'gemini', label: 'Gemini (Fast & Cheap)' },
                     { value: 'anthropic', label: 'Claude (High Quality)' },
@@ -301,7 +328,7 @@ export default function SmartDiscoveryPanel({
                 <Text size="sm" fw={500} mb="xs">Search Depth</Text>
                 <SegmentedControl
                   value={searchDepth}
-                  onChange={(v) => setSearchDepth(v as 'shallow' | 'standard' | 'deep')}
+                  onChange={(v) => { setSearchDepth(v as 'shallow' | 'standard' | 'deep'); persistConfig({ searchDepth: v }); }}
                   data={[
                     { value: 'shallow', label: 'Shallow (5 pages)' },
                     { value: 'standard', label: 'Standard (15 pages)' },
@@ -381,7 +408,7 @@ export default function SmartDiscoveryPanel({
           variant="subtle"
           size="sm"
           leftSection={<IconHistory size={16} />}
-          onClick={() => setShowHistory(!showHistory)}
+          onClick={() => { const next = !showHistory; setShowHistory(next); persistConfig({ showHistory: next }); }}
         >
           {showHistory ? 'Hide' : 'Show'} Discovery History
         </Button>

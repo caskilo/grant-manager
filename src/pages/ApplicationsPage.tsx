@@ -210,28 +210,27 @@ export default function ApplicationsPage() {
                           />
                         </div>
                       )}
-
-                      <Group gap="lg">
-                        <Text size="xs" c="dimmed">
-                          Owner: {app.leadOwner?.name || 'Unassigned'}
-                        </Text>
-                        <Text size="xs" c="dimmed">
-                          Updated: {new Date(app.updatedAt).toLocaleDateString()}
-                        </Text>
-                      </Group>
                     </Stack>
 
-                    <Button
-                      size="sm"
-                      variant="light"
-                      rightSection={<IconArrowRight size={14} />}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate(`/applications/${app.id}`);
-                      }}
-                    >
-                      Open
-                    </Button>
+                    <Stack gap={6} align="flex-end">
+                      <Button
+                        size="sm"
+                        variant="light"
+                        rightSection={<IconArrowRight size={14} />}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/applications/${app.id}`);
+                        }}
+                      >
+                        Open
+                      </Button>
+                      <Text size="xs" c="dimmed" ta="right">
+                        Owner: {app.leadOwner?.name || 'Unassigned'}
+                      </Text>
+                      <Text size="xs" c="dimmed" ta="right">
+                        Updated: {new Date(app.updatedAt).toLocaleDateString()}
+                      </Text>
+                    </Stack>
                   </Group>
                 </Paper>
               );
