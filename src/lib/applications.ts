@@ -150,10 +150,14 @@ export const applicationsApi = {
   regenerateSections: (applicationId: string, options?: {
     manualContent?: string;
     pageContent?: string;
+    llmProvider?: 'gemini' | 'anthropic';
   }) => api.post<Application>(`/applications/${applicationId}/regenerate`, options || {}),
 
-  suggestSection: (sectionId: string) =>
-    api.post<{ suggestion: string }>(`/applications/sections/${sectionId}/suggest`),
+  suggestSection: (sectionId: string, options?: { llmProvider?: 'gemini' | 'anthropic' }) =>
+    api.post<{ suggestion: string }>(
+      `/applications/sections/${sectionId}/suggest`,
+      options || {},
+    ),
 
   scrapePage: (url: string, waitForSelector?: string) =>
     api.post('/applications/scrape-page', { url, waitForSelector }),

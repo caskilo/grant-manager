@@ -24,6 +24,7 @@ import {
   Tabs,
   ScrollArea,
   NumberInput,
+  SegmentedControl,
 } from '@mantine/core';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -84,14 +85,42 @@ function wordCount(text: string): number {
   return text.trim().split(/\s+/).filter(Boolean).length;
 }
 
+type LlmProvider = 'gemini' | 'anthropic';
+
+/**
+ * Derive the LLM provider from an application's `generatedFrom` field. Recognises
+ * the explicit provider tokens (`llm_gemini`, `llm_anthropic`) as well as legacy
+ * model strings that embed a model name (e.g. `llm_claude-haiku-4-...`,
+ * `llm_gemini-flash`). Returns `null` if no provider can be inferred.
+ */
+function getProviderFromGeneratedFrom(
+  generatedFrom: string | null | undefined,
+): LlmProvider | null {
+  if (!generatedFrom) return null;
+  const lower = generatedFrom.toLowerCase();
+  if (lower.includes('gemini')) return 'gemini';
+  if (lower.includes('anthropic') || lower.includes('claude') ||
+      lower.includes('haiku') || lower.includes('sonnet') || lower.includes('opus')) {
+    return 'anthropic';
+  }
+  return null;
+}
+
 function getModelDisplayName(generatedFrom: string | null | undefined): string | null {
   if (!generatedFrom) return null;
   if (generatedFrom === 'DEFAULT_TEMPLATE') return 'Default';
-  // e.g. 'llm_claude-haiku-4-20250514' → 'Haiku'
-  const model = generatedFrom.replace(/^llm_/, '');
-  if (model.includes('haiku')) return 'Haiku';
-  if (model.includes('sonnet')) return 'Sonnet';
-  if (model.includes('opus')) return 'Opus';
+
+  // Explicit provider tokens (set when admin chooses provider in the edit header).
+  if (generatedFrom === 'llm_gemini') return 'Gemini';
+  if (generatedFrom === 'llm_anthropic') return 'Claude';
+
+  // Legacy model strings: try to map to a friendly name.
+  const model = generatedFrom.replace(/^llm_/, '').toLowerCase();
+  if (model.includes('gemini')) return 'Gemini';
+  if (model.includes('haiku')) return 'Claude Haiku';
+  if (model.includes('sonnet')) return 'Claude Sonnet';
+  if (model.includes('opus')) return 'Claude Opus';
+  if (model.includes('claude')) return 'Claude';
   if (model.includes('gpt-4o-mini')) return 'GPT-4o mini';
   if (model.includes('gpt-4o')) return 'GPT-4o';
   if (model.includes('gpt-4')) return 'GPT-4';
@@ -110,11 +139,14 @@ export default function ApplicationDetailPage() {
   const [editingQuickInfo, setEditingQuickInfo] = useState(false);
   const [editAwardAmount, setEditAwardAmount] = useState<number | string>('');
   const [editCurrency, setEditCurrency] = useState('GBP');
-  const [editModel, setEditModel] = useState('');
+  const [editProvider, setEditProvider] = useState<LlmProvider>('gemini');
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
 
   const [editingSection, setEditingSection] = useState<string | null>(null);
   const [sectionContent, setSectionContent] = useState<Record<string, string>>({});
+  // Local draft of section status while editing — committed atomically with content
+  // on Save so changing the dropdown doesn't close edit mode and discard text.
+  const [sectionStatusDraft, setSectionStatusDraft] = useState<Record<string, string>>({});
   const [addSectionOpen, setAddSectionOpen] = useState(false);
   const [newSectionTitle, setNewSectionTitle] = useState('');
   const [newSectionGuidance, setNewSectionGuidance] = useState('');
@@ -217,7 +249,10 @@ export default function ApplicationDetailPage() {
   });
 
   const suggestSectionMutation = useMutation({
-    mutationFn: (sectionId: string) => applicationsApi.suggestSection(sectionId),
+    mutationFn: (sectionId: string) =>
+      applicationsApi.suggestSection(sectionId, {
+        llmProvider: getProviderFromGeneratedFrom(application?.generatedFrom) || undefined,
+      }),
     onSuccess: (res, sectionId) => {
       const suggestion = res.data.suggestion;
       setSectionContent(prev => {
@@ -248,7 +283,10 @@ export default function ApplicationDetailPage() {
 
   const regenerateMutation = useMutation({
     mutationFn: (options: { manualContent?: string; pageContent?: string } | undefined) =>
-      applicationsApi.regenerateSections(id!, options || {}),
+      applicationsApi.regenerateSections(id!, {
+        ...(options || {}),
+        llmProvider: getProviderFromGeneratedFrom(application?.generatedFrom) || undefined,
+      }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['application', id] });
       setPasteModalOpen(false);
@@ -314,14 +352,29 @@ export default function ApplicationDetailPage() {
 
   const handleSaveSection = (section: ApplicationSection) => {
     const content = sectionContent[section.id] ?? section.content;
-    let status = section.status;
-    if (content && content.trim() && status === 'NOT_STARTED') {
+    // Prefer the user's draft status (from the in-editor dropdown); only auto-promote
+    // NOT_STARTED → IN_PROGRESS when the user hasn't manually changed status.
+    const userChangedStatus = sectionStatusDraft[section.id] !== undefined;
+    let status = sectionStatusDraft[section.id] ?? section.status;
+    if (!userChangedStatus && content && content.trim() && status === 'NOT_STARTED') {
       status = 'IN_PROGRESS';
     }
-    updateSectionMutation.mutate({
-      sectionId: section.id,
-      data: { content, status },
-    });
+    updateSectionMutation.mutate(
+      {
+        sectionId: section.id,
+        data: { content, status },
+      },
+      {
+        onSuccess: () => {
+          // Drop the draft once persisted; canonical value comes from the refetch.
+          setSectionStatusDraft(prev => {
+            const next = { ...prev };
+            delete next[section.id];
+            return next;
+          });
+        },
+      },
+    );
   };
 
   return (
@@ -423,7 +476,7 @@ export default function ApplicationDetailPage() {
             {editingQuickInfo ? (
               <Paper p="sm" withBorder bg="gray.0">
                 <Stack gap="sm">
-                  <Group gap="md" grow>
+                  <Group gap="md" grow align="flex-end">
                     <NumberInput
                       label="Expected Award"
                       value={editAwardAmount}
@@ -440,13 +493,21 @@ export default function ApplicationDetailPage() {
                       size="sm"
                       style={{ maxWidth: 120 }}
                     />
-                    <TextInput
-                      label="Model / Generation Source"
-                      value={editModel}
-                      onChange={(e) => setEditModel(e.currentTarget.value)}
-                      placeholder="e.g. llm_gemini-flash"
-                      size="sm"
-                    />
+                    <div>
+                      <Text size="sm" fw={500} mb={4}>LLM Provider</Text>
+                      <SegmentedControl
+                        size="sm"
+                        value={editProvider}
+                        onChange={(v) => setEditProvider(v as LlmProvider)}
+                        data={[
+                          { value: 'gemini', label: 'Gemini' },
+                          { value: 'anthropic', label: 'Claude' },
+                        ]}
+                      />
+                      <Text size="xs" c="dimmed" mt={2}>
+                        Used for AI Suggestion and Regenerate. Specific model is set per provider via Heroku env vars.
+                      </Text>
+                    </div>
                   </Group>
                   <Group justify="flex-end" gap="xs">
                     <Button size="xs" variant="subtle" leftSection={<IconX size={14} />} onClick={() => setEditingQuickInfo(false)}>
@@ -461,7 +522,10 @@ export default function ApplicationDetailPage() {
                         const amt = typeof editAwardAmount === 'number' ? editAwardAmount : parseFloat(String(editAwardAmount));
                         if (!isNaN(amt) && amt > 0) data.expectedAwardAmount = amt;
                         if (editCurrency) data.expectedCurrency = editCurrency;
-                        if (editModel !== (application.generatedFrom || '')) data.generatedFrom = editModel || undefined;
+                        const newGeneratedFrom = editProvider === 'gemini' ? 'llm_gemini' : 'llm_anthropic';
+                        if (newGeneratedFrom !== (application.generatedFrom || '')) {
+                          data.generatedFrom = newGeneratedFrom;
+                        }
                         updateMutation.mutate(data);
                         setEditingQuickInfo(false);
                       }}
@@ -482,9 +546,19 @@ export default function ApplicationDetailPage() {
                   </Text>
                 </div>
                 <div>
-                  <Text size="xs" c="dimmed">Model</Text>
+                  <Text size="xs" c="dimmed">LLM Provider</Text>
                   {application.generatedFrom ? (
-                    <Badge size="sm" variant="light" color="violet">
+                    <Badge
+                      size="sm"
+                      variant="light"
+                      color={
+                        getProviderFromGeneratedFrom(application.generatedFrom) === 'gemini'
+                          ? 'blue'
+                          : getProviderFromGeneratedFrom(application.generatedFrom) === 'anthropic'
+                          ? 'orange'
+                          : 'gray'
+                      }
+                    >
                       {getModelDisplayName(application.generatedFrom)}
                     </Badge>
                   ) : (
@@ -507,7 +581,7 @@ export default function ApplicationDetailPage() {
                     onClick={() => {
                       setEditAwardAmount(application.expectedAwardAmount ? Number(application.expectedAwardAmount) : '');
                       setEditCurrency(application.expectedCurrency || 'GBP');
-                      setEditModel(application.generatedFrom || '');
+                      setEditProvider(getProviderFromGeneratedFrom(application.generatedFrom) || 'gemini');
                       setEditingQuickInfo(true);
                     }}
                   >
@@ -770,17 +844,18 @@ export default function ApplicationDetailPage() {
                                   <Group gap="xs">
                                     <Select
                                       size="xs"
-                                      value={section.status}
+                                      value={sectionStatusDraft[section.id] ?? section.status}
                                       data={Object.entries(SECTION_STATUS_CONFIG).map(([val, cfg]) => ({
                                         value: val,
                                         label: cfg.label,
                                       }))}
                                       onChange={(val) => {
                                         if (val) {
-                                          updateSectionMutation.mutate({
-                                            sectionId: section.id,
-                                            data: { status: val },
-                                          });
+                                          // Stage status locally; persisted with content on Save.
+                                          setSectionStatusDraft(prev => ({
+                                            ...prev,
+                                            [section.id]: val,
+                                          }));
                                         }
                                       }}
                                       style={{ width: 140 }}
@@ -788,7 +863,20 @@ export default function ApplicationDetailPage() {
                                     <Button
                                       size="xs"
                                       variant="subtle"
-                                      onClick={() => setEditingSection(null)}
+                                      onClick={() => {
+                                        // Drop any in-flight content + status edits for this section.
+                                        setSectionContent(prev => {
+                                          const next = { ...prev };
+                                          delete next[section.id];
+                                          return next;
+                                        });
+                                        setSectionStatusDraft(prev => {
+                                          const next = { ...prev };
+                                          delete next[section.id];
+                                          return next;
+                                        });
+                                        setEditingSection(null);
+                                      }}
                                     >
                                       Cancel
                                     </Button>
