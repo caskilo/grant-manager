@@ -90,7 +90,6 @@ export default function AdminUsersPage() {
   // ---- Create user ----
   const [createOpen, setCreateOpen] = useState(false);
   const [newName, setNewName] = useState('');
-  const [newEmail, setNewEmail] = useState('');
   const [newUsername, setNewUsername] = useState('');
   const [newRole, setNewRole] = useState<string>('GRANTS_OFFICER');
   const [newUserPw, setNewUserPw] = useState('');
@@ -111,7 +110,7 @@ export default function AdminUsersPage() {
   // ---- Mutations ----
   const createMutation = useMutation({
     mutationFn: async (payload: {
-      name: string; email: string; username: string; role: string; password: string;
+      name: string; username: string; role: string; password: string;
     }) => {
       const res = await api.post('/users', payload);
       return res.data as UserRow;
@@ -186,7 +185,6 @@ export default function AdminUsersPage() {
 
   const resetCreateForm = () => {
     setNewName('');
-    setNewEmail('');
     setNewUsername('');
     setNewRole('GRANTS_OFFICER');
     setNewUserPw('');
@@ -243,10 +241,9 @@ export default function AdminUsersPage() {
   };
 
   // ---- Validation derived state ----
-  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail);
   const usernameValid = /^[a-zA-Z0-9_.-]{3,32}$/.test(newUsername);
   const createPwOk = newUserPw.length >= 6 && newUserPw === newUserPwConfirm;
-  const createCanSubmit = newName.trim() && emailValid && usernameValid && newRole && createPwOk;
+  const createCanSubmit = newName.trim() && usernameValid && newRole && createPwOk;
 
   const formatDate = (d: string | null) => {
     if (!d) return 'Never';
@@ -349,7 +346,6 @@ export default function AdminUsersPage() {
                           <Text fw={500} size="sm">{user.name}</Text>
                           {isSelf && <Badge size="xs" variant="outline">You</Badge>}
                         </Group>
-                        <Text size="xs" c="dimmed">{user.email}</Text>
                       </Table.Td>
                       <Table.Td>
                         <Text size="sm" ff="monospace">{user.username}</Text>
@@ -519,15 +515,6 @@ export default function AdminUsersPage() {
             required
           />
           <TextInput
-            label="Email"
-            placeholder="jane@example.org"
-            type="email"
-            value={newEmail}
-            onChange={(e) => setNewEmail(e.currentTarget.value)}
-            error={newEmail && !emailValid ? 'Invalid email address' : undefined}
-            required
-          />
-          <TextInput
             label="Username"
             placeholder="jane.doe"
             value={newUsername}
@@ -604,7 +591,6 @@ export default function AdminUsersPage() {
               disabled={!createCanSubmit}
               onClick={() => createMutation.mutate({
                 name: newName.trim(),
-                email: newEmail.trim(),
                 username: newUsername.trim(),
                 role: newRole,
                 password: newUserPw,
@@ -691,14 +677,12 @@ export default function AdminUsersPage() {
             database. Audit history referencing them will be retained but anonymised.
           </Alert>
           <Text size="sm">
-            If this user owns or created any funders, opportunities, applications, templates,
-            attachments, interactions, or import jobs, the deletion will be refused. Deactivate
-            them instead in that case.
+            If this user owns active applications, tasks, reviews, template usages, or attachments,
+            deletion will be refused. Deactivate them instead in that case.
           </Text>
           <List size="sm" spacing={2} c="dimmed">
             <List.Item><strong>Name:</strong> {deleteTarget?.name}</List.Item>
             <List.Item><strong>Username:</strong> {deleteTarget?.username}</List.Item>
-            <List.Item><strong>Email:</strong> {deleteTarget?.email}</List.Item>
             <List.Item><strong>Role:</strong> {deleteTarget && (ROLE_LABELS[deleteTarget.role] || deleteTarget.role)}</List.Item>
           </List>
           <TextInput

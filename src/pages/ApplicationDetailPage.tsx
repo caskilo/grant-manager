@@ -1,30 +1,8 @@
 import {
-  Container,
-  Title,
-  Text,
-  Paper,
-  Stack,
-  Group,
-  Badge,
-  Button,
-  Textarea,
-  TextInput,
-  Select,
-  Divider,
-  Progress,
-  ThemeIcon,
-  Loader,
-  Center,
-  Alert,
-  Accordion,
-  ActionIcon,
-  Tooltip,
-  Modal,
-  Menu,
-  Tabs,
-  ScrollArea,
-  NumberInput,
-  SegmentedControl,
+  Container, Title, Text, Paper, Stack, Group, Badge, Button,
+  Textarea, TextInput, Select, Divider, Progress, ThemeIcon,
+  Loader, Center, Alert, Accordion, ActionIcon, Tooltip,
+  Modal, Menu, Tabs, ScrollArea, NumberInput, SegmentedControl, Switch,
 } from '@mantine/core';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -140,6 +118,7 @@ export default function ApplicationDetailPage() {
   const [editAwardAmount, setEditAwardAmount] = useState<number | string>('');
   const [editCurrency, setEditCurrency] = useState('GBP');
   const [editProvider, setEditProvider] = useState<LlmProvider>('gemini');
+  const [noFallback, setNoFallback] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
 
   const [editingSection, setEditingSection] = useState<string | null>(null);
@@ -252,6 +231,7 @@ export default function ApplicationDetailPage() {
     mutationFn: (sectionId: string) =>
       applicationsApi.suggestSection(sectionId, {
         llmProvider: getProviderFromGeneratedFrom(application?.generatedFrom) || undefined,
+        noFallback,
       }),
     onSuccess: (res, sectionId) => {
       const suggestion = res.data.suggestion;
@@ -286,6 +266,7 @@ export default function ApplicationDetailPage() {
       applicationsApi.regenerateSections(id!, {
         ...(options || {}),
         llmProvider: getProviderFromGeneratedFrom(application?.generatedFrom) || undefined,
+        noFallback,
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['application', id] });
@@ -506,6 +487,19 @@ export default function ApplicationDetailPage() {
                       />
                       <Text size="xs" c="dimmed" mt={2}>
                         Used for AI Suggestion and Regenerate. Specific model is set per provider via Heroku env vars.
+                      </Text>
+                    </div>
+                    <div>
+                      <Text size="sm" fw={500} mb={4}>Fallback</Text>
+                      <Switch
+                        size="sm"
+                        checked={!noFallback}
+                        onChange={(e) => setNoFallback(!e.currentTarget.checked)}
+                        label="Allow fallback provider"
+                        color="blue"
+                      />
+                      <Text size="xs" c="dimmed" mt={2}>
+                        Turn off to hard-fail if the selected provider is unavailable (prevents unexpected charges).
                       </Text>
                     </div>
                   </Group>
