@@ -151,9 +151,10 @@ export const applicationsApi = {
     manualContent?: string;
     pageContent?: string;
     llmProvider?: 'gemini' | 'anthropic';
+    noFallback?: boolean;
   }) => api.post<Application>(`/applications/${applicationId}/regenerate`, options || {}),
 
-  suggestSection: (sectionId: string, options?: { llmProvider?: 'gemini' | 'anthropic' }) =>
+  suggestSection: (sectionId: string, options?: { llmProvider?: 'gemini' | 'anthropic'; noFallback?: boolean }) =>
     api.post<{ suggestion: string }>(
       `/applications/sections/${sectionId}/suggest`,
       options || {},
