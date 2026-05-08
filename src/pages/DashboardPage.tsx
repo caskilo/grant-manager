@@ -1,9 +1,9 @@
 import {
-  Container, Title, Text, SimpleGrid, Paper, Stack, Group, Badge, ThemeIcon,
+  Container, Text, SimpleGrid, Paper, Stack, Group, Badge, ThemeIcon,
   RingProgress, Progress, Anchor, Center, Loader, Grid, Box, Tooltip,
 } from '@mantine/core';
 import {
-  IconBuildingBank, IconSparkles, IconWorldSearch,
+  IconBuildingBank, IconSparkles,
   IconArrowRight, IconRocket, IconCoins,
 } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
@@ -13,6 +13,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip,
 import api from '../lib/api';
 import { harvestApi } from '../lib/harvest';
 import { applicationsApi } from '../lib/applications';
+import { SectionProgressBar } from '../components/SectionProgressBar';
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 
@@ -40,6 +41,7 @@ interface ApplicationSummary {
   expectedCurrency: string | null;
   awardAmount?: number | null;
   awardCurrency?: string | null;
+  sections?: Array<{ status: string }> | null;
   opportunity?: {
     maxAward?: number | null;
     minAward?: number | null;
@@ -183,7 +185,8 @@ export default function DashboardPage() {
     const pursue = opps.filter(o => o.aiRecommendedAction === 'PURSUE').length;
     const monitor = opps.filter(o => o.aiRecommendedAction === 'MONITOR').length;
     const noGo = opps.filter(o => o.aiRecommendedAction === 'NO_GO').length;
-    const unscored = opps.filter(o => !o.aiRecommendedAction).length;
+    const noRecommendation = opps.filter(o => !o.aiRecommendedAction).length;
+    const unscored = opps.filter(o => o.aiFitScore === null || o.aiFitScore === 0).length;
 
     // Alignment scores
     const withAlignment = opps.map(o => ({ ...o, alignment: extractAlignmentScore(o.tags || []) })).filter(o => o.alignment !== null);
@@ -228,7 +231,7 @@ export default function DashboardPage() {
     return {
       totalFunders, totalOpps, totalSources,
       fundersWithSources, fundersWithOpps,
-      pursue, monitor, noGo, unscored,
+      pursue, monitor, noGo, unscored, noRecommendation,
       highAlignment, avgFitScore,
       topOpps, funderTypeData,
       sourceCoverage, oppCoverage,
@@ -256,15 +259,15 @@ export default function DashboardPage() {
       <Stack gap="xl">
 
         {/* ── Header ──────────────────────────────────────────────────────── */}
-        <div>
+        {/* <div>
           <Title order={1}>Discovery Dashboard</Title>
           <Text c="dimmed" mt={4}>
             Opportunity discovery pipeline at a glance
           </Text>
-        </div>
+        </div> */}
 
         {/* ── Top-level stat cards ────────────────────────────────────────── */}
-        <SimpleGrid cols={{ base: 1, sm: 2, lg: 4 }}>
+        <SimpleGrid cols={{ base: 1, sm: 3, lg: 3 }}>
           <StatCard
             icon={IconBuildingBank}
             label="Funders Tracked"
@@ -273,13 +276,13 @@ export default function DashboardPage() {
             subtitle={`${metrics.fundersWithSources} with sources configured`}
             onClick={() => navigate('/funders')}
           />
-          <StatCard
+          {/* <StatCard
             icon={IconWorldSearch}
             label="Sources Inspected"
             value={metrics.totalSources}
             color="teal"
             subtitle="Configured for automated discovery"
-          />
+          /> */}
           <StatCard
             icon={IconSparkles}
             label="Opportunities Found"
@@ -370,7 +373,7 @@ export default function DashboardPage() {
                     { value: metrics.totalOpps > 0 ? (metrics.pursue / metrics.totalOpps) * 100 : 0, color: 'green', tooltip: `Pursue: ${metrics.pursue}` },
                     { value: metrics.totalOpps > 0 ? (metrics.monitor / metrics.totalOpps) * 100 : 0, color: 'yellow', tooltip: `Monitor: ${metrics.monitor}` },
                     { value: metrics.totalOpps > 0 ? (metrics.noGo / metrics.totalOpps) * 100 : 0, color: 'red', tooltip: `No-Go: ${metrics.noGo}` },
-                    { value: metrics.totalOpps > 0 ? (metrics.unscored / metrics.totalOpps) * 100 : 0, color: 'gray', tooltip: `Unscored: ${metrics.unscored}` },
+                    { value: metrics.totalOpps > 0 ? (metrics.noRecommendation / metrics.totalOpps) * 100 : 0, color: 'gray', tooltip: `No recommendation: ${metrics.noRecommendation}` },
                   ]}
                 />
               </Center>
@@ -379,7 +382,7 @@ export default function DashboardPage() {
                 <LegendItem color="green" label="Pursue" count={metrics.pursue} />
                 <LegendItem color="yellow" label="Monitor" count={metrics.monitor} />
                 <LegendItem color="red" label="No-Go" count={metrics.noGo} />
-                <LegendItem color="gray" label="Unscored" count={metrics.unscored} />
+                <LegendItem color="gray" label="No rec." count={metrics.noRecommendation} />
               </Group>
             </Paper>
           </Grid.Col>
@@ -682,7 +685,7 @@ function ApplicationTracker({
                 style={{ cursor: 'pointer' }}
                 onClick={() => navigate(`/applications/${app.id}`)}
               >
-                <Group justify="space-between" wrap="nowrap">
+                <Group justify="space-between" wrap="nowrap" mb={app.sections?.length ? 6 : 0}>
                   <Text size="sm" fw={500} truncate style={{ flex: 1 }}>{app.title}</Text>
                   <Group gap={6} wrap="nowrap">
                     {app.expectedAwardAmount && (
@@ -693,6 +696,9 @@ function ApplicationTracker({
                     <Badge size="sm" color={meta.color} variant="light">{meta.label}</Badge>
                   </Group>
                 </Group>
+                {app.sections && app.sections.length > 0 && (
+                  <SectionProgressBar sections={app.sections} height={6} showLabel={false} />
+                )}
               </Paper>
             );
           })}

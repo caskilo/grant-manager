@@ -152,6 +152,9 @@ export const applicationsApi = {
     pageContent?: string;
     llmProvider?: 'gemini' | 'anthropic';
     noFallback?: boolean;
+    expectedSections?: number;
+    keepExistingSections?: boolean;
+    contextFiles?: Array<{ name: string; content: string }>;
   }) => api.post<Application>(`/applications/${applicationId}/regenerate`, options || {}),
 
   suggestSection: (sectionId: string, options?: { llmProvider?: 'gemini' | 'anthropic'; noFallback?: boolean }) =>
