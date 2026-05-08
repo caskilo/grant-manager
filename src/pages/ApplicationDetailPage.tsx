@@ -1,12 +1,14 @@
 import {
   Container, Title, Text, Paper, Stack, Group, Badge, Button,
-  Textarea, TextInput, Select, Divider, Progress, ThemeIcon,
+  Textarea, TextInput, Select, Divider, ThemeIcon,
   Loader, Center, Alert, Accordion, ActionIcon, Tooltip,
-  Modal, Menu, Tabs, ScrollArea, NumberInput, SegmentedControl, Switch,
+  Modal, Tabs, ScrollArea, NumberInput, SegmentedControl, Switch,
+  CloseButton,
 } from '@mantine/core';
 import { useParams, useNavigate } from 'react-router-dom';
+import { SectionProgressBar } from '../components/SectionProgressBar';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { notifications } from '@mantine/notifications';
 import {
   IconCheck,
@@ -17,16 +19,20 @@ import {
   IconTrash,
   IconPlus,
   IconSparkles,
-  IconClipboard,
   IconArrowRight,
   IconEdit,
-  IconChevronDown,
   IconTarget,
   IconInfoCircle,
   IconPencil,
   IconWorld,
   IconDeviceFloppy,
   IconX,
+  IconUpload,
+  IconPaperclip,
+  IconDownload,
+  IconFileTypePdf,
+  IconMarkdown,
+  IconCopy,
 } from '@tabler/icons-react';
 import { applicationsApi, Application, ApplicationSection } from '../lib/applications';
 import { useAuthStore } from '../stores/authStore';
@@ -131,6 +137,14 @@ export default function ApplicationDetailPage() {
   const [newSectionGuidance, setNewSectionGuidance] = useState('');
   const [pasteModalOpen, setPasteModalOpen] = useState(false);
   const [pastedContent, setPastedContent] = useState('');
+  const [keepExistingSections, setKeepExistingSections] = useState(true);
+  const [expectedSections, setExpectedSections] = useState<number | string>('');
+  const [contextFiles, setContextFiles] = useState<Array<{ name: string; content: string }>>([]);
+  const [isDraggingOver, setIsDraggingOver] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [exportFilename, setExportFilename] = useState<string | undefined>(undefined);
+  const [mdCopied, setMdCopied] = useState(false);
+  const [rtfCopied, setRtfCopied] = useState(false);
   const [editingNotes, setEditingNotes] = useState(false);
   const [notesValue, setNotesValue] = useState('');
   const [templateModalSection, setTemplateModalSection] = useState<string | null>(null);
@@ -261,12 +275,32 @@ export default function ApplicationDetailPage() {
     },
   });
 
+  const addContextFiles = useCallback((files: FileList | File[]) => {
+    const fileArray = Array.from(files).filter(f =>
+      f.type === 'text/plain' || f.name.endsWith('.txt') || f.name.endsWith('.md') || f.name.endsWith('.csv')
+    );
+    fileArray.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const content = (e.target?.result as string) || '';
+        setContextFiles(prev => {
+          if (prev.some(cf => cf.name === file.name)) return prev;
+          return [...prev, { name: file.name, content }];
+        });
+      };
+      reader.readAsText(file);
+    });
+  }, []);
+
   const regenerateMutation = useMutation({
     mutationFn: (options: { manualContent?: string; pageContent?: string } | undefined) =>
       applicationsApi.regenerateSections(id!, {
         ...(options || {}),
         llmProvider: getProviderFromGeneratedFrom(application?.generatedFrom) || undefined,
         noFallback,
+        keepExistingSections,
+        expectedSections: typeof expectedSections === 'number' && expectedSections > 0 ? expectedSections : undefined,
+        contextFiles: contextFiles.length > 0 ? contextFiles : undefined,
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['application', id] });
@@ -415,18 +449,17 @@ export default function ApplicationDetailPage() {
             <Divider />
 
             {/* Progress Bar */}
-            <div>
+            <div data-testid="application-progress-bar">
               <Group justify="space-between" mb={4}>
                 <Text size="sm" fw={500}>Section Progress</Text>
                 <Text size="sm" c="dimmed" data-testid="application-progress-text">
                   {progress.completed}/{progress.total} complete ({progress.percent}%)
                 </Text>
               </Group>
-              <Progress
-                data-testid="application-progress-bar"
-                value={progress.percent}
-                color={progress.percent === 100 ? 'green' : progress.percent > 50 ? 'blue' : 'gray'}
-                size="md"
+              <SectionProgressBar
+                sections={application.sections || []}
+                height={12}
+                showLabel={false}
               />
             </div>
 
@@ -597,60 +630,153 @@ export default function ApplicationDetailPage() {
               </Group>
             )}
 
-            {/* Links */}
-            {opportunityUrl && (
-              <div style={{ display: 'inline-block' }}>
+            {/* Context resources row: URL tile + file drop zone */}
+            <div>
+              <Text size="xs" c="dimmed" mb={6} fw={500}>Context Resources</Text>
+              <Group gap="sm" align="flex-start" wrap="wrap">
+                {/* Opportunity URL tile */}
+                {opportunityUrl && (
+                  <Paper
+                    component="a"
+                    href={opportunityUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    withBorder
+                    p={0}
+                    style={{
+                      display: 'inline-flex',
+                      flexDirection: 'column',
+                      width: 110,
+                      textDecoration: 'none',
+                      overflow: 'hidden',
+                      cursor: 'pointer',
+                      borderRadius: 8,
+                      flexShrink: 0,
+                    }}
+                  >
+                    <div style={{
+                      height: 64,
+                      background: 'var(--mantine-color-gray-1)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                      {faviconUrl ? (
+                        <img
+                          src={faviconUrl}
+                          alt=""
+                          style={{ width: 28, height: 28, objectFit: 'contain' }}
+                          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                        />
+                      ) : (
+                        <IconWorld size={24} color="var(--mantine-color-gray-5)" />
+                      )}
+                    </div>
+                    <Stack gap={2} p="xs" style={{ flex: 1 }}>
+                      <Text size="xs" fw={500} lineClamp={1}>{opportunityDomain}</Text>
+                      <Group gap={4}>
+                        <IconExternalLink size={10} color="var(--mantine-color-gray-6)" />
+                        <Text size="xs" c="dimmed">Visit page</Text>
+                      </Group>
+                    </Stack>
+                  </Paper>
+                )}
+
+                {/* Existing context file tiles */}
+                {contextFiles.map((cf) => (
+                  <Paper
+                    key={cf.name}
+                    withBorder
+                    p={0}
+                    style={{
+                      display: 'inline-flex',
+                      flexDirection: 'column',
+                      width: 110,
+                      overflow: 'hidden',
+                      borderRadius: 8,
+                      flexShrink: 0,
+                      position: 'relative',
+                    }}
+                  >
+                    <div style={{
+                      height: 64,
+                      background: 'var(--mantine-color-violet-0)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                      <IconPaperclip size={24} color="var(--mantine-color-violet-5)" />
+                    </div>
+                    <Stack gap={2} p="xs" style={{ flex: 1 }}>
+                      <Text size="xs" fw={500} lineClamp={2}>{cf.name}</Text>
+                      <Text size="xs" c="dimmed">{(cf.content.length / 1000).toFixed(1)}k chars</Text>
+                    </Stack>
+                    <CloseButton
+                      size="xs"
+                      style={{ position: 'absolute', top: 4, right: 4 }}
+                      onClick={() => setContextFiles(prev => prev.filter(f => f.name !== cf.name))}
+                    />
+                  </Paper>
+                ))}
+
+                {/* Drop zone */}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".txt,.md,.csv,text/plain"
+                  multiple
+                  style={{ display: 'none' }}
+                  onChange={(e) => { if (e.target.files) addContextFiles(e.target.files); e.currentTarget.value = ''; }}
+                />
                 <Paper
-                  component="a"
-                  href={opportunityUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   withBorder
                   p={0}
                   style={{
                     display: 'inline-flex',
                     flexDirection: 'column',
-                    width: 120,
-                    textDecoration: 'none',
+                    width: 110,
+                    height: 110,
                     overflow: 'hidden',
-                    cursor: 'pointer',
                     borderRadius: 8,
-                  }}
-                >
-                  <div style={{
-                    height: 72,
-                    background: 'var(--mantine-color-gray-1)',
-                    display: 'flex',
+                    flexShrink: 0,
+                    cursor: 'pointer',
+                    borderStyle: 'dashed',
+                    borderColor: isDraggingOver
+                      ? 'var(--mantine-color-violet-5)'
+                      : 'var(--mantine-color-gray-4)',
+                    background: isDraggingOver
+                      ? 'var(--mantine-color-violet-0)'
+                      : 'transparent',
+                    transition: 'border-color 150ms, background 150ms',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    overflow: 'hidden',
-                    position: 'relative',
-                  }}>
-                    {faviconUrl ? (
-                      <img
-                        src={faviconUrl}
-                        alt=""
-                        style={{ width: 32, height: 32, objectFit: 'contain' }}
-                        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                      />
-                    ) : (
-                      <IconWorld size={28} color="var(--mantine-color-gray-5)" />
-                    )}
-                  </div>
-                  <Stack gap={2} p="xs" style={{ flex: 1 }}>
-                    <Text size="xs" fw={500} lineClamp={1}>{opportunityDomain}</Text>
-                    <Group gap={4}>
-                      <IconExternalLink size={10} color="var(--mantine-color-gray-6)" />
-                      <Text size="xs" c="dimmed">Visit page</Text>
-                    </Group>
-                  </Stack>
+                    gap: 4,
+                  }}
+                  onClick={() => fileInputRef.current?.click()}
+                  onDragOver={(e) => { e.preventDefault(); setIsDraggingOver(true); }}
+                  onDragLeave={() => setIsDraggingOver(false)}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    setIsDraggingOver(false);
+                    addContextFiles(e.dataTransfer.files);
+                  }}
+                >
+                  <IconUpload size={20} color={isDraggingOver ? 'var(--mantine-color-violet-5)' : 'var(--mantine-color-gray-5)'} />
+                  <Text size="xs" c="dimmed" ta="center" px={6}>
+                    Drop .txt / .md files
+                  </Text>
                 </Paper>
-              </div>
-            )}
+              </Group>
+              {contextFiles.length > 0 && (
+                <Text size="xs" c="violet" mt={6}>
+                  {contextFiles.length} file{contextFiles.length !== 1 ? 's' : ''} attached — included in all AI requests
+                </Text>
+              )}
+            </div>
           </Stack>
         </Paper>
 
-        {/* Tabs: Sections / Notes */}
+        {/* Tabs: Sections / Notes / Export */}
         <Tabs defaultValue="sections">
           <Tabs.List>
             <Tabs.Tab data-testid="tab-sections" value="sections" leftSection={<IconFileText size={16} />}>
@@ -658,6 +784,9 @@ export default function ApplicationDetailPage() {
             </Tabs.Tab>
             <Tabs.Tab data-testid="tab-overview" value="overview" leftSection={<IconInfoCircle size={16} />}>
               Notes & Overview
+            </Tabs.Tab>
+            <Tabs.Tab value="export" leftSection={<IconDownload size={16} />}>
+              Export
             </Tabs.Tab>
           </Tabs.List>
 
@@ -676,27 +805,15 @@ export default function ApplicationDetailPage() {
                   >
                     Add Section
                   </Button>
-                  <Menu shadow="md" width={220}>
-                    <Menu.Target>
-                      <Button size="sm" variant="light" color="violet" leftSection={<IconSparkles size={16} />} rightSection={<IconChevronDown size={14} />}>
-                        AI Assist
-                      </Button>
-                    </Menu.Target>
-                    <Menu.Dropdown>
-                      <Menu.Item
-                        leftSection={<IconSparkles size={16} />}
-                        onClick={() => regenerateMutation.mutate(undefined)}
-                      >
-                        Regenerate suggestions
-                      </Menu.Item>
-                      <Menu.Item
-                        leftSection={<IconClipboard size={16} />}
-                        onClick={() => setPasteModalOpen(true)}
-                      >
-                        Paste content & analyse
-                      </Menu.Item>
-                    </Menu.Dropdown>
-                  </Menu>
+                  <Button
+                    size="sm"
+                    variant="light"
+                    color="violet"
+                    leftSection={<IconSparkles size={16} />}
+                    onClick={() => setPasteModalOpen(true)}
+                  >
+                    Build Sections
+                  </Button>
                 </Group>
               </Group>
 
@@ -975,6 +1092,274 @@ export default function ApplicationDetailPage() {
             </Stack>
           </Tabs.Panel>
 
+          {/* Export Tab */}
+          <Tabs.Panel value="export" pt="md">
+            {(() => {
+              const stageSlug = application.stage.toLowerCase();
+              const titleSlug = application.title
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, '_')
+                .replace(/^_|_$/g, '')
+                .substring(0, 40);
+              const defaultFilename = `${titleSlug}_${stageSlug}`;
+
+              const totalSections = application.sections?.length || 0;
+              const finalCount = application.sections?.filter(s => s.status === 'FINAL').length || 0;
+
+              const buildMarkdown = () => {
+                const lines: string[] = [];
+                lines.push(`# ${application.title}`);
+                lines.push('');
+                lines.push('## Application Details');
+                lines.push('');
+                lines.push(`| Field | Value |`);
+                lines.push(`| ----- | ----- |`);
+                lines.push(`| Funder | ${application.opportunity?.funder?.name || '—'} |`);
+                lines.push(`| Programme | ${application.opportunity?.programName || '—'} |`);
+                lines.push(`| Stage | ${stageInfo.label} |`);
+                lines.push(`| Lead | ${application.leadOwner?.name || '—'} |`);
+                if (application.expectedAwardAmount) {
+                  lines.push(`| Expected Award | ${application.expectedCurrency || '£'}${Number(application.expectedAwardAmount).toLocaleString()} |`);
+                }
+                if (application.aiFitScoreSnapshot != null) {
+                  lines.push(`| Fit Score | ${Math.round(Number(application.aiFitScoreSnapshot) * 10) / 10}/10 |`);
+                }
+                lines.push(`| Progress | ${finalCount}/${totalSections} sections final |`);
+                lines.push(`| Last Updated | ${new Date(application.updatedAt).toLocaleDateString()} |`);
+                lines.push('');
+                if (application.notes) {
+                  lines.push('## Notes');
+                  lines.push('');
+                  lines.push(application.notes);
+                  lines.push('');
+                }
+                for (const section of application.sections || []) {
+                  lines.push(`## ${section.title}`);
+                  if (section.wordLimit) lines.push(`*Word limit: ${section.wordLimit}*`);
+                  lines.push('');
+                  if (section.guidance) {
+                    lines.push(`> **Guidance:** ${section.guidance}`);
+                    lines.push('');
+                  }
+                  lines.push(section.content || '*No content yet.*');
+                  lines.push('');
+                }
+                return lines.join('\n');
+              };
+
+              const handleMarkdownDownload = () => {
+                const md = buildMarkdown();
+                const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${exportFilename || defaultFilename}.md`;
+                a.click();
+                URL.revokeObjectURL(url);
+              };
+
+              const buildHtml = () => {
+                const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                const nl2br = (s: string) => esc(s).replace(/\n/g, '<br>');
+                const funder = application.opportunity?.funder?.name || '\u2014';
+                const programme = application.opportunity?.programName || '\u2014';
+                let html = `<h1>${esc(application.title)}</h1>`;
+                html += `<table><tr><th>Field</th><th>Value</th></tr>`;
+                html += `<tr><td>Funder</td><td>${esc(funder)}</td></tr>`;
+                html += `<tr><td>Programme</td><td>${esc(programme)}</td></tr>`;
+                html += `<tr><td>Stage</td><td>${esc(stageInfo.label)}</td></tr>`;
+                html += `<tr><td>Lead</td><td>${esc(application.leadOwner?.name || '\u2014')}</td></tr>`;
+                if (application.expectedAwardAmount) html += `<tr><td>Expected Award</td><td>${esc((application.expectedCurrency || '\u00a3') + Number(application.expectedAwardAmount).toLocaleString())}</td></tr>`;
+                if (application.aiFitScoreSnapshot != null) html += `<tr><td>Fit Score</td><td>${Math.round(Number(application.aiFitScoreSnapshot) * 10) / 10}/10</td></tr>`;
+                html += `<tr><td>Progress</td><td>${finalCount}/${totalSections} sections final</td></tr>`;
+                html += `<tr><td>Last Updated</td><td>${new Date(application.updatedAt).toLocaleDateString()}</td></tr>`;
+                html += `</table>`;
+                if (application.notes) html += `<h2>Notes</h2><p>${nl2br(application.notes)}</p>`;
+                for (const section of application.sections || []) {
+                  html += `<h2>${esc(section.title)}`;
+                  if (section.wordLimit) html += ` <span class="meta">(limit: ${section.wordLimit} words)</span>`;
+                  html += `</h2>`;
+                  if (section.guidance) html += `<blockquote><strong>Guidance:</strong> ${esc(section.guidance)}</blockquote>`;
+                  html += section.content ? `<p>${nl2br(section.content)}</p>` : `<p class="empty">No content yet.</p>`;
+                }
+                return html;
+              };
+
+              const buildRtf = () => {
+                const esc = (s: string) => s.replace(/\\/g, '\\\\').replace(/\{/g, '\\{').replace(/\}/g, '\\}').replace(/[\u0080-\uFFFF]/g, c => `\\u${c.charCodeAt(0)}?`);
+                const par = (text: string, bold = false) => bold ? `{\\b ${esc(text)}}\\par\\par ` : `${esc(text)}\\par\\par `;
+                const h1 = (text: string) => `{\\fs32\\b ${esc(text)}}\\par `;
+                const h2 = (text: string) => `\\par {\\fs22\\b ${esc(text)}}\\par `;
+                const trow = (a: string, b: string) => `{\\b ${esc(a)}}: ${esc(b)}\\par `;
+                let rtf = `{\\rtf1\\ansi\\deff0{\\fonttbl{\\f0 Georgia;}{\\f1 Arial;}}\\f0\\fs24\\widowctrl\\hyphauto `;
+                rtf += h1(application.title);
+                rtf += trow('Funder', application.opportunity?.funder?.name || '\u2014');
+                rtf += trow('Programme', application.opportunity?.programName || '\u2014');
+                rtf += trow('Stage', stageInfo.label);
+                rtf += trow('Lead', application.leadOwner?.name || '\u2014');
+                if (application.expectedAwardAmount) rtf += trow('Expected Award', (application.expectedCurrency || '\u00a3') + Number(application.expectedAwardAmount).toLocaleString());
+                if (application.aiFitScoreSnapshot != null) rtf += trow('Fit Score', `${Math.round(Number(application.aiFitScoreSnapshot) * 10) / 10}/10`);
+                rtf += trow('Progress', `${finalCount}/${totalSections} sections final`);
+                rtf += trow('Last Updated', new Date(application.updatedAt).toLocaleDateString());
+                if (application.notes) { rtf += h2('Notes'); rtf += par(application.notes); }
+                for (const section of application.sections || []) {
+                  rtf += h2(section.title + (section.wordLimit ? ` (limit: ${section.wordLimit} words)` : ''));
+                  if (section.guidance) rtf += `{\\i Guidance: ${esc(section.guidance)}}\\par `;
+                  rtf += par(section.content || '(No content yet.)');
+                }
+                rtf += '}';
+                return rtf;
+              };
+
+              const handlePdfExport = () => {
+                const printWindow = window.open('', '_blank');
+                if (!printWindow) return;
+                printWindow.document.write(`<!DOCTYPE html><html><head>
+<title>${exportFilename || defaultFilename}</title>
+<style>
+  body { font-family: Georgia, serif; max-width: 780px; margin: 40px auto; color: #111; line-height: 1.7; font-size: 14px; }
+  h1 { font-size: 1.5em; border-bottom: 2px solid #333; padding-bottom: 8px; margin-bottom: 16px; }
+  h2 { font-size: 1.1em; margin-top: 2em; border-bottom: 1px solid #ddd; padding-bottom: 4px; color: #222; }
+  table { border-collapse: collapse; width: 100%; margin-bottom: 1.5em; }
+  td, th { border: 1px solid #ccc; padding: 5px 10px; text-align: left; }
+  th { background: #f5f5f5; font-size: 0.85em; }
+  blockquote { border-left: 3px solid #aaa; margin: 8px 0; padding: 4px 12px; color: #555; font-size: 0.9em; }
+  .meta { color: #888; font-weight: normal; font-size: 0.85em; }
+  .empty { color: #aaa; font-style: italic; }
+  @media print { body { margin: 16px; } }
+</style></head><body>${buildHtml()}</body></html>`);
+                printWindow.document.close();
+                printWindow.focus();
+                setTimeout(() => { printWindow.print(); }, 300);
+              };
+
+              return (
+                <Stack gap="lg">
+                  {/* Editable filename */}
+                  <Group gap="xs" align="center">
+                    <Text size="sm" c="dimmed" style={{ whiteSpace: 'nowrap' }}>Filename</Text>
+                    <TextInput
+                      value={exportFilename !== undefined ? exportFilename : defaultFilename}
+                      onChange={(e) => setExportFilename(e.currentTarget.value)}
+                      size="sm"
+                      style={{ flex: '0 1 320px' }}
+                    />
+                  </Group>
+
+                  {/* Export tiles */}
+                  <Group gap="md" wrap="wrap">
+                    {/* Markdown */}
+                    <Paper
+                      withBorder
+                      p="lg"
+                      style={{ flex: '1 1 220px', minWidth: 220, cursor: 'pointer', transition: 'box-shadow 120ms' }}
+                      onClick={handleMarkdownDownload}
+                      onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 0 0 2px var(--mantine-color-blue-4)')}
+                      onMouseLeave={e => (e.currentTarget.style.boxShadow = '')}
+                    >
+                      <Stack gap="xs" align="flex-start">
+                        <Group justify="space-between" style={{ width: '100%' }} align="flex-start">
+                          <ThemeIcon size={40} radius="md" variant="light" color="blue">
+                            <IconMarkdown size={22} />
+                          </ThemeIcon>
+                          <Tooltip label={mdCopied ? 'Copied!' : 'Copy to clipboard'} withArrow>
+                            <ActionIcon
+                              variant="subtle"
+                              color={mdCopied ? 'teal' : 'gray'}
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                navigator.clipboard.writeText(buildMarkdown()).then(() => {
+                                  setMdCopied(true);
+                                  setTimeout(() => setMdCopied(false), 2000);
+                                });
+                              }}
+                            >
+                              {mdCopied ? <IconCheck size={15} /> : <IconCopy size={15} />}
+                            </ActionIcon>
+                          </Tooltip>
+                        </Group>
+                        <Text fw={600} size="sm">Markdown</Text>
+                        <Text size="xs" c="dimmed">Plain-text format, compatible with Notion, GitHub, Obsidian and most editors.</Text>
+                      </Stack>
+                    </Paper>
+
+                    {/* PDF */}
+                    <Paper
+                      withBorder
+                      p="lg"
+                      style={{ flex: '1 1 220px', minWidth: 220, cursor: 'pointer', transition: 'box-shadow 120ms' }}
+                      onClick={handlePdfExport}
+                      onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 0 0 2px var(--mantine-color-red-4)')}
+                      onMouseLeave={e => (e.currentTarget.style.boxShadow = '')}
+                    >
+                      <Stack gap="xs" align="flex-start">
+                        <ThemeIcon size={40} radius="md" variant="light" color="red">
+                          <IconFileTypePdf size={22} />
+                        </ThemeIcon>
+                        <Text fw={600} size="sm">PDF</Text>
+                        <Text size="xs" c="dimmed">Opens a print-ready view in a new tab. Use your browser's Save as PDF option.</Text>
+                      </Stack>
+                    </Paper>
+
+                    {/* Google Drive / RTF */}
+                    <Paper
+                      withBorder
+                      p="lg"
+                      style={{ flex: '1 1 220px', minWidth: 220 }}
+                    >
+                      <Stack gap="xs" align="flex-start">
+                        <Group justify="space-between" style={{ width: '100%' }} align="flex-start">
+                          <ThemeIcon size={40} radius="md" variant="light" color="gray">
+                            <IconDownload size={22} />
+                          </ThemeIcon>
+                          <Tooltip label={rtfCopied ? 'Copied!' : 'Copy rich text'} withArrow>
+                            <ActionIcon
+                              variant="subtle"
+                              color={rtfCopied ? 'teal' : 'gray'}
+                              size="sm"
+                              onClick={() => {
+                                const fullHtml = `<!DOCTYPE html><html><head><style>
+body{font-family:Georgia,serif;font-size:14px;line-height:1.7;color:#111;}
+h1{font-size:1.5em;border-bottom:2px solid #333;padding-bottom:6px;}
+h2{font-size:1.15em;margin-top:1.6em;border-bottom:1px solid #ddd;padding-bottom:3px;}
+table{border-collapse:collapse;width:100%;margin-bottom:1em;}
+td,th{border:1px solid #ccc;padding:4px 8px;text-align:left;}
+th{background:#f5f5f5;}
+blockquote{border-left:3px solid #aaa;margin:6px 0;padding:3px 10px;color:#555;font-style:italic;}
+</style></head><body>${buildHtml()}</body></html>`;
+                                const htmlBlob = new Blob([fullHtml], { type: 'text/html' });
+                                navigator.clipboard.write([
+                                  new ClipboardItem({ 'text/html': htmlBlob }),
+                                ]).then(() => {
+                                  setRtfCopied(true);
+                                  setTimeout(() => setRtfCopied(false), 2000);
+                                }).catch(() => {
+                                  const rtfBlob = new Blob([buildRtf()], { type: 'text/rtf' });
+                                  const a = document.createElement('a');
+                                  a.href = URL.createObjectURL(rtfBlob);
+                                  a.download = `${exportFilename || defaultFilename}.rtf`;
+                                  a.click();
+                                });
+                              }}
+                            >
+                              {rtfCopied ? <IconCheck size={15} /> : <IconCopy size={15} />}
+                            </ActionIcon>
+                          </Tooltip>
+                        </Group>
+                        <Group gap={6}>
+                          <Text fw={600} size="sm">Google Drive</Text>
+                          <Badge size="xs" color="gray" variant="light">Soon</Badge>
+                        </Group>
+                        <Text size="xs" c="dimmed">Copy rich text to paste directly into Google Docs or Word.</Text>
+                      </Stack>
+                    </Paper>
+                  </Group>
+                </Stack>
+              );
+            })()}
+          </Tabs.Panel>
+
           {/* Notes & Overview Tab */}
           <Tabs.Panel value="overview" pt="md">
             <Stack gap="md">
@@ -1113,15 +1498,16 @@ export default function ApplicationDetailPage() {
       {/* Paste Content Modal */}
       <Modal
         opened={pasteModalOpen}
-        onClose={() => setPasteModalOpen(false)}
-        title="Paste Content for Analysis"
-        size="lg"
+        onClose={() => { setPasteModalOpen(false); setPastedContent(''); }}
+        title="Paste Content & Analyse"
+        size="xl"
       >
         <Stack gap="md">
           <Text size="sm" c="dimmed">
-            Paste application guidelines, funder requirements, or any relevant content.
-            The AI will analyze it and update section guidance and suggestions accordingly.
+            Paste application guidelines, funder call text, or any requirements.
+            The AI will derive or update section structure and guidance accordingly.
           </Text>
+
           <Textarea
             placeholder="Paste guidelines, application form text, or funder requirements here..."
             value={pastedContent}
@@ -1130,17 +1516,49 @@ export default function ApplicationDetailPage() {
             maxRows={20}
             autosize
           />
+
+          {/* Options row */}
+          <Group gap="xl" align="center" wrap="wrap">
+            <Switch
+              label={keepExistingSections ? 'Keep existing sections' : 'Delete existing sections'}
+              checked={keepExistingSections}
+              onChange={(e) => setKeepExistingSections(e.currentTarget.checked)}
+              size="sm"
+            />
+            <Group gap="xs" align="center">
+              <Text size="sm" c="dimmed" style={{ whiteSpace: 'nowrap' }}>Expected number of sections</Text>
+              <NumberInput
+                placeholder="—"
+                value={expectedSections}
+                onChange={setExpectedSections}
+                min={1}
+                max={30}
+                size="sm"
+                allowDecimal={false}
+                style={{ width: 72 }}
+              />
+            </Group>
+          </Group>
+
+          {/* Context files indicator */}
+          {contextFiles.length > 0 && (
+            <Group gap="xs">
+              <IconPaperclip size={14} color="var(--mantine-color-violet-6)" />
+              <Text size="xs" c="violet">
+                {contextFiles.length} attached file{contextFiles.length !== 1 ? 's' : ''} will also be included
+              </Text>
+            </Group>
+          )}
+
           <Group justify="flex-end">
-            <Button variant="subtle" onClick={() => setPasteModalOpen(false)}>
+            <Button variant="subtle" onClick={() => { setPasteModalOpen(false); setPastedContent(''); }}>
               Cancel
             </Button>
             <Button
               color="violet"
               leftSection={<IconSparkles size={16} />}
-              onClick={() =>
-                regenerateMutation.mutate({ manualContent: pastedContent })
-              }
-              disabled={!pastedContent.trim()}
+              onClick={() => regenerateMutation.mutate({ manualContent: pastedContent })}
+              disabled={!pastedContent.trim() && contextFiles.length === 0}
               loading={regenerateMutation.isPending}
             >
               Analyse & Update Sections

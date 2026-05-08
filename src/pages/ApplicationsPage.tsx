@@ -9,11 +9,11 @@ import {
   Paper,
   Select,
   TextInput,
-  Progress,
   ThemeIcon,
   Loader,
   Center,
 } from '@mantine/core';
+import { SectionProgressBar } from '../components/SectionProgressBar';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useState, useMemo } from 'react';
@@ -152,9 +152,6 @@ export default function ApplicationsPage() {
             {applications.map((app: any) => {
               const stageInfo = STAGE_CONFIG[app.stage] || STAGE_CONFIG.TRIAGE;
               const sections = app.sections || [];
-              const totalSections = app._count?.sections || sections.length;
-              const completedSections = sections.filter((s: any) => s.status === 'FINAL').length;
-              const progressPercent = totalSections > 0 ? Math.round((completedSections / totalSections) * 100) : 0;
 
               return (
                 <Paper
@@ -195,20 +192,12 @@ export default function ApplicationsPage() {
                         </Group>
                       )}
 
-                      {totalSections > 0 && (
-                        <div style={{ maxWidth: 300 }}>
-                          <Group justify="space-between" mb={2}>
-                            <Text size="xs" c="dimmed">
-                              {completedSections}/{totalSections} sections
-                            </Text>
-                            <Text size="xs" c="dimmed">{progressPercent}%</Text>
-                          </Group>
-                          <Progress
-                            value={progressPercent}
-                            size="xs"
-                            color={progressPercent === 100 ? 'green' : progressPercent > 50 ? 'blue' : 'gray'}
-                          />
-                        </div>
+                      {sections.length > 0 && (
+                        <SectionProgressBar
+                          sections={sections}
+                          height={10}
+                          style={{ maxWidth: 360 }}
+                        />
                       )}
                     </Stack>
 

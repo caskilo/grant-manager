@@ -150,6 +150,45 @@ export default function OpportunitiesPage() {
     setShowHidden(next);
     try { localStorage.setItem('opportunities-show-hidden', next ? '1' : '0'); } catch {}
   }, []);
+  // ── Helper functions (must be defined before useMemos that reference them) ──
+  const extractAlignmentScore = (tags: string[]): number | null => {
+    const alignmentTag = tags.find(t => t.startsWith('alignment:'));
+    if (alignmentTag) {
+      const match = alignmentTag.match(/alignment:(\d+)%/);
+      return match ? parseInt(match[1], 10) : null;
+    }
+    return null;
+  };
+
+  const extractRecommendation = (tags: string[]): string | null => {
+    const recTag = tags.find(t => t.startsWith('recommendation:'));
+    return recTag ? recTag.replace('recommendation:', '') : null;
+  };
+
+  const extractMatchedStrands = (tags: string[]): string[] => {
+    return tags
+      .filter(t => t.startsWith('strand:'))
+      .map(t => t.replace('strand:', '').replace(/_/g, ' '));
+  };
+
+  const getAlignmentColor = (score: number): string => {
+    if (score >= 70) return 'green';
+    if (score >= 50) return 'blue';
+    if (score >= 30) return 'yellow';
+    return 'gray';
+  };
+
+  const getRecommendationColor = (rec: string): string => {
+    if (rec === 'highly_relevant') return 'green';
+    if (rec === 'relevant') return 'blue';
+    if (rec === 'somewhat_relevant') return 'yellow';
+    return 'gray';
+  };
+
+  const formatRecommendation = (rec: string): string => {
+    return rec.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  };
+
   const [searchQuery, setSearchQuery] = useState('');
   const [alignmentFilter, setAlignmentFilter] = useState<string | null>(null);
   const [amountFilter, setAmountFilter] = useState<string | null>(null);
@@ -208,16 +247,6 @@ export default function OpportunitiesPage() {
   const groupedOpportunities = useMemo<GroupedOpportunities>(() => {
     if (!data?.data) return {};
 
-    // Helper function to extract alignment score
-    const extractAlignmentScore = (tags: string[]): number | null => {
-      const alignmentTag = tags.find(t => t.startsWith('alignment:'));
-      if (alignmentTag) {
-        const match = alignmentTag.match(/alignment:(\d+)%/);
-        return match ? parseInt(match[1], 10) : null;
-      }
-      return null;
-    };
-
     // Apply search/filters
     const filtered = data.data.filter(opp => {
       // Apply search query
@@ -230,9 +259,11 @@ export default function OpportunitiesPage() {
         }
       }
 
-      // Apply alignment filter
+      // Apply alignment filter — prefer the alignment:XX% tag, fall back to aiFitScore (0-10 → ×10 = percent)
       if (alignmentFilter) {
-        const alignmentScore = extractAlignmentScore(opp.tags || []);
+        const tagScore = extractAlignmentScore(opp.tags || []);
+        const fitScore = opp.aiFitScore != null ? Number(opp.aiFitScore) * 10 : null;
+        const alignmentScore = tagScore ?? fitScore;
         if (alignmentScore === null) return false;
 
         if (alignmentFilter === 'high' && alignmentScore < 70) return false;
@@ -300,45 +331,6 @@ export default function OpportunitiesPage() {
   }, [groupedOpportunities, sortBy]);
 
   const totalOpportunities = data?.data?.length || 0;
-
-  // Helper functions for alignment scores
-  const extractAlignmentScore = (tags: string[]): number | null => {
-    const alignmentTag = tags.find(t => t.startsWith('alignment:'));
-    if (alignmentTag) {
-      const match = alignmentTag.match(/alignment:(\d+)%/);
-      return match ? parseInt(match[1], 10) : null;
-    }
-    return null;
-  };
-
-  const extractRecommendation = (tags: string[]): string | null => {
-    const recTag = tags.find(t => t.startsWith('recommendation:'));
-    return recTag ? recTag.replace('recommendation:', '') : null;
-  };
-
-  const extractMatchedStrands = (tags: string[]): string[] => {
-    return tags
-      .filter(t => t.startsWith('strand:'))
-      .map(t => t.replace('strand:', '').replace(/_/g, ' '));
-  };
-
-  const getAlignmentColor = (score: number): string => {
-    if (score >= 70) return 'green';
-    if (score >= 50) return 'blue';
-    if (score >= 30) return 'yellow';
-    return 'gray';
-  };
-
-  const getRecommendationColor = (rec: string): string => {
-    if (rec === 'highly_relevant') return 'green';
-    if (rec === 'relevant') return 'blue';
-    if (rec === 'somewhat_relevant') return 'yellow';
-    return 'gray';
-  };
-
-  const formatRecommendation = (rec: string): string => {
-    return rec.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-  };
 
   const filteredTotal = Object.values(groupedOpportunities).reduce(
     (sum, group) => sum + group.opportunities.length,
