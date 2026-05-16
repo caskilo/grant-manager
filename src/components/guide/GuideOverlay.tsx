@@ -1,10 +1,10 @@
 import { Drawer, Stack, Text, Accordion, Divider, Group, ThemeIcon, ScrollArea } from '@mantine/core';
 import {
   IconLayoutDashboard, IconBook2, IconBuildingBank, IconSparkles,
-  IconFileText, IconUsers, IconUpload, IconShield,
+  IconBuildingCommunity, IconFileText, IconUsers, IconUpload, IconShield,
   IconWand, IconTransform, IconWorldSearch, IconSearch,
   IconTarget, IconRocket, IconShieldCheck, IconChartBar,
-  IconListCheck, IconBulb,
+  IconListCheck, IconBulb, IconBrain
 } from '@tabler/icons-react';
 import { useLocation } from 'react-router-dom';
 import { useState, useCallback, useMemo, useEffect } from 'react';
@@ -17,6 +17,7 @@ const ICON_MAP: Record<string, React.ComponentType<any>> = {
   IconLayoutDashboard,
   IconBook2,
   IconBuildingBank,
+  IconBuildingCommunity,
   IconSparkles,
   IconFileText,
   IconUsers,
@@ -32,6 +33,7 @@ const ICON_MAP: Record<string, React.ComponentType<any>> = {
   IconChartBar,
   IconListCheck,
   IconBulb,
+  IconBrain,
 };
 
 interface GuideOverlayProps {

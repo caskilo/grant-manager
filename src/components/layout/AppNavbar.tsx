@@ -10,10 +10,11 @@ import {
   IconTemplate,
   IconAddressBook,
   IconMessages,
-  IconUpload,
   IconSettings,
   IconChevronLeft,
   IconChevronRight,
+  IconBuildingCommunity,
+  IconBook,
 } from '@tabler/icons-react';
 
 interface NavItemDef {
@@ -35,7 +36,9 @@ const SECONDARY: NavItemDef[] = [
   { Icon: IconTemplate,    label: 'Templates',    path: '/templates' },
   { Icon: IconAddressBook, label: 'Contacts',     path: '/contacts' },
   { Icon: IconMessages,    label: 'Interactions', path: '/interactions' },
-  { Icon: IconUpload,      label: 'Import',       path: '/import' },
+  // Import page hidden from navbar (2026-05-15) — page is underdeveloped.
+  // Route /import is preserved in App.tsx until the import flow is rebuilt.
+  // { Icon: IconUpload,   label: 'Import',       path: '/import' },
 ];
 
 interface NavItemProps extends NavItemDef {
@@ -74,9 +77,10 @@ function NavItem({ Icon, label, testid, collapsed, active, onClick }: NavItemPro
 export interface AppNavbarProps {
   collapsed: boolean;
   onToggle: () => void;
+  onOpenGuide: () => void;
 }
 
-export default function AppNavbar({ collapsed, onToggle }: AppNavbarProps) {
+export default function AppNavbar({ collapsed, onToggle, onOpenGuide }: AppNavbarProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const user = useAuthStore((state) => state.user);
@@ -136,13 +140,39 @@ export default function AppNavbar({ collapsed, onToggle }: AppNavbarProps) {
                 active={isActive('/admin/users')}
                 onClick={() => navigate('/admin/users')}
               />
+              <NavItem
+                Icon={IconBuildingCommunity}
+                label="Organisation"
+                path="/admin/organisation"
+                collapsed={collapsed}
+                active={isActive('/admin/organisation')}
+                onClick={() => navigate('/admin/organisation')}
+              />
             </>
           )}
         </Stack>
 
-        {/* Collapse toggle */}
+        {/* Bottom: guide + collapse toggle */}
         <Box mt={8}>
           <div className="ody-nav-divider" />
+          <Tooltip label="User Guide" position="right" withArrow disabled={!collapsed}>
+            <UnstyledButton
+              onClick={onOpenGuide}
+              className="ody-nav-item"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: collapsed ? 'center' : 'flex-start',
+                gap: 12,
+                padding: collapsed ? '10px 0' : '10px 14px',
+                borderRadius: 8,
+                width: '100%',
+              }}
+            >
+              <IconBook size={20} />
+              {!collapsed && <Text size="sm" className="ody-nav-label">User Guide</Text>}
+            </UnstyledButton>
+          </Tooltip>
           <Tooltip label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'} position="right" withArrow>
             <UnstyledButton
               onClick={onToggle}

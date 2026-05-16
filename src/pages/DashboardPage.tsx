@@ -8,12 +8,124 @@ import {
 } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { useMemo } from 'react';
+import { useMemo, useEffect, useRef } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Cell } from 'recharts';
 import api from '../lib/api';
 import { harvestApi } from '../lib/harvest';
 import { applicationsApi } from '../lib/applications';
 import { SectionProgressBar } from '../components/SectionProgressBar';
+
+// ── Wave background ───────────────────────────────────────────────────────────
+
+// Lightweight value-noise helper (no external dependency)
+function vnoise(x: number, y: number, t: number): number {
+  // Hash-based smooth noise in 3D using sine products
+  const ix = Math.floor(x), iy = Math.floor(y), it = Math.floor(t);
+  const fx = x - ix, fy = y - iy, ft = t - it;
+  const ux = fx * fx * (3 - 2 * fx);
+  const uy = fy * fy * (3 - 2 * fy);
+  const ut = ft * ft * (3 - 2 * ft);
+  const h = (a: number, b: number, c: number) =>
+    Math.sin(a * 127.1 + b * 311.7 + c * 74.3) * 0.5 + 0.5;
+  return (
+    h(ix, iy, it) * (1 - ux) * (1 - uy) * (1 - ut) +
+    h(ix + 1, iy, it) * ux * (1 - uy) * (1 - ut) +
+    h(ix, iy + 1, it) * (1 - ux) * uy * (1 - ut) +
+    h(ix + 1, iy + 1, it) * ux * uy * (1 - ut) +
+    h(ix, iy, it + 1) * (1 - ux) * (1 - uy) * ut +
+    h(ix + 1, iy, it + 1) * ux * (1 - uy) * ut +
+    h(ix, iy + 1, it + 1) * (1 - ux) * uy * ut +
+    h(ix + 1, iy + 1, it + 1) * ux * uy * ut
+  );
+}
+
+// Each line has gradient stops: [position 0‥1, r, g, b, alpha]
+const WAVE_LINES = [
+  { yf: 0.10, amp: 36, freq: 0.0026, speed: 0.00016, nx: 3.1, ny: 7.4, lw: 2.5,
+    stops: [[0,'rgba(99,179,237,0.04)'],[0.25,'rgba(99,179,237,0.32)'],[0.55,'rgba(129,140,248,0.28)'],[0.8,'rgba(167,139,250,0.22)'],[1,'rgba(99,179,237,0.04)']] },
+  { yf: 0.26, amp: 28, freq: 0.0033, speed: 0.00011, nx: 5.7, ny: 2.1, lw: 2.0,
+    stops: [[0,'rgba(129,140,248,0.04)'],[0.3,'rgba(167,139,250,0.26)'],[0.6,'rgba(99,179,237,0.24)'],[0.85,'rgba(129,140,248,0.20)'],[1,'rgba(129,140,248,0.04)']] },
+  { yf: 0.60, amp: 42, freq: 0.0020, speed: 0.00019, nx: 1.3, ny: 9.8, lw: 3.0,
+    stops: [[0,'rgba(99,179,237,0.04)'],[0.2,'rgba(129,140,248,0.22)'],[0.5,'rgba(99,179,237,0.30)'],[0.75,'rgba(167,139,250,0.18)'],[1,'rgba(99,179,237,0.04)']] },
+  { yf: 0.70, amp: 30, freq: 0.0029, speed: 0.00014, nx: 8.2, ny: 4.5, lw: 2.0,
+    stops: [[0,'rgba(167,139,250,0.04)'],[0.35,'rgba(99,179,237,0.22)'],[0.65,'rgba(167,139,250,0.24)'],[0.9,'rgba(129,140,248,0.16)'],[1,'rgba(167,139,250,0.04)']] },
+  { yf: 0.88, amp: 22, freq: 0.0038, speed: 0.00009, nx: 2.9, ny: 6.3, lw: 1.5,
+    stops: [[0,'rgba(129,140,248,0.04)'],[0.4,'rgba(167,139,250,0.20)'],[0.7,'rgba(99,179,237,0.18)'],[1,'rgba(129,140,248,0.04)']] },
+] as const;
+
+function WaveBackground() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const rafRef = useRef<number>(0);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let W = 0, H = 0;
+    const sync = () => {
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    };
+    sync();
+    window.addEventListener('resize', sync);
+
+    // Throttle to ~24 fps — plenty smooth for ambient animation
+    const INTERVAL = 1000 / 24;
+    let lastTs = 0;
+
+    const draw = (ts: number) => {
+      rafRef.current = requestAnimationFrame(draw);
+      if (ts - lastTs < INTERVAL) return;
+      lastTs = ts;
+
+      const t = ts * 0.001; // seconds
+      ctx.clearRect(0, 0, W, H);
+
+      for (const line of WAVE_LINES) {
+        const baseY = line.yf * H;
+        const STEPS = Math.ceil(W / 6);
+
+        // Build horizontal gradient spanning the canvas width
+        const grad = ctx.createLinearGradient(0, 0, W, 0);
+        for (const [pos, color] of line.stops) grad.addColorStop(pos as number, color as string);
+
+        ctx.beginPath();
+        for (let i = 0; i <= STEPS; i++) {
+          const x = (i / STEPS) * W;
+          const noiseAmp = 0.55 + 0.45 * vnoise(x * 0.0025 + line.nx, t * 0.18 + line.ny, 0);
+          const noiseSpd = 0.65 + 0.55 * vnoise(x * 0.0018 + line.ny, line.nx, t * 0.12);
+          const y = baseY + Math.sin(x * line.freq + t * line.speed * 400 * noiseSpd) * line.amp * noiseAmp;
+          i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        }
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = line.lw;
+        ctx.stroke();
+      }
+    };
+
+    rafRef.current = requestAnimationFrame(draw);
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      window.removeEventListener('resize', sync);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: 'fixed',
+        inset: 0,
+        width: '100%',
+        height: '100%',
+        pointerEvents: 'none',
+        zIndex: 0,
+      }}
+    />
+  );
+}
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 
@@ -255,7 +367,9 @@ export default function DashboardPage() {
   const CHART_COLORS = ['#228be6', '#40c057', '#fab005', '#fa5252', '#7950f2', '#15aabf', '#e64980'];
 
   return (
-    <Container size="xl" py="md">
+    <>
+      <WaveBackground />
+      <Container size="xl" py="md" style={{ position: 'relative', zIndex: 1 }}>
       <Stack gap="xl">
 
         {/* ── Header ──────────────────────────────────────────────────────── */}
@@ -492,6 +606,7 @@ export default function DashboardPage() {
         }
       `}</style>
     </Container>
+    </>
   );
 }
 

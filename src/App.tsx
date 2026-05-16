@@ -18,10 +18,10 @@ import InteractionsPage from './pages/InteractionsPage';
 import InteractionDetailPage from './pages/InteractionDetailPage';
 import ImportPage from './pages/ImportPage';
 import AdminUsersPage from './pages/AdminUsersPage';
+import OrganisationPage from './pages/OrganisationPage';
 import CatalogueEditorPage from './pages/CatalogueEditorPage';
 import AppHeader from './components/layout/AppHeader';
 import AppNavbar from './components/layout/AppNavbar';
-import GuideLauncher from './components/guide/GuideLauncher';
 import GuideOverlay from './components/guide/GuideOverlay';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -50,7 +50,6 @@ function App() {
   }, []);
 
   if (!user) {
-    console.log('No user, showing login page with basename:', basename);
     return (
       <BrowserRouter basename={basename}>
         <Routes>
@@ -74,7 +73,11 @@ function App() {
         </AppShell.Header>
 
         <AppShell.Navbar>
-          <AppNavbar collapsed={navbarCollapsed} onToggle={toggleNavbar} />
+          <AppNavbar
+            collapsed={navbarCollapsed}
+            onToggle={toggleNavbar}
+            onOpenGuide={() => setGuideOpen(true)}
+          />
         </AppShell.Navbar>
 
         <AppShell.Main>
@@ -208,10 +211,17 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/admin/organisation"
+              element={
+                <ProtectedRoute>
+                  <OrganisationPage />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </AppShell.Main>
       </AppShell>
-      <GuideLauncher onClick={() => setGuideOpen(true)} />
       <GuideOverlay opened={guideOpen} onClose={() => setGuideOpen(false)} />
     </BrowserRouter>
   );
