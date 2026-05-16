@@ -261,27 +261,101 @@ const contacts: GuideModule = {
   ],
 };
 
-const dataImport: GuideModule = {
-  id: 'import',
+const organisation: GuideModule = {
+  id: 'organisation',
   group: 'artefact',
-  title: 'Data Import',
-  icon: 'IconUpload',
+  title: 'Organisation',
+  icon: 'IconBuildingCommunity',
   summary:
-    'Bulk-import funders or opportunities from CSV files.',
-  relatedRoutes: ['/import'],
+    'Organisation-wide settings — identity, programmes, LLM context blocks, funding parameters, branding, and system preferences. Admin only.',
+  relatedRoutes: ['/admin/organisation'],
   sections: [
     {
-      heading: 'Supported Formats',
+      heading: 'Overview',
       content:
-        '• **Funder CSV** — columns for name, type, website, description, geographies, etc.\n' +
-        '• **Opportunity CSV** — columns for program name, funder, source URL, deadlines, award amounts, etc.',
+        'The Organisation page is the central configuration hub for the grant manager. All settings here are read by the backend at request time — changes take effect immediately on save, without a server restart.\n\n' +
+        'Access is restricted to Admin users. Navigate via the navbar or sidebar.',
     },
     {
-      heading: 'Import Flow',
+      heading: 'Identity Tab',
       content:
-        'Select the job type, choose a CSV file, and click Upload. The file is processed in the background via a job queue. The status table at the bottom shows all import jobs with their current status (Pending / Running / Completed / Failed).',
+        'Three sections:\n\n' +
+        '• **Basic information** — display name, legal name, organisation type, sector, year founded, staff count, website.\n' +
+        '• **Registration & location** — charity number, company number, other identifier, HQ city and country.\n' +
+        '• **Narrative** — elevator pitch (used as a concise org summary throughout the LLM pipeline), plus mission and vision statements.',
       tips: [
-        'The status table refreshes automatically every 5 seconds. Large files may take a minute to process.',
+        'The elevator pitch is injected into multiple LLM prompts. Keep it concise, specific, and keyword-rich.',
+      ],
+    },
+    {
+      heading: 'Programmes Tab',
+      content:
+        'Research strands or strategic programmes. Each programme has:\n\n' +
+        '• Name and description\n' +
+        '• Keywords, themes, methodologies, and output types\n\n' +
+        'Programme data feeds directly into alignment scoring — the AI reads these when deciding how well a grant fits the organisation. Cross-cutting themes, geographic priorities, and applicant type descriptors apply across all programmes.',
+      tips: [
+        'The more specific and keyword-rich your programmes are, the better the AI alignment scoring will be.',
+        'Add or remove programmes at any time — changes are reflected in the next scoring run.',
+      ],
+    },
+    {
+      heading: 'LLM Context Tab',
+      content:
+        'Three context blocks that are injected verbatim into LLM prompts at different pipeline stages:\n\n' +
+        '• **Discovery context** — injected when assessing whether a web page is a relevant grant opportunity. Should be keyword-rich and focused on themes, methods, and scope.\n' +
+        '• **Alignment scoring context** — injected when scoring how well a grant fits the organisation. Can be more detailed and nuanced.\n' +
+        '• **Application writing context** — injected when generating application structures and drafting section content. Include organisational boilerplate, track record, and capacity information.\n\n' +
+        'Each context block can be collapsed by clicking its header. When collapsed, the header shows word and token counts.',
+      tips: [
+        'Token estimates are approximate (word count × 1.3). Keep contexts focused — very long contexts increase cost and can dilute LLM attention.',
+        'Use the Summarise tool to condense source material into a dense context block automatically.',
+      ],
+    },
+    {
+      heading: 'LLM Context — Source Tools',
+      content:
+        'Each context block has a source material panel for building and refining context:\n\n' +
+        '• **Paste area** — paste raw text (documents, notes, strategy papers) and click **Add** to queue it as a source.\n' +
+        '• **Drop zone** — drop `.txt` or `.md` files directly onto the panel (up to 5 MB each).\n' +
+        '• **Source list** — queued sources are listed with word counts and can be removed individually.\n\n' +
+        '**Toolbar actions:**\n' +
+        '• **Add** — adds the pasted text as a named source entry.\n' +
+        '• **Revise** — sends the current context output plus any queued sources to the LLM; the result replaces the context. Use this to holistically update an existing context with new material.\n' +
+        '• **Replace / Append toggle** — controls whether Summarise replaces the context output or appends to it.\n' +
+        '• **Summarise** — sends queued sources to the LLM and writes a high-density summary into the context output field.',
+      tips: [
+        'Revise is best when you already have a context and want to integrate new information into it.',
+        'Summarise is best when starting from scratch with a set of source documents.',
+        'The Append mode is useful for incrementally building a context from multiple summarisation passes.',
+      ],
+    },
+    {
+      heading: 'Funding Tab',
+      content:
+        'Award and duration parameters used in alignment scoring to assess practical feasibility:\n\n' +
+        '• **Award parameters** — minimum, maximum, and ideal range (lower and upper bound) in the organisation\'s primary currency.\n' +
+        '• **Duration parameters** — minimum, maximum, and ideal range in months.\n' +
+        '• **Preferred currencies** — ISO codes (GBP, EUR, USD, etc.) for currencies the organisation actively tracks.',
+    },
+    {
+      heading: 'Branding Tab',
+      content:
+        'Logo URLs (primary and monochrome/secondary) and brand colour palette (primary, secondary, accent). These are stored for future use in generated documents and white-label features.',
+    },
+    {
+      heading: 'System Tab',
+      content:
+        'LLM configuration:\n\n' +
+        '• **Preferred LLM provider** — Gemini (default), Anthropic Claude, or Auto. The active provider is also controlled by the `LLM_PROVIDER` environment variable on the backend.\n' +
+        '• **Temperature per use case** — separate temperature values for discovery (default 0, deterministic), alignment scoring (default 0.3), and application writing (default 0.7, more generative).',
+    },
+    {
+      heading: 'Saving Changes',
+      content:
+        'An orange "Unsaved changes" badge appears whenever you have modified settings. Click **Save changes** at the top right to persist all changes to the database. The backend reads the latest saved values on every request — there is no cache to clear.',
+      tips: [
+        'Use "Reset to defaults" to restore all settings to the built-in Odyssean Institute defaults. This cannot be undone.',
       ],
     },
   ],
@@ -304,9 +378,9 @@ const admin: GuideModule = {
     {
       heading: 'Roles',
       content:
-        '• **Admin** — full access to all features including user management.\n' +
-        '• **Grants Officer** — access to all grant management features (funders, opportunities, applications, etc.) but not user administration.\n' +
-        '• **Reviewer** — read-only access for reviewing applications and opportunities.',
+        '• **Admin** — full access to all features including user management and Organisation settings.\n' +
+        '• **Grants Officer** — access to all grant management features (funders, opportunities, applications, etc.) but not user administration or Organisation settings.\n' +
+        '• **Reviewer** — read-only access for reviewing opportunities and applications.',
     },
     {
       heading: 'Password Management',
@@ -403,8 +477,8 @@ const wfSourceDiscovery: GuideModule = {
     {
       heading: 'What Is Source Discovery?',
       content:
-        'Source Discovery crawls a funder\'s website to find pages that are likely to contain grant or funding opportunity information. It analyses navigation structure, identifies scheme/programme links, and scores each page for relevance.\n\n' +
-        'The discovered pages become "suggested sources" that you can selectively add as sources.',
+        'Source Discovery crawls a funder\'s website to find pages that are likely to contain grant or funding opportunity information. It analyses navigation structure, identifies scheme/programme links, and scores each page for relevance against the organisation\'s discovery context.\n\n' +
+        'The discovered pages become "suggested sources" that you can selectively add as sources. Relevance scoring is more accurate when the Organisation → LLM Context → Discovery context is up to date.',
     },
     {
       heading: 'Running Discovery',
@@ -447,8 +521,8 @@ const wfSourceInspection: GuideModule = {
     {
       heading: 'What Is Source Inspection?',
       content:
-        'Source Inspection fetches the HTML content of a configured source page and uses an LLM (Claude) to extract structured grant opportunity data. It identifies programme names, deadlines, award amounts, eligibility criteria, and more.\n\n' +
-        'Extracted opportunities are automatically scored for Odyssean Institute alignment and integrated into the database.',
+        'Source Inspection fetches the HTML content of a configured source page and uses an LLM to extract structured grant opportunity data. It identifies programme names, deadlines, award amounts, eligibility criteria, and more.\n\n' +
+        'Extracted opportunities are automatically scored for alignment with the organisation and integrated into the database. The scoring uses the alignment context and programme data configured in the Organisation settings.',
     },
     {
       heading: 'Running an Inspection',
@@ -466,13 +540,14 @@ const wfSourceInspection: GuideModule = {
       content:
         'The inspection process runs several stages:\n\n' +
         '1. **HTML Fetch** — downloads the source page content.\n' +
-        '2. **LLM Extraction** — Claude analyses the page and extracts grant data in structured JSON format.\n' +
+        '2. **LLM Extraction** — the LLM analyses the page and extracts grant data in structured JSON format.\n' +
         '3. **Eligibility Extraction** — a second LLM pass extracts detailed eligibility criteria.\n' +
-        '4. **Alignment Scoring** — each opportunity is scored across 5 dimensions for Odyssean Institute fit.\n' +
+        '4. **Alignment Scoring** — each opportunity is scored across 5 dimensions using the organisation\'s alignment context and programme data.\n' +
         '5. **Auto-Integration** — opportunities are saved to the database and linked to the funder.',
       tips: [
         'If a source page has changed since the last inspection, re-running will update existing opportunities and add new ones.',
         'The LLM uses anti-hallucination rules — it will only extract information explicitly present on the page.',
+        'Alignment scoring quality improves with richer programme and context data in the Organisation settings.',
       ],
     },
   ],
@@ -570,16 +645,77 @@ const wfPipeline: GuideModule = {
       heading: 'Pipeline Stages',
       content:
         'The Odyssean Grant Manager follows a structured pipeline:\n\n' +
+        '**Stage 0: Organisation** → Configure identity, programmes, and LLM context blocks. These drive relevance and scoring quality throughout every later stage.\n\n' +
         '**Stage 1: Catalogue** → Research and collect funder information in the Catalogue Editor. Use Auto-Fill to quickly extract data from funder websites.\n\n' +
         '**Stage 2: Funders** → Integrate catalogue entries to create Funder records. Each funder becomes a trackable entity with its own sources, opportunities, and contacts.\n\n' +
         '**Stage 3: Sources** → Run Source Discovery on each funder to find grant-related pages. Select the best pages and create sources.\n\n' +
-        '**Stage 4: Opportunities** → Run Source Inspection on configured sources. The LLM extracts grant data, scores it for alignment, and creates Opportunity records.\n\n' +
-        '**Stage 5: Applications** (Coming Soon) → Select promising opportunities and create application drafts, manage deadlines, and track outcomes.',
+        '**Stage 4: Opportunities** → Run Source Inspection on configured sources. The LLM extracts grant data, scores it for alignment using the organisation\'s context, and creates Opportunity records.\n\n' +
+        '**Stage 5: Applications** → Select promising opportunities and create application drafts. The LLM uses the organisation\'s application context when generating templates and drafting section content.',
     },
     {
       heading: 'Monitoring Progress',
       content:
         'The Dashboard provides a live view of pipeline progress. The Discovery Pipeline section shows what percentage of funders have progressed through each stage. Use this to identify bottlenecks — for example, if many funders lack sources, prioritise running Source Discovery.',
+    },
+    {
+      heading: 'Keeping Context Current',
+      content:
+        'The quality of AI outputs across all stages depends on the Organisation → LLM Context blocks being accurate and up to date. Revisit them whenever the organisation\'s research agenda, programmes, or strategic priorities change.',
+    },
+  ],
+};
+
+const wfOrganisationSetup: GuideModule = {
+  id: 'wf-organisation-setup',
+  group: 'workflow',
+  title: 'Configuring Organisation Context',
+  icon: 'IconBrain',
+  summary:
+    'How to set up and maintain the LLM context blocks that drive discovery, alignment scoring, and application drafting.',
+  relatedRoutes: ['/admin/organisation'],
+  sections: [
+    {
+      heading: 'Why Context Matters',
+      content:
+        'The three LLM context blocks — Discovery, Alignment, and Application — are injected directly into AI prompts at each pipeline stage. Well-crafted context significantly improves:\n\n' +
+        '• The accuracy of source relevance scoring during discovery\n' +
+        '• The quality and specificity of alignment scores\n' +
+        '• The relevance of generated application structures and drafted content\n\n' +
+        'Think of context blocks as a briefing document you write for the AI — the more precise and information-dense, the better.',
+    },
+    {
+      heading: 'Building a Context from Scratch',
+      content: '',
+      steps: [
+        'Go to Organisation → LLM Context tab.',
+        'Click a context block header to expand it.',
+        'In the source material panel, paste relevant documents (strategy papers, research agendas, annual reports) into the paste area, clicking Add after each.',
+        'Alternatively, drop .txt or .md files onto the drop zone.',
+        'Once sources are queued, click Summarise. The LLM will produce a dense, structured summary optimised for use in AI prompts.',
+        'Review and edit the output in the context field below.',
+        'Click Save changes at the top of the page.',
+      ],
+      tips: [
+        'Start with your most comprehensive strategic document (e.g. a research agenda or funding strategy).',
+        'The Summarise output is designed for LLM readers, not humans — it prioritises density over readability.',
+      ],
+    },
+    {
+      heading: 'Updating an Existing Context',
+      content: '',
+      steps: [
+        'Queue any new source material (paste or drop files).',
+        'Use Revise if you want the new material integrated holistically into the existing context.',
+        'Use Append + Summarise if you want to add a supplementary block to the end of the existing context without rewriting it.',
+        'Save when done.',
+      ],
+    },
+    {
+      heading: 'Discovery vs Alignment Context',
+      content:
+        '• **Discovery context** — used when scanning web pages for relevance. Optimise for breadth: include research themes, methodologies, and keywords that signal relevant grant pages.\n\n' +
+        '• **Alignment context** — used when scoring individual opportunities. Can be more detailed and nuanced. Include programme descriptions, strategic priorities, and eligibility preferences.\n\n' +
+        '• **Application context** — used when generating application structures and drafting content. Include organisational boilerplate, track record, capacity information, and anything useful to pre-populate in applications.',
     },
   ],
 };
@@ -600,8 +736,8 @@ const refRoles: GuideModule = {
       content:
         '| Role | Access |\n' +
         '|------|--------|\n' +
-        '| **Admin** | Everything — funders, opportunities, catalogue, templates, contacts, interactions, import, user management, password resets |\n' +
-        '| **Grants Officer** | All grant management features. Cannot access Admin → Users. |\n' +
+        '| **Admin** | Everything — funders, opportunities, catalogue, templates, contacts, interactions, user management, Organisation settings, password resets |\n' +
+        '| **Grants Officer** | All grant management features. Cannot access Admin → Users or Organisation settings. |\n' +
         '| **Reviewer** | Read-only access to review opportunities and applications. |',
     },
   ],
@@ -619,7 +755,7 @@ const refScoring: GuideModule = {
     {
       heading: 'Fit Score',
       content:
-        'A number from 0 to 10 representing overall suitability for Odyssean Institute. The score is computed from weighted factors: alignment (50%), geography (20%), applicant type (20%), and award size (10%).\n\n' +
+        'A number from 0 to 10 representing overall suitability for the organisation. The score is computed from weighted factors: alignment (50%), geography (20%), applicant type (20%), and award size (10%).\n\n' +
         '• **7–10** — Strong match (typically PURSUE)\n' +
         '• **4–6.9** — Moderate match (typically MONITOR)\n' +
         '• **0–3.9** — Weak match (typically NO_GO)',
@@ -627,12 +763,15 @@ const refScoring: GuideModule = {
     {
       heading: 'Alignment Dimensions',
       content:
-        'Each opportunity is scored across five dimensions (0–100%):\n\n' +
-        '• **Research Strand Match** — overlap with OI research areas.\n' +
-        '• **Methodological Fit** — compatibility with OI research methods.\n' +
-        '• **Thematic Alignment** — relevance to OI themes and priorities.\n' +
-        '• **Impact Potential** — potential for meaningful impact.\n' +
-        '• **Practical Feasibility** — logistical and resource fit.',
+        'Each opportunity is scored across five dimensions (0–100%). The LLM uses the organisation\'s alignment context and programme data when computing these:\n\n' +
+        '• **Research Strand Match** — overlap with the organisation\'s research areas and programmes.\n' +
+        '• **Methodological Fit** — compatibility with the organisation\'s research methods.\n' +
+        '• **Thematic Alignment** — relevance to the organisation\'s themes and priorities.\n' +
+        '• **Impact Potential** — potential for meaningful real-world impact.\n' +
+        '• **Practical Feasibility** — logistical and resource fit (award size, duration, geography).',
+      tips: [
+        'Scoring quality improves when the Organisation → Programmes and LLM Context → Alignment context are detailed and up to date.',
+      ],
     },
     {
       heading: 'Recommendations',
@@ -674,14 +813,6 @@ const refStatuses: GuideModule = {
         '• **Submit** — application has been submitted.\n' +
         '• **Awarded** — funding was granted.\n' +
         '• **Rejected** — application was unsuccessful.',
-    },
-    {
-      heading: 'Import Job Status',
-      content:
-        '• **Pending** — job is queued.\n' +
-        '• **Running** — currently processing.\n' +
-        '• **Completed** — finished successfully.\n' +
-        '• **Failed** — an error occurred (check error message).',
     },
   ],
 };
@@ -735,16 +866,17 @@ export const GUIDE_MODULES: GuideModule[] = [
   opportunities,
   templates,
   contacts,
-  dataImport,
+  organisation,
   admin,
   // Workflows
+  wfPipeline,
+  wfOrganisationSetup,
   wfCatalogueEdit,
   wfCatalogueIntegrate,
   wfSourceDiscovery,
   wfSourceInspection,
   wfAddOpportunity,
   wfOpportunityReview,
-  wfPipeline,
   // Reference
   refRoles,
   refScoring,

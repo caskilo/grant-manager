@@ -39,6 +39,11 @@ a:hover {
   color: var(--color-white);
 }
 
+/* Allow fixed canvas backgrounds to show through the app shell */
+.mantine-AppShell-main {
+  background: transparent;
+}
+
 /* Scrollbar styles */
 ::-webkit-scrollbar {
   width: 8px;
