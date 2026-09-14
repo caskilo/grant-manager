@@ -27,6 +27,7 @@ interface Programme {
   themes: string[];
   methodologies: string[];
   outputTypes: string[];
+  priority: 'high' | 'medium' | 'low';
 }
 
 interface OrgSettings {
@@ -50,6 +51,7 @@ interface OrgSettings {
   applicantTypeDescriptions: string[];
   discoveryContext: string;
   alignmentContext: string;
+  eligibilityContext: string;
   applicationContext: string;
   fundingMinAward: number;
   fundingIdealMin: number;
@@ -83,6 +85,15 @@ const ORG_TYPE_OPTIONS = [
   { value: 'social_enterprise', label: 'Social Enterprise' },
   { value: 'consultancy', label: 'Consultancy / Agency' },
   { value: 'government', label: 'Government / Public Body' },
+  { value: 'limited_company', label: 'Limited Company (Ltd)' },
+  { value: 'public_limited_company', label: 'Public Limited Company (PLC)' },
+  { value: 'cic', label: 'Community Interest Company (CIC)' },
+  { value: 'charity', label: 'Charity / Nonprofit' },
+  { value: 'cio', label: 'Charitable Incorporated Organisation (CIO)' },
+  { value: 'coop', label: 'Cooperative / Mutual' },
+  { value: 'partnership', label: 'Partnership / LLP' },
+  { value: 'sole_trader', label: 'Sole Trader / Freelancer' },
+  { value: 'community_group', label: 'Community / Voluntary Group' },
   { value: 'other', label: 'Other' },
 ];
 
@@ -144,6 +155,42 @@ Long-term human flourishing within planetary boundaries, integrating wellbeing, 
 - **Funding:** £50k-500k for 1-3 years (flexible)
 - **Applicant:** Research orgs, think tanks, NGOs, academic institutions, interdisciplinary teams`;
 
+const ELIGIBILITY_CONTEXT_DEFAULT = `# Odyssean Institute — Eligibility Assessment Context
+
+You are evaluating whether the Odyssean Institute (OI) is eligible to apply for a specific grant opportunity. This context provides the organisational details needed to make an accurate eligibility determination.
+
+## Legal Entity
+The Odyssean Institute is a **UK-based research organisation** operating as a Focused Research Organization (FRO), headquartered in London. It is a small non-profit research institute (2-5 staff), NOT a university, commercial company, or sole trader.
+
+- **Legal name:** Odyssean Institute
+- **Type:** Focused Research Organization / independent research institute
+- **Registered in:** England, UK
+- **Sector:** Research & Policy
+
+## Organisational Model
+OI conducts interdisciplinary research across three strands (Odyssean Process, GRAIN, Aeonic Flourishing) aimed at real-world impact on Grand Challenges. It works through research, publications, public engagement, and partnerships — including consortia with universities, NGOs, and policy institutions.
+
+## Geographic Eligibility
+- **Primary base:** London, UK
+- **Eligible for:** UK-only grants, European grants (where UK entities remain eligible), international and global grants
+- **NOT eligible for:** Grants restricted to specific countries/regions where the UK is not included
+
+## Applicant Type Eligibility
+OI can apply as a research organisation / research institute, think tank, NGO / civil society organisation, non-profit (where formal charity registration is not required), or consortium member/lead.
+
+OI is NOT a commercial company or for-profit enterprise, NOT a university or higher education institution (though it can partner with them), NOT a public sector body, and NOT an individual / sole trader.
+
+If a grant says "research organisations", "think tanks", "NGOs", "civil society", or "any organisation" — OI is eligible.
+If a grant says "registered charity only" — verify whether OI's legal form qualifies; if not, OI may still participate as a consortium partner.
+If a grant requires a commercial or for-profit applicant — OI is NOT eligible.
+If a grant requires a university lead — OI can participate as a consortium partner, not lead.
+
+## Funding Range
+- **Minimum practical:** £10,000
+- **Ideal:** £50,000–£500,000
+- **Maximum practical:** £2,000,000 (above this, delivery capacity is a concern for a 2-5 person core team)
+- **Currencies:** GBP, EUR, USD`;
+
 const APPLICATION_CONTEXT_DEFAULT = `The Odyssean Institute is a Focused Research Organization (FRO) dedicated to developing comprehensive, legitimate, and tractable approaches to Grand Challenges. We operate at the intersection of democratic innovation, systemic resilience, and long-term human flourishing.
 
 ## Our Work
@@ -184,6 +231,7 @@ const DEFAULT_SETTINGS: OrgSettings = {
       themes: ['democratic legitimacy', 'public trust', 'governance quality', 'systemic change', 'paradigm shift', 'institutional capacity', 'political reform', 'civic engagement'],
       methodologies: ['expert elicitation', 'DMDU', 'exploratory modeling', 'scenario planning', 'citizen assemblies', 'deliberative polling', 'participatory methods', 'futures methodologies'],
       outputTypes: ['policy recommendations', 'governance frameworks', 'deliberative processes', 'institutional designs', 'public engagement tools', 'documentary', 'educational curriculum'],
+      priority: 'high',
     },
     {
       id: 'grain',
@@ -193,6 +241,7 @@ const DEFAULT_SETTINGS: OrgSettings = {
       themes: ['global resilience', 'collapse prevention', 'extinction risk', 'material flows', 'institutional capacity', 'technological innovation', 'adaptive capacity', 'positive tipping points'],
       methodologies: ['causal layered analysis', 'CLA', 'backcasting', '3 horizons framework', 'horizon scanning', 'systems mapping', 'trade analysis', 'supply chain modeling'],
       outputTypes: ['resilience frameworks', 'infrastructure designs', 'technology incubation', 'trade policy', 'industrial strategy', 'case studies', 'partnership models'],
+      priority: 'medium',
     },
     {
       id: 'aeonic-flourishing',
@@ -202,6 +251,7 @@ const DEFAULT_SETTINGS: OrgSettings = {
       themes: ['human flourishing', 'existential hope', 'ecological sustainability', 'social justice', 'intergenerational fairness', 'community resilience', 'cultural wisdom', 'paradigm transformation'],
       methodologies: ['capabilities approach', 'socio-ecological systems', 'commons governance', 'participatory action research', 'philosophical synthesis', 'interdisciplinary integration'],
       outputTypes: ['theoretical frameworks', 'wellbeing indicators', 'community projects', 'local governance models', 'philosophical synthesis', 'practical interventions'],
+      priority: 'medium',
     },
   ],
   crossCuttingThemes: ['systemic change', 'paradigmatic change', 'interdisciplinary', 'transdisciplinary', 'action research', 'focused research organization', 'public engagement', 'real world impact', 'policy impact', 'collapse risk', 'extinction risk', 'existential risk', 'tipping points', 'complexity', 'innovation', 'knowledge translation', 'capacity building'],
@@ -209,6 +259,7 @@ const DEFAULT_SETTINGS: OrgSettings = {
   applicantTypeDescriptions: ['research organization', 'think tank', 'NGO', 'civil society', 'academic institution', 'independent researcher', 'interdisciplinary team', 'collaboration', 'partnership'],
   discoveryContext: DISCOVERY_CONTEXT_DEFAULT,
   alignmentContext: DISCOVERY_CONTEXT_DEFAULT,
+  eligibilityContext: ELIGIBILITY_CONTEXT_DEFAULT,
   applicationContext: APPLICATION_CONTEXT_DEFAULT,
   fundingMinAward: 10000,
   fundingIdealMin: 50000,
@@ -260,6 +311,10 @@ interface ApiOrgSettings extends Omit<OrgSettings,
 function fromApi(s: ApiOrgSettings): OrgSettings {
   return {
     ...s,
+    programmes: (s.programmes || []).map(p => ({
+      ...p,
+      priority: (p as any).priority || 'medium',
+    })),
     fundingMinAward: s.funding?.minAward ?? 10000,
     fundingIdealMin: s.funding?.idealMin ?? 50000,
     fundingIdealMax: s.funding?.idealMax ?? 500000,
@@ -330,10 +385,18 @@ function ProgrammeItem({
   onUpdate: (id: string, patch: Partial<Programme>) => void;
   onDelete: (id: string) => void;
 }) {
+  const priorityColor = prog.priority === 'high' ? 'red' : prog.priority === 'medium' ? 'blue' : 'gray';
   return (
     <Accordion.Item value={prog.id}>
       <Accordion.Control>
-        <Text fw={500} size="sm">{prog.name || <Text component="span" c="dimmed" fs="italic" size="sm">Unnamed programme</Text>}</Text>
+        <Group gap="sm" align="center">
+          <Text fw={500} size="sm">{prog.name || <Text component="span" c="dimmed" fs="italic" size="sm">Unnamed programme</Text>}</Text>
+          {prog.priority && (
+            <Badge size="xs" variant="light" color={priorityColor}>
+              {prog.priority.toUpperCase()}
+            </Badge>
+          )}
+        </Group>
       </Accordion.Control>
       <Accordion.Panel>
         <Stack gap="sm" pt="xs">
@@ -358,6 +421,19 @@ function ProgrammeItem({
             minRows={2}
             autosize
           />
+          <Group>
+            <Text size="sm" fw={500}>Priority</Text>
+            <SegmentedControl
+              size="xs"
+              value={prog.priority || 'medium'}
+              onChange={(val) => onUpdate(prog.id, { priority: val as 'high' | 'medium' | 'low' })}
+              data={[
+                { value: 'high', label: 'High' },
+                { value: 'medium', label: 'Medium' },
+                { value: 'low', label: 'Low' },
+              ]}
+            />
+          </Group>
           <TagsInput
             label="Keywords"
             description="Terms used for grant discovery matching. Press Enter or comma to add."
@@ -411,7 +487,7 @@ function ContextWorkspace({
 }: {
   label: string;
   description: string;
-  contextType: 'discovery' | 'alignment' | 'application';
+  contextType: 'discovery' | 'alignment' | 'eligibility' | 'application';
   value: string;
   onChange: (v: string) => void;
   open: boolean;
@@ -492,7 +568,7 @@ function ContextWorkspace({
     }
   };
 
-  const accentMap = { discovery: 'blue', alignment: 'violet', application: 'teal' } as const;
+  const accentMap = { discovery: 'blue', alignment: 'violet', eligibility: 'indigo', application: 'teal' } as const;
   const accent = accentMap[contextType];
 
   return (
@@ -730,12 +806,12 @@ export default function OrganisationPage() {
   const [activeTab, setActiveTab] = useState<string>(() => {
     return sessionStorage.getItem('orgPage.tab') ?? 'identity';
   });
-  const [ctxOpen, setCtxOpen] = useState<{ discovery: boolean; alignment: boolean; application: boolean }>(() => {
+  const [ctxOpen, setCtxOpen] = useState<{ discovery: boolean; alignment: boolean; eligibility: boolean; application: boolean }>(() => {
     try {
       const stored = sessionStorage.getItem('orgPage.ctxOpen');
-      return stored ? JSON.parse(stored) : { discovery: true, alignment: true, application: true };
+      return stored ? JSON.parse(stored) : { discovery: true, alignment: true, eligibility: true, application: true };
     } catch {
-      return { discovery: true, alignment: true, application: true };
+      return { discovery: true, alignment: true, eligibility: true, application: true };
     }
   });
 
@@ -791,7 +867,7 @@ export default function OrganisationPage() {
     update({
       programmes: [
         ...effective.programmes,
-        { id: uid(), name: '', description: '', keywords: [], themes: [], methodologies: [], outputTypes: [] },
+        { id: uid(), name: '', description: '', keywords: [], themes: [], methodologies: [], outputTypes: [], priority: 'medium' },
       ],
     });
   };
@@ -1136,6 +1212,16 @@ export default function OrganisationPage() {
                 onChange={(v) => update({ alignmentContext: v })}
                 open={ctxOpen.alignment}
                 onToggle={() => setCtxOpenPersisted(s => ({ ...s, alignment: !s.alignment }))}
+              />
+
+              <ContextWorkspace
+                label="Eligibility assessment context"
+                description="Injected when the LLM evaluates whether the organisation is eligible for a specific grant. Include legal entity details, applicant type constraints, and common eligibility misconceptions."
+                contextType="eligibility"
+                value={effective.eligibilityContext}
+                onChange={(v) => update({ eligibilityContext: v })}
+                open={ctxOpen.eligibility}
+                onToggle={() => setCtxOpenPersisted(s => ({ ...s, eligibility: !s.eligibility }))}
               />
 
               <ContextWorkspace

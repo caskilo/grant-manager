@@ -1,4 +1,4 @@
-import { Container, Title, Text, Paper, Stack, Group, Badge, Button, Textarea, Anchor, Divider, Grid, Card, Tabs, ThemeIcon, Progress, Tooltip } from '@mantine/core';
+import { Container, Title, Text, Paper, Stack, Group, Badge, Button, Textarea, Anchor, Divider, Grid, Card, Tabs, ThemeIcon, Progress, Tooltip, useMantineTheme } from '@mantine/core';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState, useEffect } from 'react';
@@ -10,6 +10,11 @@ import SmartDiscoveryPanel from '../components/funder/SmartDiscoveryPanel';
 const getCatalogueType = (tags: string[]): string | null => {
   const catalogueTypeTag = tags.find(tag => tag.startsWith('CATALOGUE_TYPE:'));
   return catalogueTypeTag ? catalogueTypeTag.replace('CATALOGUE_TYPE:', '') : null;
+};
+
+const hexA = (hex: string, alpha: number) => {
+  const h = hex.replace('#', '');
+  return `rgba(${parseInt(h.slice(0, 2), 16)}, ${parseInt(h.slice(2, 4), 16)}, ${parseInt(h.slice(4, 6), 16)}, ${alpha})`;
 };
 
 
@@ -70,6 +75,7 @@ export default function FunderDetailPage() {
   const [notes, setNotes] = useState('');
   const [hasChanges, setHasChanges] = useState(false);
   const [confirmingPurge, setConfirmingPurge] = useState(false);
+  const theme = useMantineTheme();
 
   const purgeOpportunitiesMutation = useMutation({
     mutationFn: () => harvestApi.purgeOpportunities(id!),
@@ -133,11 +139,11 @@ export default function FunderDetailPage() {
         </Group>
 
         {/* Header Card */}
-        <Paper p="lg" withBorder shadow="sm" style={{ background: 'linear-gradient(135deg, rgba(30, 58, 95, 0.02) 0%, rgba(40, 116, 166, 0.03) 100%)' }}>
+        <Paper p="lg" withBorder shadow="sm" style={{ background: `linear-gradient(135deg, ${hexA(theme.colors.odyssean[8], 0.02)} 0%, ${hexA(theme.colors.odyssean[6], 0.03)} 100%)` }}>
           <Stack gap="md">
             <Group justify="space-between" align="flex-start">
               <div>
-                <Title order={2} data-testid="funder-name" c="#1e3a5f">{funder.name}</Title>
+                <Title order={2} data-testid="funder-name" c={theme.colors.odyssean[8]}>{funder.name}</Title>
                 {funder.websiteUrl && (
                   <Anchor href={funder.websiteUrl} target="_blank" rel="noopener noreferrer" size="sm" mt="xs">
                     <Group gap={4}>
@@ -175,10 +181,10 @@ export default function FunderDetailPage() {
         </Paper>
 
         {/* Notes */}
-        <Paper p="lg" withBorder shadow="sm" style={{ background: 'linear-gradient(135deg, rgba(44, 62, 80, 0.02) 0%, rgba(52, 73, 94, 0.03) 100%)' }}>
+        <Paper p="lg" withBorder shadow="sm" style={{ background: `linear-gradient(135deg, ${hexA(theme.colors.authority[6], 0.02)} 0%, ${hexA(theme.colors.authority[5], 0.03)} 100%)` }}>
           <Stack gap="md">
             <Group justify="space-between">
-              <Title order={4} c="#2C3E50">Notes</Title>
+              <Title order={4} c={theme.colors.authority[6]}>Notes</Title>
               {hasChanges && (
                 <Button size="xs" leftSection={<IconDeviceFloppy size={14} />} onClick={() => updateNotesMutation.mutate(notes)} loading={updateNotesMutation.isPending}>
                   Save Changes
@@ -211,21 +217,21 @@ export default function FunderDetailPage() {
           <Tabs.Panel value="overview" pt="md">
             <Grid>
               <Grid.Col span={4}>
-                <Card withBorder p="lg" shadow="sm" style={{ textAlign: 'center', background: 'linear-gradient(135deg, rgba(30, 58, 95, 0.03) 0%, rgba(40, 116, 166, 0.05) 100%)' }}>
+                <Card withBorder p="lg" shadow="sm" style={{ textAlign: 'center', background: `linear-gradient(135deg, ${hexA(theme.colors.odyssean[8], 0.03)} 0%, ${hexA(theme.colors.odyssean[6], 0.05)} 100%)` }}>
                   <Text size="xs" c="dimmed" tt="uppercase" fw={500}>Opportunities</Text>
-                  <Title order={2} mt="xs" c="#1e3a5f">{funder._count.opportunities}</Title>
+                  <Title order={2} mt="xs" c={theme.colors.odyssean[8]}>{funder._count.opportunities}</Title>
                 </Card>
               </Grid.Col>
               <Grid.Col span={4}>
-                <Card withBorder p="lg" shadow="sm" style={{ textAlign: 'center', background: 'linear-gradient(135deg, rgba(12, 58, 41, 0.03) 0%, rgba(39, 174, 96, 0.05) 100%)' }}>
+                <Card withBorder p="lg" shadow="sm" style={{ textAlign: 'center', background: `linear-gradient(135deg, ${hexA(theme.colors.grain[9], 0.03)} 0%, ${hexA(theme.colors.grain[6], 0.05)} 100%)` }}>
                   <Text size="xs" c="dimmed" tt="uppercase" fw={500}>Sources</Text>
-                  <Title order={2} mt="xs" c="#0c3a29">{funder.harvestSources.length}</Title>
+                  <Title order={2} mt="xs" c={theme.colors.grain[9]}>{funder.harvestSources.length}</Title>
                 </Card>
               </Grid.Col>
               <Grid.Col span={4}>
-                <Card withBorder p="lg" shadow="sm" style={{ textAlign: 'center', background: 'linear-gradient(135deg, rgba(44, 62, 80, 0.03) 0%, rgba(52, 73, 94, 0.05) 100%)' }}>
+                <Card withBorder p="lg" shadow="sm" style={{ textAlign: 'center', background: `linear-gradient(135deg, ${hexA(theme.colors.authority[6], 0.03)} 0%, ${hexA(theme.colors.authority[5], 0.05)} 100%)` }}>
                   <Text size="xs" c="dimmed" tt="uppercase" fw={500}>Contacts</Text>
-                  <Title order={2} mt="xs" c="#2C3E50">{funder._count.contacts}</Title>
+                  <Title order={2} mt="xs" c={theme.colors.authority[6]}>{funder._count.contacts}</Title>
                 </Card>
               </Grid.Col>
             </Grid>
@@ -377,10 +383,10 @@ export default function FunderDetailPage() {
           <Tabs.Panel value="statistics" pt="md">
             <Grid>
               <Grid.Col span={6}>
-                <Paper p="md" withBorder shadow="sm" style={{ background: 'linear-gradient(135deg, rgba(30, 58, 95, 0.02) 0%, rgba(40, 116, 166, 0.03) 100%)' }}>
+                <Paper p="md" withBorder shadow="sm" style={{ background: `linear-gradient(135deg, ${hexA(theme.colors.odyssean[8], 0.02)} 0%, ${hexA(theme.colors.odyssean[6], 0.03)} 100%)` }}>
                   <Stack gap="md">
                     <Group justify="space-between">
-                      <Title order={4} c="#1e3a5f">Fit Score Distribution</Title>
+                      <Title order={4} c={theme.colors.odyssean[8]}>Fit Score Distribution</Title>
                       <ThemeIcon size="lg" variant="light" color="blue"><IconTarget size={20} /></ThemeIcon>
                     </Group>
                     {(() => {
@@ -414,10 +420,10 @@ export default function FunderDetailPage() {
               </Grid.Col>
 
               <Grid.Col span={6}>
-                <Paper p="md" withBorder shadow="sm" style={{ background: 'linear-gradient(135deg, rgba(12, 58, 41, 0.02) 0%, rgba(39, 174, 96, 0.03) 100%)' }}>
+                <Paper p="md" withBorder shadow="sm" style={{ background: `linear-gradient(135deg, ${hexA(theme.colors.grain[9], 0.02)} 0%, ${hexA(theme.colors.grain[6], 0.03)} 100%)` }}>
                   <Stack gap="md">
                     <Group justify="space-between">
-                      <Title order={4} c="#0c3a29">Odyssean Alignment</Title>
+                      <Title order={4} c={theme.colors.grain[9]}>Odyssean Alignment</Title>
                       <ThemeIcon size="lg" variant="light" color="violet"><IconSparkles size={20} /></ThemeIcon>
                     </Group>
                     {(() => {

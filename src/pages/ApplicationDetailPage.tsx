@@ -3,7 +3,7 @@ import {
   Textarea, TextInput, Select, Divider, ThemeIcon,
   Loader, Center, Alert, Accordion, ActionIcon, Tooltip,
   Modal, Tabs, ScrollArea, NumberInput, SegmentedControl, Switch,
-  CloseButton,
+  CloseButton, useMantineTheme,
 } from '@mantine/core';
 import { useParams, useNavigate } from 'react-router-dom';
 import { SectionProgressBar } from '../components/SectionProgressBar';
@@ -117,6 +117,7 @@ export default function ApplicationDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const theme = useMantineTheme();
   const currentUser = useAuthStore((s) => s.user);
 
   // Quick Info editing state
@@ -1222,7 +1223,7 @@ export default function ApplicationDetailPage() {
   h2 { font-size: 1.1em; margin-top: 2em; border-bottom: 1px solid #ddd; padding-bottom: 4px; color: #222; }
   table { border-collapse: collapse; width: 100%; margin-bottom: 1.5em; }
   td, th { border: 1px solid #ccc; padding: 5px 10px; text-align: left; }
-  th { background: #f5f5f5; font-size: 0.85em; }
+  th { background: ${theme.colors.odyssean[0]}; font-size: 0.85em; }
   blockquote { border-left: 3px solid #aaa; margin: 8px 0; padding: 4px 12px; color: #555; font-size: 0.9em; }
   .meta { color: #888; font-weight: normal; font-size: 0.85em; }
   .empty { color: #aaa; font-style: italic; }
@@ -1325,7 +1326,7 @@ h1{font-size:1.5em;border-bottom:2px solid #333;padding-bottom:6px;}
 h2{font-size:1.15em;margin-top:1.6em;border-bottom:1px solid #ddd;padding-bottom:3px;}
 table{border-collapse:collapse;width:100%;margin-bottom:1em;}
 td,th{border:1px solid #ccc;padding:4px 8px;text-align:left;}
-th{background:#f5f5f5;}
+th{background:${theme.colors.odyssean[0]};}
 blockquote{border-left:3px solid #aaa;margin:6px 0;padding:3px 10px;color:#555;font-style:italic;}
 </style></head><body>${buildHtml()}</body></html>`;
                                 const htmlBlob = new Blob([fullHtml], { type: 'text/html' });

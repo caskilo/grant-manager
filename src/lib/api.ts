@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
+import { useAuthStore } from '../stores/authStore';
 
 const API_URL = import.meta.env.VITE_API_URL || '/api';
 
@@ -53,6 +54,7 @@ async function performRefresh(): Promise<string | null> {
     if (!newAccess) return null;
     localStorage.setItem('access_token', newAccess);
     if (newRefresh) localStorage.setItem('refresh_token', newRefresh);
+    useAuthStore.setState({ accessToken: newAccess });
     return newAccess;
   } catch (err) {
     console.warn('[auth] Refresh token exchange failed', err);
@@ -80,8 +82,7 @@ if (bootToken) scheduleExpiryWarning(bootToken);
 function forceLogoutRedirect() {
   if (isRedirectingToLogin) return;
   isRedirectingToLogin = true;
-  localStorage.removeItem('access_token');
-  localStorage.removeItem('refresh_token');
+  useAuthStore.getState().logout();
   sessionStorage.setItem('session_expired', '1');
   const basePath = import.meta.env.BASE_URL;
   window.location.href = `${basePath}login`;

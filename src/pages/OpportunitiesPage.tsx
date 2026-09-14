@@ -98,7 +98,11 @@ export default function OpportunitiesPage() {
 
   const createOppMutation = useMutation({
     mutationFn: async (data: typeof newOpp) => {
-      return api.post('/opportunities', data);
+      const { description, ...payload } = data;
+      return api.post('/opportunities', {
+        ...payload,
+        ...(description ? { rawDescription: description } : {}),
+      });
     },
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: ['opportunities'] });
@@ -799,6 +803,11 @@ export default function OpportunitiesPage() {
             onChange={(v) => setNewOpp({ ...newOpp, applicationType: v || 'OPEN' })}
           />
           <Group justify="flex-end">
+            {createOppMutation.isError && (
+              <Text size="sm" color="red" style={{ marginRight: 'auto' }}>
+                {(createOppMutation.error as any)?.response?.data?.message || 'Failed to create opportunity. Check required fields.'}
+              </Text>
+            )}
             <Button variant="subtle" onClick={() => setAddModalOpen(false)}>Cancel</Button>
             <Button
               onClick={() => createOppMutation.mutate(newOpp)}

@@ -64,7 +64,7 @@ function App() {
     <BrowserRouter basename={basename}>
       <AppShell
         header={{ height: 60 }}
-        navbar={{ width: navbarCollapsed ? 72 : { base: '100vw', sm: 250 }, breakpoint: 'xs' }}
+        navbar={{ width: navbarCollapsed ? 72 : 240, breakpoint: 'sm', collapsed: { mobile: true } }}
         styles={{ navbar: { transition: 'width 200ms ease' }, main: { transition: 'padding-left 200ms ease' } }}
         padding="md"
       >

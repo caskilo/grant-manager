@@ -194,11 +194,22 @@ const opportunities: GuideModule = {
     {
       heading: 'Opportunity Detail — Eligibility Tab',
       content:
-        'Shows structured eligibility information extracted by the AI:\n\n' +
+        'The Eligibility tab has two main areas:\n\n' +
+        '**Extracted Eligibility Criteria** — structured information pulled from the source page during inspection:\n' +
         '• Eligible applicant types (e.g. Universities, Research Institutes)\n' +
         '• Geographic restrictions\n' +
         '• Additional eligibility details (process steps)\n' +
-        '• Full eligibility text from the source page',
+        '• Full eligibility text from the source page\n\n' +
+        '**Check Eligibility** — an interactive eligibility assessment tool:\n' +
+        '• Click **Check Eligibility** to run a rule-based check against the organisation\'s geography, applicant type, and award-size criteria.\n' +
+        '• Add **Reference Links** (URLs to funder pages, guidance documents, etc.) to enable a more detailed LLM-assisted assessment. The system fetches the linked pages, sends their content to the LLM along with the organisation\'s eligibility context, and produces a nuanced evaluation.\n' +
+        '• LLM results show criteria met, blockers, warnings, uncertain areas, reasoning, a confidence score, and the sources checked. The LLM can override rule-based failures when it finds nuance (e.g. naming variations, consortium eligibility).\n' +
+        '• Reference links persist with the opportunity (stored in tags) and survive navigation. Eligibility check results also persist within the session.\n' +
+        '• Without reference links, only the quick rule-based check runs. Add at least one link for the full LLM assessment.',
+      tips: [
+        'Reference links are especially useful for pages that list eligible organisation types, geographic restrictions, or charitable/non-profit requirements.',
+        'The eligibility context block on the Organisation page directly informs the LLM assessment — keep it up to date with your legal entity details and applicant type constraints.',
+      ],
     },
     {
       heading: 'Opportunity Detail — Details Tab',
@@ -302,9 +313,10 @@ const organisation: GuideModule = {
     {
       heading: 'LLM Context Tab',
       content:
-        'Three context blocks that are injected verbatim into LLM prompts at different pipeline stages:\n\n' +
+        'Four context blocks that are injected verbatim into LLM prompts at different pipeline stages:\n\n' +
         '• **Discovery context** — injected when assessing whether a web page is a relevant grant opportunity. Should be keyword-rich and focused on themes, methods, and scope.\n' +
         '• **Alignment scoring context** — injected when scoring how well a grant fits the organisation. Can be more detailed and nuanced.\n' +
+        '• **Eligibility assessment context** — injected when the LLM evaluates whether the organisation is eligible for a specific grant. Include legal entity details, applicant type constraints, and common eligibility misconceptions.\n' +
         '• **Application writing context** — injected when generating application structures and drafting section content. Include organisational boilerplate, track record, and capacity information.\n\n' +
         'Each context block can be collapsed by clicking its header. When collapsed, the header shows word and token counts.',
       tips: [
@@ -622,12 +634,22 @@ const wfOpportunityReview: GuideModule = {
     {
       heading: 'Checking Eligibility',
       content:
-        'The Eligibility tab on the detail page shows extracted criteria:\n\n' +
+        'The Eligibility tab on the detail page provides both extracted criteria and an interactive assessment tool.\n\n' +
+        '**Extracted criteria** (populated during source inspection):\n' +
         '• Eligible applicant types (e.g. "UK Higher Education Institutions")\n' +
         '• Geographic restrictions\n' +
         '• Process steps and requirements\n' +
         '• Full eligibility text from the source\n\n' +
-        'Cross-reference this with the official page to confirm accuracy.',
+        '**Interactive eligibility check:**\n' +
+        '• Click **Check Eligibility** for a quick rule-based assessment against the organisation\'s geography, applicant type, and award size.\n' +
+        '• Add **Reference Links** to funder pages (eligibility pages, guidance documents, FAQs) and click Check Eligibility again for a full LLM-assisted assessment. The LLM fetches the linked pages, cross-references them with the organisation\'s eligibility context, and produces a detailed evaluation with criteria met, blockers, warnings, and a confidence score.\n' +
+        '• The LLM can override rule-based failures when it finds nuance — for example, if the rules check fails on applicant type because "research institute" didn\'t match "academic body", but the reference page clearly states independent research organisations are eligible, the LLM will correct this.\n' +
+        '• Reference links persist with the opportunity across navigation. Results persist within the browser session.\n\n' +
+        'Cross-reference the assessment with the official page to confirm accuracy.',
+      tips: [
+        'The eligibility context block on the Organisation page is the single source of truth for LLM eligibility assessments. Keep it current — especially legal entity type, charitable status, and applicant type constraints.',
+        'Add reference links to the most specific eligibility page you can find — a dedicated "Who can apply" page is better than a general funder homepage.',
+      ],
     },
   ],
 };
@@ -660,7 +682,7 @@ const wfPipeline: GuideModule = {
     {
       heading: 'Keeping Context Current',
       content:
-        'The quality of AI outputs across all stages depends on the Organisation → LLM Context blocks being accurate and up to date. Revisit them whenever the organisation\'s research agenda, programmes, or strategic priorities change.',
+        'The quality of AI outputs across all stages depends on the Organisation → LLM Context blocks being accurate and up to date. Revisit them whenever the organisation\'s research agenda, programmes, strategic priorities, or legal/eligibility status change. The eligibility context block is especially important for accurate eligibility assessments — ensure it reflects the current legal entity type and any applicant type constraints.',
     },
   ],
 };
@@ -677,9 +699,10 @@ const wfOrganisationSetup: GuideModule = {
     {
       heading: 'Why Context Matters',
       content:
-        'The three LLM context blocks — Discovery, Alignment, and Application — are injected directly into AI prompts at each pipeline stage. Well-crafted context significantly improves:\n\n' +
+        'The four LLM context blocks — Discovery, Alignment, Eligibility, and Application — are injected directly into AI prompts at each pipeline stage. Well-crafted context significantly improves:\n\n' +
         '• The accuracy of source relevance scoring during discovery\n' +
         '• The quality and specificity of alignment scores\n' +
+        '• The accuracy of eligibility assessments when checking specific opportunities\n' +
         '• The relevance of generated application structures and drafted content\n\n' +
         'Think of context blocks as a briefing document you write for the AI — the more precise and information-dense, the better.',
     },
@@ -711,10 +734,11 @@ const wfOrganisationSetup: GuideModule = {
       ],
     },
     {
-      heading: 'Discovery vs Alignment Context',
+      heading: 'Choosing the Right Context Block',
       content:
         '• **Discovery context** — used when scanning web pages for relevance. Optimise for breadth: include research themes, methodologies, and keywords that signal relevant grant pages.\n\n' +
         '• **Alignment context** — used when scoring individual opportunities. Can be more detailed and nuanced. Include programme descriptions, strategic priorities, and eligibility preferences.\n\n' +
+        '• **Eligibility context** — used when checking whether the organisation is eligible for a specific grant. Include legal entity type, registration details, applicant type constraints (what you can and cannot apply as), geographic eligibility, and common misconceptions. This is the single source of truth the LLM uses when evaluating eligibility.\n\n' +
         '• **Application context** — used when generating application structures and drafting content. Include organisational boilerplate, track record, capacity information, and anything useful to pre-populate in applications.',
     },
   ],

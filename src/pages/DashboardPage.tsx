@@ -1,6 +1,7 @@
 import {
   Container, Text, SimpleGrid, Paper, Stack, Group, Badge, ThemeIcon,
   RingProgress, Progress, Anchor, Center, Loader, Grid, Box, Tooltip,
+  useMantineTheme,
 } from '@mantine/core';
 import {
   IconBuildingBank, IconSparkles,
@@ -252,6 +253,7 @@ function StatCard({ icon: Icon, label, value, color, subtitle, onClick }: {
 
 export default function DashboardPage() {
   const navigate = useNavigate();
+  const theme = useMantineTheme();
 
   // Fetch all data in parallel
   const { data: fundersData, isLoading: fundersLoading } = useQuery<{ data: Funder[] }>({
@@ -364,7 +366,7 @@ export default function DashboardPage() {
     );
   }
 
-  const CHART_COLORS = ['#228be6', '#40c057', '#fab005', '#fa5252', '#7950f2', '#15aabf', '#e64980'];
+  const CHART_COLORS = [theme.colors.odyssean[5], theme.colors.odyssean[4], theme.colors.odyssean[3], theme.colors.odyssean[2], theme.colors.odyssean[7], theme.colors.odyssean[6], theme.colors.odyssean[8]];
 
   return (
     <>

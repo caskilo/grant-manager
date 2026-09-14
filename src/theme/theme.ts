@@ -37,6 +37,22 @@ export const theme = {
   primaryColor: 'odyssean',
   primaryShade: { light: 6, dark: 5 } as const,
   defaultRadius: 'md',
+  other: {
+    gradients: {
+      header: 'linear-gradient(90deg, #1e3a5f 0%, #2874A6 50%, #1e3a5f 100%)',
+      navbar: 'linear-gradient(175deg, #1E5A8B 0%, #1e3a5f 100%)',
+      title: 'linear-gradient(135deg, #ffffff 0%, #5DADE2 100%)',
+      login: 'linear-gradient(135deg, #0c1929 0%, #0d2847 25%, #0a3d62 50%, #1a6b8a 75%, #2e8b9e 100%)',
+      loginButton: 'linear-gradient(135deg, #0d2847 0%, #1a6b8a 100%)',
+    },
+    shadows: {
+      sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+      md: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+      lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+      card: '0 4px 12px rgba(0, 0, 0, 0.1)',
+      header: '0 2px 8px rgba(0, 0, 0, 0.15)',
+    },
+  },
 };
 
 export default theme;

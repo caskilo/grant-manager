@@ -9,6 +9,7 @@ import {
   Stack,
   Text,
   Box,
+  useMantineTheme,
 } from '@mantine/core';
 import { IconCompass } from '@tabler/icons-react';
 import { notifications } from '@mantine/notifications';
@@ -22,6 +23,7 @@ export default function LoginPage() {
   const setUser = useAuthStore((state) => state.setUser);
   const setTokens = useAuthStore((state) => state.setTokens);
   const navigate = useNavigate();
+  const theme = useMantineTheme();
 
   // Show a notification if the user was redirected due to session expiry
   useEffect(() => {
@@ -92,7 +94,7 @@ export default function LoginPage() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'linear-gradient(135deg, #0c1929 0%, #0d2847 25%, #0a3d62 50%, #1a6b8a 75%, #2e8b9e 100%)',
+        background: theme.other.gradients.login,
         backgroundSize: '400% 400%',
         animation: 'oceanShift 20s ease infinite',
         position: 'relative',
@@ -129,8 +131,8 @@ export default function LoginPage() {
         }}
       >
         <Stack align="center" gap={4} mb="xl">
-          <IconCompass size={44} stroke={1.5} color="#1a6b8a" />
-          <Title order={2} ta="center" style={{ color: '#0d2847', letterSpacing: '-0.5px' }}>
+          <IconCompass size={44} stroke={1.5} color={theme.colors.odyssean[5]} />
+          <Title order={2} ta="center" style={{ color: theme.colors.odyssean[9], letterSpacing: '-0.5px' }}>
             Odyssean Institute
           </Title>
           <Text size="sm" c="dimmed" ta="center">
@@ -148,7 +150,7 @@ export default function LoginPage() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               styles={{
-                input: { borderColor: '#d0d5dd', '&:focus': { borderColor: '#1a6b8a' } },
+                input: { borderColor: '#d0d5dd', '&:focus': { borderColor: theme.colors.odyssean[5] } },
               }}
             />
 
@@ -160,7 +162,7 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               styles={{
-                input: { borderColor: '#d0d5dd', '&:focus': { borderColor: '#1a6b8a' } },
+                input: { borderColor: '#d0d5dd', '&:focus': { borderColor: theme.colors.odyssean[5] } },
               }}
             />
 
@@ -171,7 +173,7 @@ export default function LoginPage() {
               loading={loading}
               size="md"
               style={{
-                background: 'linear-gradient(135deg, #0d2847 0%, #1a6b8a 100%)',
+                background: theme.other.gradients.loginButton,
                 marginTop: 8,
               }}
             >
