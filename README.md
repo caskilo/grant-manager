@@ -79,10 +79,13 @@ pnpm build
   - `https://caskilo.github.io/grant-manager`
 - Vite is configured with a non-root base path in `vite.config.ts`:
   - `base: '/grant-manager/'`
-- Environment configuration for production is done via `.env.production`:
+- Environment configuration for production is done via the `VITE_API_URL`
+  GitHub Actions variable (Settings → Secrets and variables → Actions),
+  injected at build time by the deploy workflow. `.env.production` is not
+  committed. For local development, copy `.env.example`:
 
   ```bash
-  VITE_API_URL=https://***REMOVED***.herokuapp.com/api
+  VITE_API_URL=http://localhost:3000/api
   ```
 
 ### GitHub Actions Workflow

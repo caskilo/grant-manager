@@ -42,18 +42,18 @@ This frontend is deployed to GitHub Pages at: **https://caskilo.github.io/grant-
 
 3. **Verify deployment:**
    - Visit https://caskilo.github.io/grant-manager
-   - Check that the app loads and can communicate with the backend API at `https://***REMOVED***.herokuapp.com/api`
+   - Check that the app loads and can communicate with the backend API configured via the `VITE_API_URL` Actions variable
 
 ### Configuration
 
 - **Base path:** Set in `vite.config.ts` as `base: '/grant-manager/'` to match the GitHub Pages URL structure
-- **API URL:** Set in `.env.production` as `VITE_API_URL=https://***REMOVED***.herokuapp.com/api`
+- **API URL:** Set as the `VITE_API_URL` GitHub Actions variable (repo Settings → Secrets and variables → Actions → Variables, or the `github-pages` environment); injected at build time. `.env.production` is gitignored and not committed.
 - **Build output:** `dist/` directory (excluded from git via `.gitignore`)
 
 ### Troubleshooting
 
 - **App loads but routes don't work:** Ensure `base: '/grant-manager/'` is set in `vite.config.ts`
-- **API calls fail:** Verify `VITE_API_URL` in `.env.production` points to the correct backend URL
+- **API calls fail:** Verify the `VITE_API_URL` Actions variable points to the correct backend URL
 - **Deploy command fails:** Ensure you have push access to the GitHub repository and the `origin` remote is configured
 
 ### Local Development
