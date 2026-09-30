@@ -23,8 +23,6 @@ api.interceptors.request.use((config) => {
 // ─────────────────────────────────────────────────────────────────────────────
 // Token refresh coordination
 // ─────────────────────────────────────────────────────────────────────────────
-// Debounce session-expiry redirect so we don't fire multiple times
-let isRedirectingToLogin = false;
 // Single in-flight refresh promise so concurrent 401s don't race
 let refreshInFlight: Promise<string | null> | null = null;
 
@@ -75,17 +73,30 @@ function scheduleExpiryWarning(token: string) {
   }
 }
 
-// Announce token expiry once at boot for diagnostics
-const bootToken = localStorage.getItem('access_token');
-if (bootToken) scheduleExpiryWarning(bootToken);
-
+// Log out and let the auth store drive the app to the login page
+// (App renders the unauthenticated router when user is null, so no reload needed)
 function forceLogoutRedirect() {
-  if (isRedirectingToLogin) return;
-  isRedirectingToLogin = true;
-  useAuthStore.getState().logout();
+  if (!useAuthStore.getState().user) return; // already logged out — debounce
   sessionStorage.setItem('session_expired', '1');
-  const basePath = import.meta.env.BASE_URL;
-  window.location.href = `${basePath}login`;
+  useAuthStore.getState().logout();
+}
+
+// At boot, resolve an expired access token proactively instead of waiting
+// for the first query to 401 — prevents the app rendering empty while auth settles
+const bootToken = localStorage.getItem('access_token');
+if (bootToken && useAuthStore.getState().user) {
+  scheduleExpiryWarning(bootToken);
+  const expMs = parseJwtExpiry(bootToken);
+  if (expMs && expMs <= Date.now()) {
+    if (localStorage.getItem('refresh_token')) {
+      refreshInFlight = performRefresh().then((token) => {
+        if (!token) forceLogoutRedirect();
+        return token;
+      });
+    } else {
+      forceLogoutRedirect();
+    }
+  }
 }
 
 // Response interceptor: on 401, try refresh ONCE, then retry original request.

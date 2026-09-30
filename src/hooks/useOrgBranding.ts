@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import api from '../lib/api';
 
@@ -6,7 +7,6 @@ export interface OrgBranding {
   secondaryColour: string;
   accentColour: string;
   primaryLogoUrl: string;
-  secondaryLogoUrl: string;
   name: string;
 }
 
@@ -16,7 +16,6 @@ interface ApiOrgResponse {
     secondaryColour?: string;
     accentColour?: string;
     primaryLogoUrl?: string;
-    secondaryLogoUrl?: string;
     name?: string;
   };
 }
@@ -26,9 +25,10 @@ const DEFAULT_BRANDING: OrgBranding = {
   secondaryColour: '#1e3a5f',
   accentColour: '#5DADE2',
   primaryLogoUrl: '',
-  secondaryLogoUrl: '',
   name: 'Odyssean',
 };
+
+const DEFAULT_FAVICON = `${import.meta.env.BASE_URL}favicon.ico`;
 
 /**
  * Fetches organisation branding settings for use in AppHeader, AppNavbar, etc.
@@ -46,7 +46,6 @@ export function useOrgBranding() {
         secondaryColour: s.secondaryColour || DEFAULT_BRANDING.secondaryColour,
         accentColour: s.accentColour || DEFAULT_BRANDING.accentColour,
         primaryLogoUrl: s.primaryLogoUrl || '',
-        secondaryLogoUrl: s.secondaryLogoUrl || '',
         name: s.name || DEFAULT_BRANDING.name,
       } as OrgBranding;
     },
@@ -54,7 +53,15 @@ export function useOrgBranding() {
     retry: false,
   });
 
-  return data ?? DEFAULT_BRANDING;
+  const branding = data ?? DEFAULT_BRANDING;
+
+  // Reflect the org logo in the browser tab icon (falls back to favicon.ico)
+  useEffect(() => {
+    const link = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
+    if (link) link.href = branding.primaryLogoUrl || DEFAULT_FAVICON;
+  }, [branding.primaryLogoUrl]);
+
+  return branding;
 }
 
 /**

@@ -81,6 +81,8 @@ export default function FunderDetailPage() {
     mutationFn: () => harvestApi.purgeOpportunities(id!),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['funder', id] });
+      queryClient.invalidateQueries({ queryKey: ['opportunities'] });
+      queryClient.invalidateQueries({ queryKey: ['funders'] });
       setConfirmingPurge(false);
     },
   });

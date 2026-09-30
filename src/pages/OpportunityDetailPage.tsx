@@ -335,6 +335,8 @@ export default function OpportunityDetailPage() {
     onSuccess: (data) => {
       setEligibilityResult(data);
       try { sessionStorage.setItem(`eligibility.${id}`, JSON.stringify(data)); } catch {}
+      queryClient.invalidateQueries({ queryKey: ['opportunity', id] });
+      queryClient.invalidateQueries({ queryKey: ['opportunities'] });
     },
     onError: () => {
       notifications.show({ title: 'Error', message: 'Failed to check eligibility.', color: 'red' });
@@ -402,6 +404,8 @@ export default function OpportunityDetailPage() {
     onSuccess: (res) => {
       setAppModalOpen(false);
       setManualContent('');
+      queryClient.invalidateQueries({ queryKey: ['applications'] });
+      queryClient.invalidateQueries({ queryKey: ['opportunity', id] });
       notifications.show({
         title: 'Application Created',
         message: `"${res.data.title}" has been created with ${res.data.sections?.length || 0} sections`,

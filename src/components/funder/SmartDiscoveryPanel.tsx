@@ -200,6 +200,7 @@ export default function SmartDiscoveryPanel({
           setProgress(null);
           addLog('success', `Discovery completed! Found ${job.result?.opportunities?.length || 0} opportunities`);
           queryClient.invalidateQueries({ queryKey: ['funder', funderId] });
+          queryClient.invalidateQueries({ queryKey: ['opportunities'] });
           // Delay history invalidation slightly so the backend has time to finish writing the run JSON file
           setTimeout(() => {
             queryClient.invalidateQueries({ queryKey: ['discoveryRuns', funderId] });

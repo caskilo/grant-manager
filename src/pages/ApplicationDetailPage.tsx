@@ -203,6 +203,7 @@ export default function ApplicationDetailPage() {
     mutationFn: (data: any) => applicationsApi.update(id!, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['application', id] });
+      queryClient.invalidateQueries({ queryKey: ['applications'] });
       notifications.show({ title: 'Updated', message: 'Application updated', color: 'green' });
     },
     onError: (err: any) => {
@@ -321,6 +322,7 @@ export default function ApplicationDetailPage() {
   const deleteMutation = useMutation({
     mutationFn: () => applicationsApi.delete(id!),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['applications'] });
       notifications.show({ title: 'Deleted', message: 'Application has been deleted.', color: 'orange' });
       navigate('/applications');
     },

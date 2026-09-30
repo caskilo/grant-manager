@@ -16,6 +16,7 @@ import { notifications } from '@mantine/notifications';
 import { Navigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../lib/api';
+import OrgLogo from '../assets/OrgLogo';
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 
@@ -63,7 +64,6 @@ interface OrgSettings {
   durationMaxMonths: number;
   preferredCurrencies: string[];
   primaryLogoUrl: string;
-  secondaryLogoUrl: string;
   primaryColour: string;
   secondaryColour: string;
   accentColour: string;
@@ -271,7 +271,6 @@ const DEFAULT_SETTINGS: OrgSettings = {
   durationMaxMonths: 60,
   preferredCurrencies: ['GBP', 'EUR', 'USD'],
   primaryLogoUrl: '',
-  secondaryLogoUrl: '',
   primaryColour: '#2874A6',
   secondaryColour: '#1e3a5f',
   accentColour: '#5DADE2',
@@ -829,6 +828,7 @@ export default function OrganisationPage() {
     mutationFn: putOrg,
     onSuccess: (saved) => {
       queryClient.setQueryData(['organisation'], saved);
+      queryClient.invalidateQueries({ queryKey: ['org-branding'] });
       setSettings(null);
       setDirty(false);
       notifications.show({ title: 'Saved', message: 'Organisation settings saved to database.', color: 'teal' });
@@ -843,6 +843,7 @@ export default function OrganisationPage() {
     mutationFn: resetOrgApi,
     onSuccess: (reset) => {
       queryClient.setQueryData(['organisation'], reset);
+      queryClient.invalidateQueries({ queryKey: ['org-branding'] });
       setSettings(null);
       setDirty(false);
       notifications.show({ title: 'Reset', message: 'Settings reset to defaults.', color: 'orange' });
@@ -862,6 +863,25 @@ export default function OrganisationPage() {
 
   const handleSave = () => saveMutation.mutate(effective);
   const handleReset = () => resetMutation.mutate();
+
+  const handleLogoDrop = (files: FileWithPath[]) => {
+    const file = files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const dataUrl = e.target?.result as string;
+      if (dataUrl) update({ primaryLogoUrl: dataUrl });
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleLogoReject = () => {
+    notifications.show({
+      title: 'Logo not accepted',
+      message: 'Please use a PNG, SVG, WebP or ICO image under 500 KB.',
+      color: 'red',
+    });
+  };
 
   const addProgramme = () => {
     update({
@@ -1353,44 +1373,75 @@ export default function OrganisationPage() {
             <Stack gap="md">
               <Paper withBorder p="md" radius="md">
                 <Stack gap="sm">
-                  <Text fw={600}>Logos</Text>
+                  <Text fw={600}>Logo</Text>
                   <Text size="xs" c="dimmed">
-                    URLs to hosted logo assets. Used in generated documents, exports, and future white-label features.
+                    Shown in the app header, used as the browser tab icon, and embedded in generated documents and exports.
                   </Text>
-                  <Grid>
-                    <Grid.Col span={{ base: 12, sm: 6 }}>
-                      <TextInput
-                        label="Primary logo URL"
-                        placeholder="https://example.com/logo.png"
-                        value={effective.primaryLogoUrl}
-                        onChange={(e) => update({ primaryLogoUrl: e.target.value })}
-                      />
+                  <Group align="flex-start" gap="md" wrap="nowrap">
+                    <Stack gap={6} align="center">
+                      <Box
+                        style={{
+                          width: 96,
+                          height: 96,
+                          border: '1px solid var(--mantine-color-gray-3)',
+                          borderRadius: 8,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          overflow: 'hidden',
+                          background: 'var(--mantine-color-gray-0)',
+                        }}
+                      >
+                        <OrgLogo
+                          size={80}
+                          logoUrl={effective.primaryLogoUrl || undefined}
+                          brandColours={{
+                            primary: effective.primaryColour,
+                            secondary: effective.secondaryColour,
+                            accent: effective.accentColour,
+                          }}
+                        />
+                      </Box>
                       {effective.primaryLogoUrl && (
-                        <img
-                          src={effective.primaryLogoUrl}
-                          alt="Primary logo preview"
-                          style={{ marginTop: 8, maxHeight: 64, maxWidth: '100%', objectFit: 'contain', borderRadius: 4 }}
-                          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                        />
+                        <Button
+                          variant="subtle"
+                          color="red"
+                          size="compact-xs"
+                          leftSection={<IconTrash size={12} />}
+                          onClick={() => update({ primaryLogoUrl: '' })}
+                        >
+                          Remove
+                        </Button>
                       )}
-                    </Grid.Col>
-                    <Grid.Col span={{ base: 12, sm: 6 }}>
-                      <TextInput
-                        label="Secondary / monochrome logo URL"
-                        placeholder="https://example.com/logo-mono.png"
-                        value={effective.secondaryLogoUrl}
-                        onChange={(e) => update({ secondaryLogoUrl: e.target.value })}
-                      />
-                      {effective.secondaryLogoUrl && (
-                        <img
-                          src={effective.secondaryLogoUrl}
-                          alt="Secondary logo preview"
-                          style={{ marginTop: 8, maxHeight: 64, maxWidth: '100%', objectFit: 'contain', borderRadius: 4 }}
-                          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                        />
-                      )}
-                    </Grid.Col>
-                  </Grid>
+                    </Stack>
+                    <Dropzone
+                      onDrop={handleLogoDrop}
+                      onReject={handleLogoReject}
+                      accept={['image/png', 'image/jpeg', 'image/svg+xml', 'image/webp', 'image/x-icon', 'image/vnd.microsoft.icon']}
+                      maxSize={500 * 1024}
+                      multiple={false}
+                      style={{ flexGrow: 1 }}
+                      styles={{
+                        root: {
+                          borderStyle: 'dashed',
+                          height: 96,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        },
+                      }}
+                    >
+                      <Group gap="sm" style={{ pointerEvents: 'none' }}>
+                        <Dropzone.Accept><IconUpload size={22} color="var(--mantine-color-blue-6)" /></Dropzone.Accept>
+                        <Dropzone.Reject><IconX size={22} color="var(--mantine-color-red-6)" /></Dropzone.Reject>
+                        <Dropzone.Idle><IconUpload size={22} color="var(--mantine-color-dimmed)" /></Dropzone.Idle>
+                        <Text size="xs" c="dimmed" lh={1.4}>
+                          Drop a logo here, or click to browse<br />
+                          PNG · SVG · WebP · ICO — up to 500 KB
+                        </Text>
+                      </Group>
+                    </Dropzone>
+                  </Group>
                 </Stack>
               </Paper>
 
